@@ -1,3 +1,5 @@
+import { dispatch } from "./dispatch.js";
+import { state } from "./state.js";
 const canvas=document.querySelector("canvas");
 
 const ctx=canvas.getContext('2d');
@@ -32,36 +34,7 @@ function startGame(){
 
 player1.onload=startGame;
 player2.onload=startGame;
-
-
-state = {
-  board: {
-    rows: 8,
-    cols: 8
-  },
-
-  players: {
-    p1: {
-      id: "p1",
-      row: 0,
-      col: 0,
-      health: 3
-    },
-
-    p2: {
-      id: "p2",
-      row: 7,
-      col: 7,
-      health: 3
-    }
-  },
-
-  turn: "p1",
-
-  status: "playing"
-}
-
-
+let board;
 function init(){
     class Board{
 
@@ -97,22 +70,61 @@ function init(){
             const tileHeight=this.boardHeight/state.board.cols;
             const p1x=this.x+(state.players.p1.col*tileWidth);
             const p1y=this.y+(state.players.p1.row*tileHeight);
-            const p2x=this.x+(state.players.p2.col*tileHeight);
+            const p2x=this.x+(state.players.p2.col*tileWidth);
             const p2y=this.y+(state.players.p2.row*tileHeight);
             ctx.drawImage(player1,p1x,p1y,tileWidth,tileHeight);
             ctx.drawImage(player2,p2x,p2y,tileWidth,tileHeight);
         }
 
     }
+ 
     const boardwidth=500;
     const boardHeight=500;
     const x=canvas.width/2-boardwidth/2;
     const y=canvas.height/2-boardHeight/2;
-
-    const board=new Board(boardHeight,boardwidth,x,y);
+    const tileWidth=boardwidth/state.board.rows;
+    const tileHeight=boardHeight/state.board.cols;
+    board=new Board(boardHeight,boardwidth,x,y);
     board.drawBoard(ctx);
     board.drawGrid(matrix,state,ctx);
     board.drawPlayer(state,ctx);
     console.log(ctx);
 
+    canvas.addEventListener("click",(e)=>{
+        const mouseX=e.clientX-canvas.offsetLeft;
+        const mouseY=e.clientY-canvas.offsetTop;
+
+         if (
+            mouseX >= x &&
+            mouseX <= x + boardwidth &&
+            mouseY >= y &&
+            mouseY <= y + boardHeight
+        ){
+            const col = Math.floor((mouseX - x) / tileWidth);
+            const row = Math.floor((mouseY - y) / tileHeight);
+            console.log(row,col)
+              dispatch({
+                type:"MOVE_UP",
+                payload:{
+                    row:row,
+                    col:col
+                },
+            },render
+        )
+        }
+
+    
+      
+    })
+
 }
+
+function render(){
+    ctx.clearRect(0,0,canvas.width,canvas.height)
+
+    board.drawBoard(ctx)
+    board.drawGrid(matrix,state,ctx)
+    board.drawPlayer(state,ctx)
+}
+
+
