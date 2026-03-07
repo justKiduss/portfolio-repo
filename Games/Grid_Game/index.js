@@ -1,11 +1,11 @@
 import { dispatch } from "./dispatch.js";
-import { state } from "./state.js";
+import { getState } from "./state.js";
 const h3=document.querySelector("h3");
 const canvas=document.querySelector("canvas");
 const ctx=canvas.getContext('2d');
 
-canvas.width=innerWidth;
-canvas.height=innerHeight;
+canvas.width=500;
+canvas.height=500;
 
 const matrix=[
     [1,0,1,0,1,0,1,0],
@@ -81,8 +81,8 @@ function init(){
     boardHeight=500;
     x=canvas.width/2-boardwidth/2;
     y=canvas.height/2-boardHeight/2;
-    tileWidth=boardwidth/state.board.cols;
-    tileHeight=boardHeight/state.board.rows;
+    tileWidth=boardwidth/getState().board.cols;
+    tileHeight=boardHeight/getState().board.rows;
     board=new Board(boardHeight,boardwidth,x,y);
 
     inputs()
@@ -93,7 +93,7 @@ function init(){
 }
 
 function inputs(){
-        let turn="p1";
+            let turn=getState().turn;
             canvas.addEventListener("click",(e)=>{
             const rect=canvas.getBoundingClientRect();
             const mouseX=e.clientX-rect.left;
@@ -102,20 +102,37 @@ function inputs(){
                 mouseX >= x && mouseX <= x + boardwidth &&
                 mouseY >= y && mouseY <= y + boardHeight
             ){
-                const col = Math.min(state.board.cols - 1,Math.floor((mouseX - x) / tileWidth));
-                const row = Math.min(state.board.rows - 1,Math.floor((mouseY - y) / tileHeight));
+                const col = Math.min(getState().board.cols - 1,Math.floor((mouseX - x) / tileWidth));
+                const row = Math.min(getState().board.rows - 1,Math.floor((mouseY - y) / tileHeight));
 
+                const player=getState().players[turn];
+                console.log(player)
+                const rowDiff=Math.abs(row - player.row);
+                const colDiff=Math.abs(col - player.col);
+                if(rowDiff + colDiff !== 1) return; 
                     dispatch({
-                        type:"MOVE_UP",
+                        type:"MOVEMENT",
                         payload:{row,col,id:turn},
                     },render)
                     turn=turn==="p1"?"p2":"p1";
-                console.log(row,col,turn);
-                console.log(state);
+                console.log(getState());
+            }
+        })
+        addEventListener("keydown",(e)=>{
+            const player=getState().players[turn];
+            let direction={row:0,col:0};
+
+            switch(e.key){
+                case "ArrowUp":    direction = { row: -1, col: 0 }; break;
+                case "ArrowDown":  direction = { row: 1, col: 0 }; break;
+                case "ArrowLeft":  direction = { row: 0, col: -1 }; break;
+                case "ArrowRight": direction = { row: 0, col: 1 }; break;
+                default: return; // Exit if other keys are pressed 
             }
         })
 }
 function render(){
+    const state=getState();
     ctx.clearRect(0,0,canvas.width,canvas.height);
     board.drawBoard(ctx);
     board.drawGrid(matrix,state,ctx);

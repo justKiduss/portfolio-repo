@@ -1,13 +1,13 @@
 export function reducer(state,action){
     switch(action.type){
-    case "MOVE_UP":{
+    case "MOVEMENT":{
         const {row,col,id}=action.payload;
             return{
                 ...state,
                 players: {
                     ...state.players,
                     [id]: {
-                        ...state.players.p1,
+                        ...state.players[id],
                         row: row,
                         col: col,
                     },
@@ -15,26 +15,6 @@ export function reducer(state,action){
                 },
                 status:`player ${id} is playing`
             }
-    }
-    case "MOVE_DOWN":{
-        const {row,col}=action.payload;
-            return{
-                ...state,
-                players: {
-                    ...state.players,
-                    p1: {
-                        ...state.players.p1,
-                        row: row,
-                        col: col,
-                    },
-                }
-            }
-    }
-    case "MOVE_LEFT":{
-
-    }
-    case "MOVE_RIGHT":{
-
     }
     case "SHOOT":{
 

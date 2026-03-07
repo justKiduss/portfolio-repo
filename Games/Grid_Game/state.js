@@ -10,6 +10,13 @@ export let state = {
   },
 
   turn: "p1",
+  status: `player or p1 starts it`
+}
 
-  status: "playing"
+export function getState(){
+  return state;
+}
+
+export function setState(newState){
+  state = newState;
 }
