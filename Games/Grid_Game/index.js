@@ -1,7 +1,7 @@
 import { dispatch } from "./dispatch.js";
 import { state } from "./state.js";
+const h3=document.querySelector("h3");
 const canvas=document.querySelector("canvas");
-
 const ctx=canvas.getContext('2d');
 
 canvas.width=innerWidth;
@@ -34,7 +34,7 @@ function startGame(){
 
 player1.onload=startGame;
 player2.onload=startGame;
-let board;
+let board,boardwidth,boardHeight,tileWidth,tileHeight,x,y;
 function init(){
     class Board{
 
@@ -51,8 +51,8 @@ function init(){
         }
 
         drawGrid(matrix,state,ctx){
-            const tileWidth=this.boardwidth/state.board.rows;
-            const tileHeight=this.boardHeight/state.board.cols;
+            const tileWidth=this.boardwidth/state.board.cols;
+            const tileHeight=this.boardHeight/state.board.rows;
             for(let row=0;row<state.board.rows;row++){
                 for(let col=0;col<state.board.cols;col++){
                     ctx.fillStyle=matrix[row][col]>0?"red":"black";
@@ -66,8 +66,8 @@ function init(){
         }
 
         drawPlayer(state,ctx){
-            const tileWidth=this.boardwidth/state.board.rows;
-            const tileHeight=this.boardHeight/state.board.cols;
+            const tileWidth=this.boardwidth/state.board.cols;
+            const tileHeight=this.boardHeight/state.board.rows;
             const p1x=this.x+(state.players.p1.col*tileWidth);
             const p1y=this.y+(state.players.p1.row*tileHeight);
             const p2x=this.x+(state.players.p2.col*tileWidth);
@@ -75,56 +75,52 @@ function init(){
             ctx.drawImage(player1,p1x,p1y,tileWidth,tileHeight);
             ctx.drawImage(player2,p2x,p2y,tileWidth,tileHeight);
         }
-
     }
- 
-    const boardwidth=500;
-    const boardHeight=500;
-    const x=canvas.width/2-boardwidth/2;
-    const y=canvas.height/2-boardHeight/2;
-    const tileWidth=boardwidth/state.board.rows;
-    const tileHeight=boardHeight/state.board.cols;
+    
+    boardwidth=500;
+    boardHeight=500;
+    x=canvas.width/2-boardwidth/2;
+    y=canvas.height/2-boardHeight/2;
+    tileWidth=boardwidth/state.board.cols;
+    tileHeight=boardHeight/state.board.rows;
     board=new Board(boardHeight,boardwidth,x,y);
+
+    inputs()
+    render();
+    console.log(ctx);
+
+
+}
+
+function inputs(){
+        let turn="p1";
+            canvas.addEventListener("click",(e)=>{
+            const rect=canvas.getBoundingClientRect();
+            const mouseX=e.clientX-rect.left;
+            const mouseY=e.clientY-rect.top;
+            if (
+                mouseX >= x && mouseX <= x + boardwidth &&
+                mouseY >= y && mouseY <= y + boardHeight
+            ){
+                const col = Math.min(state.board.cols - 1,Math.floor((mouseX - x) / tileWidth));
+                const row = Math.min(state.board.rows - 1,Math.floor((mouseY - y) / tileHeight));
+
+                    dispatch({
+                        type:"MOVE_UP",
+                        payload:{row,col,id:turn},
+                    },render)
+                    turn=turn==="p1"?"p2":"p1";
+                console.log(row,col,turn);
+                console.log(state);
+            }
+        })
+}
+function render(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     board.drawBoard(ctx);
     board.drawGrid(matrix,state,ctx);
     board.drawPlayer(state,ctx);
-    console.log(ctx);
-
-    canvas.addEventListener("click",(e)=>{
-        const mouseX=e.clientX-canvas.offsetLeft;
-        const mouseY=e.clientY-canvas.offsetTop;
-
-         if (
-            mouseX >= x &&
-            mouseX <= x + boardwidth &&
-            mouseY >= y &&
-            mouseY <= y + boardHeight
-        ){
-            const col = Math.floor((mouseX - x) / tileWidth);
-            const row = Math.floor((mouseY - y) / tileHeight);
-            console.log(row,col)
-              dispatch({
-                type:"MOVE_UP",
-                payload:{
-                    row:row,
-                    col:col
-                },
-            },render
-        )
-        }
-
-    
-      
-    })
+    h3.textContent=state.status;
 
 }
-
-function render(){
-    ctx.clearRect(0,0,canvas.width,canvas.height)
-
-    board.drawBoard(ctx)
-    board.drawGrid(matrix,state,ctx)
-    board.drawPlayer(state,ctx)
-}
-
 
