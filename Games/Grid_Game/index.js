@@ -119,6 +119,7 @@ function inputs(){
             }
         })
         addEventListener("keydown",(e)=>{
+            const currentTurn=getState().turn;
             const player=getState().players[turn];
             let direction={row:0,col:0};
 
@@ -129,7 +130,19 @@ function inputs(){
                 case "ArrowRight": direction = { row: 0, col: 1 }; break;
                 default: return; // Exit if other keys are pressed 
             }
-        })
+
+            dispatch({
+                type: "SHOOT",
+                payload: { 
+                    row: player.row, 
+                    col: player.col, 
+                    dir: direction, 
+                    id: currentTurn 
+                    }
+            }, render); 
+            console.log(getState());
+            })
+
 }
 function render(){
     const state=getState();
