@@ -150,6 +150,23 @@ function render(){
     board.drawBoard(ctx);
     board.drawGrid(matrix,state,ctx);
     board.drawPlayer(state,ctx);
+
+    // DRAW THE LASER
+    if (state.lastShot) {
+        ctx.strokeStyle = "cyan";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(state.lastShot.startX, state.lastShot.startY);
+        ctx.lineTo(state.lastShot.endX, state.lastShot.endY);
+        ctx.stroke();
+
+        // Optional: Remove the laser after 100ms so it flashes
+        setTimeout(() => {
+            state.lastShot = null;
+            // No need to call render again unless you want it to disappear immediately
+        }, 100);
+    }
+
     h3.textContent=state.status;
 
 }

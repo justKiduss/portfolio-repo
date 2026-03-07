@@ -10,6 +10,7 @@ export let state = {
   },
 
   turn: "p1",
+  lastShot:null,
   status: `player or p1 starts it`
 }
 
