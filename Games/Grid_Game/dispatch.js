@@ -6,5 +6,4 @@ export function dispatch(action, render){
   const newState = reducer(getState(),action)
   setState(newState);
   render()
-
 }

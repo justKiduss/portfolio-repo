@@ -21,3 +21,8 @@ export function getState(){
 export function setState(newState){
   state = newState;
 }
+
+export const initialPositions = {
+  p1: { row:0, col:0 },
+  p2: { row:7, col:7 }
+}
