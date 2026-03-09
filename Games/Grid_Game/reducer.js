@@ -3,9 +3,7 @@ const initialPositions = {
   p2: { row:7, col:7 }
 }
 export function reducer(state,action){
-    if (state.status.includes("Game Over")) {
-        return state;
-    }
+
     switch(action.type){    
     case "MOVEMENT":{
         const {row,col,id}=action.payload;
@@ -28,7 +26,7 @@ export function reducer(state,action){
 
   const targetId = id === "p1" ? "p2" : "p1";
   const enemy = state.players[targetId];
-
+  const shooter=state.players[id];
   let hit = false;
 
   if (dir.row !== 0 && col === enemy.col) {
@@ -41,15 +39,6 @@ export function reducer(state,action){
     if ((dir.col === -1 && enemy.col < col) || (dir.col === 1 && enemy.col > col)) {
       hit = true;
     }
-  }
-
-  let newEnemy = enemy;
-
-  if (hit) {
-    newEnemy = {
-      ...enemy,
-      health: enemy.health - 1
-    };
   }
 
   const tileW = 500 / state.board.cols;
@@ -66,12 +55,17 @@ export function reducer(state,action){
     players:{
       ...state.players,
 
-      [targetId]: newEnemy,
-
+      [targetId]:{
+        ...state.players[targetId],
+         row:hit?initialPositions[targetId].row:enemy.row,
+         col:hit?initialPositions[targetId].col:enemy.col,
+         health:hit?enemy.health - 1:enemy.health,
+      },
       [id]:{
-        ...state.players[id],
-        row: initialPositions[id].row,
-        col: initialPositions[id].col
+        ...shooter,
+        row: hit?initialPositions[id].row:shooter.row,
+        col: hit?initialPositions[id].col:shooter.col,
+
       }
     },
     lastShot:{ startX,startY,endX,endY },
@@ -79,6 +73,12 @@ export function reducer(state,action){
     status: hit ? `player ${id} hit ${targetId}` : `player ${id} missed`
   }
 }
+case "CLEAR_SHOT":{
+  return {
+    ...state,
+    lastShot:null
+    }
+  }
     default: return state;  
     }
 }

@@ -160,10 +160,9 @@ function render(){
         ctx.lineTo(state.lastShot.endX, state.lastShot.endY);
         ctx.stroke();
 
-        // Optional: Remove the laser after 100ms so it flashes
         setTimeout(() => {
-            state.lastShot = null;
-            // No need to call render again unless you want it to disappear immediately
+            
+            dispatch({ type: "CLEAR_SHOT" }, render);
         }, 100);
     }
 
