@@ -84,12 +84,8 @@ function init(){
     tileWidth=boardwidth/getState().board.cols;
     tileHeight=boardHeight/getState().board.rows;
     board=new Board(boardHeight,boardwidth,x,y);
-
     inputs()
     render();
-    console.log(ctx);
-
-
 }
 
 function inputs(){
@@ -160,9 +156,8 @@ function render(){
         ctx.stroke();
 
         setTimeout(() => {
-            
             dispatch({ type: "CLEAR_SHOT" }, render);
-        }, 100);
+        }, 200);
     }
     if (state.status.includes("Game Over")) {
         ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Semi-transparent black
