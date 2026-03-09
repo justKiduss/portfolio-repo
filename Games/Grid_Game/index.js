@@ -93,8 +93,10 @@ function init(){
 }
 
 function inputs(){
-            let turn=getState().turn;
             canvas.addEventListener("click",(e)=>{
+            const state = getState()
+            let turn = state.turn
+            const player = state.players[turn]  
             const rect=canvas.getBoundingClientRect();
             const mouseX=e.clientX-rect.left;
             const mouseY=e.clientY-rect.top;
@@ -104,9 +106,6 @@ function inputs(){
             ){
                 const col = Math.min(getState().board.cols - 1,Math.floor((mouseX - x) / tileWidth));
                 const row = Math.min(getState().board.rows - 1,Math.floor((mouseY - y) / tileHeight));
-
-                const player=getState().players[turn];
-                console.log(player)
                 const rowDiff=Math.abs(row - player.row);
                 const colDiff=Math.abs(col - player.col);
                 if(rowDiff + colDiff !== 1) return; 
@@ -120,7 +119,7 @@ function inputs(){
         })
         addEventListener("keydown",(e)=>{
             const currentTurn=getState().turn;
-            const player=getState().players[turn];
+            const player=getState().players[currentTurn];
             let direction={row:0,col:0};
 
             switch(e.key){
@@ -165,7 +164,15 @@ function render(){
             dispatch({ type: "CLEAR_SHOT" }, render);
         }, 100);
     }
-
+    if (state.status.includes("Game Over")) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Semi-transparent black
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = "white";
+        ctx.font = "40px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(state.status, canvas.width / 2, canvas.height / 2);
+    }
     h3.textContent=state.status;
 
 }

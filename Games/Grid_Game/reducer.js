@@ -18,6 +18,7 @@ export function reducer(state,action){
                     },
 
                 },
+                turn:id==="p1"?'p2':"p1",
                 status:`player ${id} is playing`
             }
     }
@@ -28,7 +29,6 @@ export function reducer(state,action){
   const enemy = state.players[targetId];
   const shooter=state.players[id];
   let hit = false;
-
   if (dir.row !== 0 && col === enemy.col) {
     if ((dir.row === -1 && enemy.row < row) || (dir.row === 1 && enemy.row > row)) {
       hit = true;
@@ -40,6 +40,7 @@ export function reducer(state,action){
       hit = true;
     }
   }
+  const newHealth = hit ? enemy.health - 1 : enemy.health
 
   const tileW = 500 / state.board.cols;
   const tileH = 500 / state.board.rows;
@@ -50,16 +51,33 @@ export function reducer(state,action){
   const endX = startX + dir.col * 500;
   const endY = startY + dir.row * 500;
 
+  if(newHealth<=0){
+        return {
+        ...state,
+        players:{
+            ...state.players,
+            [targetId]:{
+                ...enemy,
+                row: initialPositions[targetId].row,
+                col: initialPositions[targetId].col,
+                health:0
+            }
+        },
+        status:`Game Over. ${id} wins`,
+        turn:null,
+        lastShot:{ startX,startY,endX,endY }
+    }
+  }
   return {
     ...state,
     players:{
       ...state.players,
 
       [targetId]:{
-        ...state.players[targetId],
+         ...enemy,
          row:hit?initialPositions[targetId].row:enemy.row,
          col:hit?initialPositions[targetId].col:enemy.col,
-         health:hit?enemy.health - 1:enemy.health,
+         health:newHealth
       },
       [id]:{
         ...shooter,
@@ -76,6 +94,7 @@ export function reducer(state,action){
 case "CLEAR_SHOT":{
   return {
     ...state,
+
     lastShot:null
     }
   }
