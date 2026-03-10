@@ -9,6 +9,8 @@ export const state = {
     tiles: {
         "0-0": { row:0, col:0, terrain:"plain" },
         "0-1": { row:0, col:1, terrain:"forest" },
+        "2-4":{  row:2, col:4, terrain:"river"},
+        "6-5":{  row:6, col:5, terrain:"mountain"}
     }
   },
   units: {

@@ -10,16 +10,28 @@ const unitOne=new Image();
 unitOne.src="./asset/player1.jpg";
 const unitTwo=new Image();
 unitTwo.src="./asset/player2.jpg";
+const terrainPlain=new Image();
+terrainPlain.src="./asset/plain.png";
+const terrainMountain=new Image();
+terrainMountain.src="./asset/mountain.png";
+const terrainRiver=new Image();
+terrainRiver.src="./asset/river.png";
+const terrainForest=new Image();
+terrainForest.src="./asset/forest.png";
 
 let loaded=0;
 function startGame(){
     loaded++;
-    if(loaded>=2){
+    if(loaded>=6){
         render();
     }
 }
 unitOne.onload=startGame;
 unitTwo.onload=startGame;
+terrainForest.onload=startGame;
+terrainMountain.onload=startGame;
+terrainPlain.onload=startGame;
+terrainRiver.onload=startGame;
 
 class Game{
     constructor(boardHeight,boardWidth,x,y,tileWidth,tileHeight){
@@ -39,13 +51,14 @@ class Game{
         Grid(ctx,state,this.x,this.y,this.tileWidth,this.tileHeight);
     }
     drawUnits(ctx,state){
-        Units(ctx,state,this.x,this.y,this.tileWidth,this.tileHeight,unitOne,unitTwo);
+        Units(ctx,state,this.x,this.y,this.tileWidth,this.tileHeight,
+            unitOne,unitTwo,terrainForest,terrainMountain,terrainPlain,terrainRiver);
     }
 }
 const boardHeight=600;
 const boardWidth=600;
 const x=canvas.width/2 - boardWidth/2;
-const y=canvas.height/2 -boardHeight/2;
+const y=canvas.height/2 - boardHeight/2;
 const tileWidth=boardWidth/state.grid.cols;
 const tileHeight=boardHeight/state.grid.rows;
 const game=new Game(boardHeight,boardWidth,x,y,tileWidth,tileHeight);
@@ -55,6 +68,3 @@ function render(){
     game.drawGrid(ctx,state);
     game.drawUnits(ctx,state);
 }
-
-console.log(ctx);
-console.log(state);
