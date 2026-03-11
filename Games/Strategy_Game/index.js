@@ -1,6 +1,7 @@
 import { Grid } from "./Grid.js"
+import { inputs } from "./inputs.js";
 import { state } from "./state.js";
-import { Units,Terrains } from "./Units.js";
+import { Units,Terrains} from "./Units.js";
 const canvas=document.querySelector("canvas");
 const ctx=canvas.getContext("2d");
 canvas.width=600;
@@ -23,7 +24,9 @@ let loaded=0;
 function startGame(){
     loaded++;
     if(loaded>=6){
+        inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth);
         render();
+
     }
 }
 unitOne.onload=startGame;
@@ -64,6 +67,11 @@ class Game{
                 terrainForest,terrainMountain,terrainPlain,terrainRiver);
         }
     }
+    drawHighlightedTiles(){
+        for(let tile in state.ui.highlightedTiles){
+            highLight(ctx,state,tile);
+        }
+    }
 }
 const boardHeight=600;
 const boardWidth=600;
@@ -79,3 +87,4 @@ function render(){
     game.drawUnits(ctx,state);
     game.drawTerrains(ctx,state);
 }
+
