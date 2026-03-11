@@ -1,6 +1,6 @@
 import { Grid } from "./Grid.js"
 import { state } from "./state.js";
-import { Units } from "./Units.js";
+import { Units,Terrains } from "./Units.js";
 const canvas=document.querySelector("canvas");
 const ctx=canvas.getContext("2d");
 canvas.width=600;
@@ -51,8 +51,18 @@ class Game{
         Grid(ctx,state,this.x,this.y,this.tileWidth,this.tileHeight);
     }
     drawUnits(ctx,state){
-        Units(ctx,state,this.x,this.y,this.tileWidth,this.tileHeight,
-            unitOne,unitTwo,terrainForest,terrainMountain,terrainPlain,terrainRiver);
+        for(let unitId in state.units){
+            let unit=state.units[unitId];
+            Units(ctx,unit,this.x,this.y,this.tileWidth,this.tileHeight,
+                unitOne,unitTwo);
+        }
+    }
+    drawTerrains(ctx,state){
+        for(let terrainId in state.tiles){
+            let tile=state.tiles[terrainId];
+            Terrains(ctx,tile,this.x,this.y,this.tileWidth,this.tileHeight,
+                terrainForest,terrainMountain,terrainPlain,terrainRiver);
+        }
     }
 }
 const boardHeight=600;
@@ -67,4 +77,5 @@ function render(){
     game.drawBoard(ctx);
     game.drawGrid(ctx,state);
     game.drawUnits(ctx,state);
+    game.drawTerrains(ctx,state);
 }

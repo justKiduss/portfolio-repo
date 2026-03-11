@@ -4,14 +4,11 @@ export const state = {
     rows: 10,
     cols: 10
   },
-
   tiles: {
-    tiles: {
-        "0-0": { row:0, col:0, terrain:"plain" },
-        "0-1": { row:0, col:1, terrain:"forest" },
-        "2-4":{  row:2, col:4, terrain:"river"},
-        "6-5":{  row:6, col:5, terrain:"mountain"}
-    }
+      "0-0": { row:0, col:0, terrain:"plain" },
+      "0-1": { row:0, col:1, terrain:"forest" },
+      "4-2":{  row:4, col:2, terrain:"river"},
+      "5-6":{  row:5, col:6, terrain:"mountain"}
   },
   units: {
     unit1: {
