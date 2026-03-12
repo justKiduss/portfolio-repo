@@ -1,4 +1,4 @@
-export const state = {
+export let state = {
 
   grid: {
     rows: 10,
@@ -50,6 +50,6 @@ export function getState(){
   return state;
 }
 
-export function setState(){
-
+export function setState(newState){
+  state=newState;
 }

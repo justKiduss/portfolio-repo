@@ -11,10 +11,6 @@ const Matrix=[
     [1,0,1,0,1,0,1,0,1,0],
 ]
 export function Grid(ctx,state,x,y,tileWidth,tileHeight){
-    // for(let i=0;i<state.tiles.length;i++){
-    //     console.log(state.tiles[i]);
-    // }
-    console.log(state.tiles);
     for(let row=0;row<state.grid.rows;row++){
         for(let col=0;col<state.grid.cols;col++){
             const gridX= x+(tileWidth*col);

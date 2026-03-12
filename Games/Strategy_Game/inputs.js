@@ -1,13 +1,9 @@
-import { dispatch } from "../Grid_Game/dispatch.js";
+import { dispatch } from "./dispatch.js";
 import { getState } from "./state.js";
 
-    const state=getState();
-    const unit=state.units;
-export function inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth){
+export function inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,render){
     // MOVEMENT
-
     canvas.addEventListener("click",(e)=>{
-
         const rect=canvas.getBoundingClientRect();
         const mouseX=e.clientX - rect.left;
         const mouseY=e.clientY - rect.top;
@@ -15,27 +11,57 @@ export function inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth){
                 mouseX >= x && mouseX <= x + boardWidth &&
                 mouseY >= y && mouseY <= y + boardHeight
             ){
-                const col=Math.min(state.grid.cols-1,Math.floor((mouseX-x)/tileWidth));
-                const row=Math.min(state.grid.rows-1,Math.floor((mouseY-y)/tileHeight));
-                const rowDiff=Math.abs(unit.unit1.row-row);
-                const colDiff=Math.abs(unit.unit1.col-col);
-                if(rowDiff || colDiff === 0){
-                    drawHighlightedTiles(row,col);
-                }
-                move(row,col);
+                const col=Math.min(getState().grid.cols-1,Math.floor((mouseX-x)/tileWidth));
+                const row=Math.min(getState().grid.rows-1,Math.floor((mouseY-y)/tileHeight));
+
+                    const state = getState();
+                    const units = state.units;
+                    let clickedUnitId = null;
+
+                    // 1. Find if a unit exists at the clicked coordinate
+                    for (let id in units) {
+                        if (units[id].row === row && units[id].col === col) {
+                            clickedUnitId = id;
+                            break;
+                        }
+                    }
+
+                    // 2. DECISION LOGIC: Are we Selecting or Moving?
+                    if (clickedUnitId) {
+                        // ACTION: SELECTING A UNIT
+                        const clickedUnit = units[clickedUnitId];
+                        
+                        if (clickedUnit.owner === state.turn.currentPlayer) {
+                            dispatch({ type: "SELECTION", payload: clickedUnitId }, render);
+                            drawHighlightedTiles(row, col, render,getState);
+                        } else {
+                            console.log("Not your unit!");
+                        }
+                        } else if (state.selection.unitId) {
+                            // ACTION: MOVING THE ALREADY SELECTED UNIT
+                            const selectedUnit = units[state.selection.unitId];
+                            const rowDiff = Math.abs(selectedUnit.row - row);
+                            const colDiff = Math.abs(selectedUnit.col - col);
+
+                            // Only move if it's 1 tile away (or use movement range logic)
+                            if (rowDiff + colDiff === 1) {
+                                move(row, col,rowDiff,colDiff,render);
+                            }
+                        }  
             }
     })
 
 }
 
-function move(row,col){
+function move(row,col,rowDiff,colDiff,render){
     if(rowDiff+colDiff !== 1) return;
-
-    const currentPlayer=state.turn.currentPlayer;
-    // state.turn.currentPlayer pass to reducer
-
+    dispatch({
+        type:"MOVEMENT",
+        payload:{row,col}
+    },render)
 }
-function drawHighlightedTiles(row,col){
+
+function drawHighlightedTiles(row,col,render,getState){
     const direction =[
         {r:-1,c:0},
         {r:1,c:0},
@@ -47,14 +73,15 @@ function drawHighlightedTiles(row,col){
     direction.forEach(dir=>{
     const targetRow=row+dir.r;
     const targetCol=col+dir.c;
-        if (targetRow >= 0 && targetRow < state.grid.rows &&
-            targetCol >= 0 && targetCol < state.grid.cols) {
+        if (targetRow >= 0 && targetRow < getState().grid.rows &&
+            targetCol >= 0 && targetCol < getState().grid.cols) {
                 possibleTile.push(`${targetRow}-${targetCol}`)
             }
+    })
+    console.log(possibleTile);
             dispatch({
                 type:"POSSIBLETILES",
                 payload:possibleTile
-            })
-            console.log(possibleTile);
-    })
+            },render)
+            console.log(getState());
 }
