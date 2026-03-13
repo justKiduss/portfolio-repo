@@ -5,10 +5,11 @@ export let state = {
     cols: 10
   },
   tiles: {
-      "0-0": { row:0, col:0, terrain:"plain" },
-      "0-1": { row:0, col:1, terrain:"forest" },
-      "4-2":{  row:4, col:2, terrain:"river"},
-      "5-6":{  row:5, col:6, terrain:"mountain"}
+      '0-0': { row:0, col:0, terrain:"plain" },
+      '0-1': { row:0, col:1, terrain:"forest" },
+      '4-2':{  row:4, col:2, terrain:"river"},
+      '5-6':{  row:5, col:6, terrain:"mountain"},
+      '8-7':{ row:8,  col:7, terrain:"wall"}
   },
   units: {
     unit1: {
@@ -18,7 +19,9 @@ export let state = {
         col: 4,
         health: 10,
         attack: 3,
-        movement: 3
+        movement: 3,
+        remainingMovement:3,
+        defense:0
     },
 
     unit2: {
@@ -28,7 +31,9 @@ export let state = {
         col: 5,
         health: 10,
         attack: 4,
-        movement: 2
+        movement: 2,
+        remainingMovement:2,
+        defense:0
     }
     },
   turn: {

@@ -1,7 +1,24 @@
+// wall collision
+// occupied tile detection
+// movement points
+// terrain movement cost
+
+
+
+
+
+
 import { dispatch } from "./dispatch.js";
 import { getState } from "./state.js";
 
 export function inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,render){
+    //end turn
+
+    document.addEventListener("keydown",(e)=>{
+        if(e.key === "e"){
+            dispatch({type:"END_TURN"},render);
+        }
+    });
     // MOVEMENT
     canvas.addEventListener("click",(e)=>{
         const rect=canvas.getBoundingClientRect();
@@ -45,7 +62,7 @@ export function inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,re
 
                             // Only move if it's 1 tile away (or use movement range logic)
                             if (rowDiff + colDiff === 1) {
-                                move(row, col,rowDiff,colDiff,render);
+                                move(row, col,rowDiff,colDiff,render,state);
                             }
                         }  
             }
@@ -53,12 +70,28 @@ export function inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,re
 
 }
 
-function move(row,col,rowDiff,colDiff,render){
+function move(row,col,rowDiff,colDiff,render,state){
     if(rowDiff+colDiff !== 1) return;
+    const targetTileKey=`${row}-${col}`;
+    const targetTile=state.tiles[targetTileKey];
+
+    if(targetTile && targetTile.terrain === "wall"){
+        console.log("Movement Bloacked !!!it's a wall");
+        return
+    }
+
+    for(let id in state.units){
+        const unit=state.units[id];
+        if(unit.row===row && unit.col===col){
+            console.log("Movement Blocked!!! Occupied by another player");
+            return;
+        }
+    }
     dispatch({
         type:"MOVEMENT",
         payload:{row,col}
     },render)
+
 }
 
 function drawHighlightedTiles(row,col,render,getState){

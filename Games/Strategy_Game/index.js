@@ -20,11 +20,12 @@ const terrainRiver=new Image();
 terrainRiver.src="./asset/river.png";
 const terrainForest=new Image();
 terrainForest.src="./asset/forest.png";
-
+const terrainWall=new Image();
+terrainWall.src="./asset/wall.jpg"
 let loaded=0;
 function startGame(){
     loaded++;
-    if(loaded>=6){
+    if(loaded>=7){
         inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,render);
         render();
     }
@@ -35,6 +36,7 @@ terrainForest.onload=startGame;
 terrainMountain.onload=startGame;
 terrainPlain.onload=startGame;
 terrainRiver.onload=startGame;
+terrainWall.onload=startGame;
 
 class Game{
     constructor(boardHeight,boardWidth,x,y,tileWidth,tileHeight){
@@ -64,7 +66,7 @@ class Game{
         for(let terrainId in state.tiles){
             let tile=state.tiles[terrainId];
             Terrains(ctx,tile,this.x,this.y,this.tileWidth,this.tileHeight,
-                terrainForest,terrainMountain,terrainPlain,terrainRiver);
+                terrainForest,terrainMountain,terrainPlain,terrainRiver,terrainWall);
         }
     }
     drawHighlightedTiles(ctx,state){
