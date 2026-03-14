@@ -1,13 +1,3 @@
-// wall collision
-// occupied tile detection
-// movement points
-// terrain movement cost
-
-
-
-
-
-
 import { dispatch } from "./dispatch.js";
 import { getState } from "./state.js";
 
@@ -111,10 +101,10 @@ function drawHighlightedTiles(row,col,render,getState){
                 possibleTile.push(`${targetRow}-${targetCol}`)
             }
     })
-    console.log(possibleTile);
             dispatch({
                 type:"POSSIBLETILES",
                 payload:possibleTile
             },render)
-            console.log(getState());
 }
+
+

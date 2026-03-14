@@ -1,7 +1,7 @@
 import { Grid } from "./Grid.js"
 import { inputs } from "./inputs.js";
 import { getState } from "./state.js";
-import { Units,Terrains} from "./Units.js";
+import { Units} from "./Units.js";
 const canvas=document.querySelector("canvas");
 const ctx=canvas.getContext("2d");
 canvas.width=600;
@@ -9,35 +9,20 @@ canvas.height=600;
 
 
 const unitOne=new Image();
-unitOne.src="./asset/player1.jpg";
+unitOne.src="./asset/unit.png";
 const unitTwo=new Image();
-unitTwo.src="./asset/player2.jpg";
-const terrainPlain=new Image();
-terrainPlain.src="./asset/plain.png";
-const terrainMountain=new Image();
-terrainMountain.src="./asset/mountain.png";
-const terrainRiver=new Image();
-terrainRiver.src="./asset/river.png";
-const terrainForest=new Image();
-terrainForest.src="./asset/forest.png";
-const terrainWall=new Image();
-terrainWall.src="./asset/wall.jpg"
+unitTwo.src="./asset/unit.png";
+
 let loaded=0;
-function startGame(){
+export function startGame(){
     loaded++;
-    if(loaded>=7){
+    if(loaded>=6 ){
         inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,render);
         render();
     }
 }
 unitOne.onload=startGame;
 unitTwo.onload=startGame;
-terrainForest.onload=startGame;
-terrainMountain.onload=startGame;
-terrainPlain.onload=startGame;
-terrainRiver.onload=startGame;
-terrainWall.onload=startGame;
-
 class Game{
     constructor(boardHeight,boardWidth,x,y,tileWidth,tileHeight){
         this.boardHeight=boardHeight;
@@ -62,20 +47,13 @@ class Game{
                 unitOne,unitTwo);
         }
     }
-    drawTerrains(ctx,state){
-        for(let terrainId in state.tiles){
-            let tile=state.tiles[terrainId];
-            Terrains(ctx,tile,this.x,this.y,this.tileWidth,this.tileHeight,
-                terrainForest,terrainMountain,terrainPlain,terrainRiver,terrainWall);
-        }
-    }
     drawHighlightedTiles(ctx,state){
         state.ui.highlightedTiles.forEach(tileKey=>{
             const [r, c] = tileKey.split("-").map(Number);
             const hX = this.x + (c * this.tileWidth);
             const hY = this.y + (r * this.tileHeight);
 
-            ctx.fillStyle = "rgba(0, 255, 0, 0.4)"; // Semi-transparent green
+            ctx.fillStyle = "#ffffff33";
             ctx.fillRect(hX, hY, this.tileWidth, this.tileHeight);
         })
     }
@@ -93,8 +71,6 @@ function render(){
     game.drawBoard(ctx);
     game.drawGrid(ctx,state);
     game.drawUnits(ctx,state);
-    game.drawTerrains(ctx,state);
     game.drawHighlightedTiles(ctx,state);
 }
-
 

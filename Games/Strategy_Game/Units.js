@@ -6,30 +6,16 @@ export function Units(ctx,unit,x,y,tileWidth,tileHeight,unitOne,unitTwo){
     ctx.drawImage(img,imgX,imgy,tileWidth,tileHeight);
 
 }
+export const Stat=(getState)=>{
+        const state=getState();
+        const status=state.units[state.selection.unitId];
+        if(!status) return;
+        const ul=document.getElementById("unit-stat");
+        ul.innerHTML="";
 
-
-export function Terrains(ctx,tile,x,y,tileWidth,tileHeight,terrainForest,
-                terrainMountain,terrainPlain,terrainRiver,terrainWall){
-    let img;
-    switch(tile.terrain){
-        case "forest":
-            img=terrainForest;
-            break;
-        case "plain":
-            img=terrainPlain;
-            break;  
-        case "mountain":
-            img=terrainMountain;
-            break;
-        case "river":
-            img=terrainRiver; 
-            break;
-        case "wall":
-            img=terrainWall;
-            break;
-    }
-    const imgX=x+(tileWidth*tile.col);
-    const imgy=y+(tileHeight*tile.row);
-    ctx.drawImage(img,imgX,imgy,tileWidth,tileHeight/2);
-
+        Object.entries(status).forEach(([key,value])=>{
+                const li=document.createElement("li");
+                li.textContent=`${key.toUpperCase()}: ${value}`;
+                ul.appendChild(li);
+        })
 }
