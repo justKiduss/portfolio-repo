@@ -1,12 +1,17 @@
 import { Grid } from "./Grid.js"
 import { inputs } from "./inputs.js";
-import { getState } from "./state.js";
+import { getState, state } from "./state.js";
 import { Units} from "./Units.js";
 const canvas=document.querySelector("canvas");
 const ctx=canvas.getContext("2d");
 canvas.width=600;
 canvas.height=600;
 
+const explosion={
+    row:6,
+    col:5,
+    frame:0
+}
 
 const unitOne=new Image();
 unitOne.src="./asset/unit.png";
@@ -57,7 +62,46 @@ class Game{
             ctx.fillRect(hX, hY, this.tileWidth, this.tileHeight);
         })
     }
+    drawExplosion(ctx,state){
+        const explosion = state.ui.explosion
+        if(!explosion) return      
+        const x = game.x + explosion.col * game.tileWidth
+        const y = game.y + explosion.row * game.tileHeight 
+        ctx.fillStyle = "orange"
+        ctx.beginPath()
+        ctx.arc(
+        x + game.tileWidth/2,
+        y + game.tileHeight/2,
+        10 + explosion.frame*3,
+        0,
+        Math.PI*2
+        )
+        ctx.fill() 
+    }
+
+    drawFlash(ctx,state){
+
+        const flash = state.ui.flash
+        if(!flash) return
+
+        const x = this.x + flash.col * this.tileWidth
+        const y = this.y + flash.row * this.tileHeight
+
+        ctx.fillStyle="yellow"
+
+        ctx.beginPath()
+        ctx.arc(
+            x + this.tileWidth/2,
+            y + this.tileHeight/2,
+            6 + flash.frame*2,
+            0,
+            Math.PI*2
+        )
+
+        ctx.fill()
+    }
 }
+
 const boardHeight=600;
 const boardWidth=600;
 const x=canvas.width/2 - boardWidth/2;
@@ -72,5 +116,24 @@ function render(){
     game.drawGrid(ctx,state);
     game.drawUnits(ctx,state);
     game.drawHighlightedTiles(ctx,state);
+    
+    game.drawFlash(ctx,state);
+    game.drawExplosion(ctx,state);
+    const explosion = state.ui.explosion
+    const flash = state.ui.flash
+
+    if(flash){
+        flash.frame++
+        if(flash.frame > 3){
+            state.ui.flash = null
+        }
+    }
+    if(explosion){
+        explosion.frame++
+
+        if(explosion.frame > 6){
+            state.ui.explosion = null
+        }
+    }
 }
 

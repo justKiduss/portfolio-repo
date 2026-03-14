@@ -58,10 +58,11 @@ export let state = {
         row: 2,
         col: 4,
         health: 10,
-        attack: 3,
+        attack: 4,
         movement: 3,
         remainingMovement:3,
-        defense:0
+        defense:0,
+        range:3
     },
 
     unit2: {
@@ -73,7 +74,8 @@ export let state = {
         attack: 4,
         movement: 3,
         remainingMovement:3,
-        defense:0
+        defense:0,
+        range:3
     }
     },
   turn: {
@@ -91,7 +93,9 @@ export let state = {
   },
 
   ui: {
-    highlightedTiles: []
+    highlightedTiles: [],
+    explosion:null,
+    flash:null
   }
 
 }

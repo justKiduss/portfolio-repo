@@ -103,6 +103,61 @@ export function reducer(state=getState(),action){
                 }
             }
         }
+
+        case "ATTACK":{
+            const {row,col,enemy,dir,shooter}=action.payload;
+            const enemyUnit = state.units[enemy];
+            const shooterUnit = state.units[shooter];
+            let hit=false;
+
+            if(dir.row!==0 && col===enemyUnit.col){
+                if((dir.row===1 && enemyUnit.row<row) || (dir.row===-1 && enemyUnit.row>row)){
+                    hit=true;
+                }
+            }
+
+            if(dir.col!==0 && row==enemyUnit.row){
+                if((dir.col===1 && enemyUnit.col>col) || (dir.col===-1 && enemyUnit.col<col)){
+                    hit=true;
+                }
+            }
+            const newHealth=enemyUnit.health-shooterUnit.attack;
+            const updatedUnits = { ...state.units };
+                if (newHealth <= 0) {
+                    delete updatedUnits[enemy];
+                } else {
+                    updatedUnits[enemy] = { ...enemyUnit, health: newHealth };
+                }
+
+                 const nextPlayer =
+                    state.turn.currentPlayer === "player1"
+                    ? "player2"
+                    : "player1";
+            return{
+                ...state,
+                units:updatedUnits,
+                ui:{
+                    ...state.ui,
+
+                    flash:{
+                        row: shooterUnit.row,
+                        col: shooterUnit.col,
+                        frame:0
+                    },
+
+                    explosion:{
+                        row: enemyUnit.row,
+                        col: enemyUnit.col,
+                        frame:0
+                    }
+                },
+                selection:{unitId:null},
+                turn:{
+                    ...state.turn,
+                    currentPlayer:nextPlayer
+                }
+                }
+            }
     default:
             return state;
 }}

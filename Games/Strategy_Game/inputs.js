@@ -58,8 +58,6 @@ export function inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,re
             }
     })
 
-}
-
 function move(row,col,rowDiff,colDiff,render,state){
     if(rowDiff+colDiff !== 1) return;
     const targetTileKey=`${row}-${col}`;
@@ -85,7 +83,10 @@ function move(row,col,rowDiff,colDiff,render,state){
 }
 
     addEventListener("keydown",(e)=>{
+    const state=getState(); 
     const shooterId = state.selection.unitId; 
+    if(!shooterId) return;
+    const shooter=state.units[shooterId];
     let enemy = null;
     
     for (const unit of Object.values(state.units)) {
@@ -94,13 +95,10 @@ function move(row,col,rowDiff,colDiff,render,state){
             break;
         }
     }
-    const shooter=state.units.shooterId;
-    if(shooter.row===enemy.row || shooter.col===enemy.col){
-        console.log("injured");
-    }
+    if(!enemy) return;
+
     let direction={row:0,col:0};
     
-    // if()
     switch(e.key){
         case "ArrowUp": direction = { row: 1, col: 0 }; break;
         case "ArrowDown": direction = { row: -1, col: 0 }; break;
@@ -108,15 +106,21 @@ function move(row,col,rowDiff,colDiff,render,state){
         case "ArrowRight": direction = { row: 0, col: -1 }; break;
         default: return;
     }
-
+    const dist=Math.abs(enemy.row - shooter.row)+Math.abs(enemy.col-shooter.col);
+    if(dist < shooter.range){
     dispatch({
         type:"ATTACK",
         payload:{
             row:shooter.row,
             col:shooter.col,
-            dir:direction
+            enemy:enemy.id,
+            dir:direction,
+            shooter:shooterId,
         }
-    })
+    },render)
+        }else{
+            console.log("out of range");
+        }
 })
 
 function drawHighlightedTiles(row,col,render,getState){
@@ -140,6 +144,8 @@ function drawHighlightedTiles(row,col,render,getState){
                 type:"POSSIBLETILES",
                 payload:possibleTile
             },render)
+}
+
 }
 
 
