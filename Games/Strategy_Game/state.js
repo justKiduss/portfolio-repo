@@ -85,6 +85,11 @@ export let state = {
     unitId: null
   },
 
+  unitLocations: {
+        '2-4': 'unit1',
+        '6-5': 'unit2'
+  },
+
   ui: {
     highlightedTiles: []
   }

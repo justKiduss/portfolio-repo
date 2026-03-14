@@ -48,7 +48,12 @@ export function reducer(state=getState(),action){
 
             const updatedMovement=unit.remainingMovement - cost;
             // const nextPlayer=state.turn.currentPlayer=== "player1"?"player2":"player1";
+            const newPosition=`${row}-${col}`;
+            const oldPosition = `${unit.row}-${unit.col}`;
 
+            const nextLocations = { ...state.unitLocations };
+            delete nextLocations[oldPosition]; // This removes the "ghost"
+            nextLocations[newPosition] = selectedId; // Add the new spot
             return{
                 ...state,
                 units:{
@@ -61,6 +66,7 @@ export function reducer(state=getState(),action){
                     }
                 },
                 selection:{unitId:null},
+                unitLocations:nextLocations,
                 ui:{...state.ui,highlightedTiles:[]}
             }
         }

@@ -84,6 +84,41 @@ function move(row,col,rowDiff,colDiff,render,state){
 
 }
 
+    addEventListener("keydown",(e)=>{
+    const shooterId = state.selection.unitId; 
+    let enemy = null;
+    
+    for (const unit of Object.values(state.units)) {
+        if (unit.id !== shooterId) {
+            enemy = unit; 
+            break;
+        }
+    }
+    const shooter=state.units.shooterId;
+    if(shooter.row===enemy.row || shooter.col===enemy.col){
+        console.log("injured");
+    }
+    let direction={row:0,col:0};
+    
+    // if()
+    switch(e.key){
+        case "ArrowUp": direction = { row: 1, col: 0 }; break;
+        case "ArrowDown": direction = { row: -1, col: 0 }; break;
+        case "ArrowLeft": direction = { row: 0, col: 1 }; break;
+        case "ArrowRight": direction = { row: 0, col: -1 }; break;
+        default: return;
+    }
+
+    dispatch({
+        type:"ATTACK",
+        payload:{
+            row:shooter.row,
+            col:shooter.col,
+            dir:direction
+        }
+    })
+})
+
 function drawHighlightedTiles(row,col,render,getState){
     const direction =[
         {r:-1,c:0},
