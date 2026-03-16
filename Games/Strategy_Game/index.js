@@ -21,7 +21,7 @@ unitTwo.src="./asset/unit.png";
 let loaded=0;
 export function startGame(){
     loaded++;
-    if(loaded>=6 ){
+    if(loaded>=2 ){
         inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,render);
         render();
     }
