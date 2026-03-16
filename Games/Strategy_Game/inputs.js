@@ -100,14 +100,14 @@ function move(row,col,rowDiff,colDiff,render,state){
     let direction={row:0,col:0};
     
     switch(e.key){
-        case "ArrowUp": direction = { row: 1, col: 0 }; break;
-        case "ArrowDown": direction = { row: -1, col: 0 }; break;
-        case "ArrowLeft": direction = { row: 0, col: 1 }; break;
-        case "ArrowRight": direction = { row: 0, col: -1 }; break;
+        case "ArrowUp": direction = { row: -1, col: 0 }; break;
+        case "ArrowDown": direction = { row: 1, col: 0 }; break;
+        case "ArrowLeft": direction = { row: 0, col: -1 }; break;
+        case "ArrowRight": direction = { row: 0, col: 1 }; break;
         default: return;
     }
     const dist=Math.abs(enemy.row - shooter.row)+Math.abs(enemy.col-shooter.col);
-    if(dist < shooter.range){
+    if(dist <= shooter.range){
     dispatch({
         type:"ATTACK",
         payload:{
@@ -145,7 +145,6 @@ function drawHighlightedTiles(row,col,render,getState){
                 payload:possibleTile
             },render)
 }
-
 }
 
 

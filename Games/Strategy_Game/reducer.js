@@ -39,11 +39,7 @@ export function reducer(state=getState(),action){
 
             const terrain=tile?.terrain || "plain";
             const cost=terrainCost[terrain];
-
-            // impassable terrain
             if(cost===Infinity) return state;
-
-            // not enough movement
             if(unit.remainingMovement < cost) return state;
 
             const updatedMovement=unit.remainingMovement - cost;
@@ -52,8 +48,28 @@ export function reducer(state=getState(),action){
             const oldPosition = `${unit.row}-${unit.col}`;
 
             const nextLocations = { ...state.unitLocations };
-            delete nextLocations[oldPosition]; // This removes the "ghost"
-            nextLocations[newPosition] = selectedId; // Add the new spot
+            delete nextLocations[oldPosition];
+            nextLocations[newPosition] = selectedId;
+
+            let defenseBonus=null;
+            let defenseTerrain=tile?.terrain || "plain";
+            switch(defenseTerrain){
+                case "forest":{
+                    defenseBonus=2;
+                    break;
+                }
+                case "mountain":{
+                    defenseBonus=4;
+                    break;
+                }
+                case "plain":{
+                    defenseBonus=0;
+                    break;
+                }
+                default:{
+                    defenseBonus=0;
+                }
+            }
             return{
                 ...state,
                 units:{
@@ -62,7 +78,8 @@ export function reducer(state=getState(),action){
                         ...state.units[selectedId],
                         row:row,
                         col:col,
-                        remainingMovement:updatedMovement
+                        remainingMovement:updatedMovement,
+                        defense:defenseBonus
                     }
                 },
                 selection:{unitId:null},
@@ -108,34 +125,42 @@ export function reducer(state=getState(),action){
             const {row,col,enemy,dir,shooter}=action.payload;
             const enemyUnit = state.units[enemy];
             const shooterUnit = state.units[shooter];
+
+            if (!enemyUnit || !shooterUnit) return state;
             let hit=false;
 
             if(dir.row!==0 && col===enemyUnit.col){
-                if((dir.row===1 && enemyUnit.row<row) || (dir.row===-1 && enemyUnit.row>row)){
+                if((dir.row===1 && enemyUnit.row>row) || (dir.row===-1 && enemyUnit.row<row)){
                     hit=true;
                 }
             }
 
-            if(dir.col!==0 && row==enemyUnit.row){
+            if(dir.col!==0 && row===enemyUnit.row){
                 if((dir.col===1 && enemyUnit.col>col) || (dir.col===-1 && enemyUnit.col<col)){
                     hit=true;
                 }
             }
-            const newHealth=enemyUnit.health-shooterUnit.attack;
+            if (!hit) return state;
+
+            const damage = Math.max(0, shooterUnit.attack - (enemyUnit.defense || 0));
+            const newHealth=enemyUnit.health-damage;
             const updatedUnits = { ...state.units };
+            const nextLocations = { ...state.unitLocations };
+
                 if (newHealth <= 0) {
                     delete updatedUnits[enemy];
+                    delete nextLocations[`${enemyUnit.row}-${enemyUnit.col}`];
                 } else {
                     updatedUnits[enemy] = { ...enemyUnit, health: newHealth };
                 }
-
-                 const nextPlayer =
-                    state.turn.currentPlayer === "player1"
-                    ? "player2"
-                    : "player1";
+            const nextPlayer =
+                state.turn.currentPlayer === "player1"
+                ? "player2"
+                : "player1";
             return{
                 ...state,
                 units:updatedUnits,
+                unitLocations:nextLocations,
                 ui:{
                     ...state.ui,
 
@@ -158,6 +183,8 @@ export function reducer(state=getState(),action){
                 }
                 }
             }
+
+
     default:
             return state;
 }}

@@ -1,7 +1,7 @@
 import { Grid } from "./Grid.js"
 import { inputs } from "./inputs.js";
 import { getState, state } from "./state.js";
-import { Units} from "./Units.js";
+import { getVisibleTiles, Units} from "./Units.js";
 const canvas=document.querySelector("canvas");
 const ctx=canvas.getContext("2d");
 canvas.width=600;
@@ -46,10 +46,14 @@ class Game{
         Grid(ctx,state,this.x,this.y,this.tileWidth,this.tileHeight);
     }
     drawUnits(ctx,state){
+        const visibleTiles = getVisibleTiles(state);
         for(let unitId in state.units){
             let unit=state.units[unitId];
-            Units(ctx,unit,this.x,this.y,this.tileWidth,this.tileHeight,
-                unitOne,unitTwo);
+            const tileKey = `${unit.row}-${unit.col}`;
+            if (unit.owner === state.turn.currentPlayer || visibleTiles.has(tileKey)) {
+                Units(ctx,unit,this.x,this.y,this.tileWidth,this.tileHeight,
+                    unitOne,unitTwo);
+            }
         }
     }
     drawHighlightedTiles(ctx,state){
@@ -87,7 +91,7 @@ class Game{
         const x = this.x + flash.col * this.tileWidth
         const y = this.y + flash.row * this.tileHeight
 
-        ctx.fillStyle="yellow"
+        ctx.fillStyle="black"
 
         ctx.beginPath()
         ctx.arc(
@@ -99,6 +103,24 @@ class Game{
         )
 
         ctx.fill()
+    }
+    drawFog(ctx, state) {
+        const visibleTiles = getVisibleTiles(state);
+
+        for (let r = 0; r < state.grid.rows; r++) {
+            for (let c = 0; c < state.grid.cols; c++) {
+                const tileKey = `${r}-${c}`;
+                
+                if (!visibleTiles.has(tileKey)) {
+                    const fX = this.x + (c * this.tileWidth);
+                    const fY = this.y + (r * this.tileHeight);
+
+                    // Draw a dark overlay on hidden tiles
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.8)"; 
+                    ctx.fillRect(fX, fY, this.tileWidth, this.tileHeight);
+                }
+            }
+        }
     }
 }
 
@@ -115,12 +137,13 @@ function render(){
     game.drawBoard(ctx);
     game.drawGrid(ctx,state);
     game.drawUnits(ctx,state);
+    game.drawFog(ctx,state);
     game.drawHighlightedTiles(ctx,state);
     
     game.drawFlash(ctx,state);
     game.drawExplosion(ctx,state);
-    const explosion = state.ui.explosion
-    const flash = state.ui.flash
+    const explosion = state.ui.explosion;
+    const flash = state.ui.flash;
 
     if(flash){
         flash.frame++
@@ -136,4 +159,6 @@ function render(){
         }
     }
 }
+
+
 

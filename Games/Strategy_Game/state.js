@@ -61,7 +61,7 @@ export let state = {
         attack: 4,
         movement: 3,
         remainingMovement:3,
-        defense:0,
+        defense:2,
         range:3
     },
 

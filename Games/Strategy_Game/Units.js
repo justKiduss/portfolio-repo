@@ -19,3 +19,24 @@ export const Stat=(getState)=>{
                 ul.appendChild(li);
         })
 }
+
+
+export function getVisibleTiles(state) {
+    const visible = new Set();
+    const currentPlayer = state.turn.currentPlayer;
+    const visionRange = 3; // You can also use unit.range or add unit.vision
+
+    Object.values(state.units).forEach(unit => {
+        if (unit.owner === currentPlayer) {
+            for (let r = unit.row - visionRange; r <= unit.row + visionRange; r++) {
+                for (let c = unit.col - visionRange; c <= unit.col + visionRange; c++) {
+                    const dist = Math.abs(r - unit.row) + Math.abs(c - unit.col);
+                    if (dist <= visionRange) {
+                        visible.add(`${r}-${c}`);
+                    }
+                }
+            }
+        }
+    });
+    return visible;
+}
