@@ -16,7 +16,7 @@ const explosion={
 const unitOne=new Image();
 unitOne.src="./asset/unit.png";
 const unitTwo=new Image();
-unitTwo.src="./asset/unit.png";
+unitTwo.src="./asset/aiUnit.png";
 
 let loaded=0;
 export function startGame(){
@@ -132,6 +132,9 @@ const tileWidth=boardWidth/getState().grid.cols;
 const tileHeight=boardHeight/getState().grid.rows;
 const game=new Game(boardHeight,boardWidth,x,y,tileWidth,tileHeight);
 
+//
+let isAiThinking = false;
+//
 function render(){
     const state=getState();
     game.drawBoard(ctx);
@@ -158,7 +161,24 @@ function render(){
             state.ui.explosion = null
         }
     }
+    if (state.turn.currentPlayer === "player2" && !isAiThinking) {
+        isAiThinking = true; 
+        
+        // Small delay so the player can process the turn change
+        setTimeout(() => {
+            import("./ai.js").then(m => {
+                m.ai(render);
+                isAiThinking = false;
+            });
+        }, 1000);
+    }
+
+    requestAnimationFrame(render);
 }
+
+
+
+
 
 
 

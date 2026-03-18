@@ -1,9 +1,14 @@
 export function Units(ctx,unit,x,y,tileWidth,tileHeight,unitOne,unitTwo){
     const imgX=x+(tileWidth*unit.col);
-    const imgy=y+(tileHeight*unit.row);
+    const imgY=y+(tileHeight*unit.row);
 
     const img=unit.owner==="player1"?unitOne:unitTwo;
-    ctx.drawImage(img,imgX,imgy,tileWidth,tileHeight);
+    // Add a colored glow or ring under the unit to show ownership
+    ctx.fillStyle = unit.owner === "player1" ? "rgba(0, 0, 255, 0.3)" : "rgba(255, 0, 0, 0.3)";
+    ctx.beginPath();
+    ctx.ellipse(imgX + tileWidth/2, imgY + tileHeight/2, tileWidth/3, tileHeight/4, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.drawImage(img,imgX,imgY,tileWidth,tileHeight);
 
 }
 export const Stat=(getState)=>{

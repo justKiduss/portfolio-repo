@@ -5,12 +5,17 @@ export function inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,re
     //end turn
 
     document.addEventListener("keydown",(e)=>{
+        const state = getState();
+        if (state.turn.currentPlayer === "player2") return;
         if(e.key === "e"){
             dispatch({type:"END_TURN"},render);
         }
     });
     // MOVEMENT
     canvas.addEventListener("click",(e)=>{
+        const state = getState();
+        // BLOCK HUMAN INPUT IF IT'S PLAYER 2'S TURN
+        if (state.turn.currentPlayer === "player2") return;
         const rect=canvas.getBoundingClientRect();
         const mouseX=e.clientX - rect.left;
         const mouseY=e.clientY - rect.top;
