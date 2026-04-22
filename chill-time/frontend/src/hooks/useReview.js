@@ -82,5 +82,10 @@ export default function useReview(state,dispatch){
             })
         }
     }
-    return {create,update,remove,hydrate}
+    return useMemo(() => ({
+        create,
+        update,
+        remove,
+        hydrate
+    }), []);
 }
