@@ -1,10 +1,11 @@
-const API=`http://localhost:5000/api`;
+// http://localhost:5000/api
+const API=`https://chill-time-three.vercel.app/api`;
 function getToken() {
   return localStorage.getItem("token");
 }
 export async function createReview(movie_id,movie_title,rating,review){
     try{
-        const response=await fetch(`${API}/reviews/`,{
+        const response=await fetch(`${API}/reviews`,{
             method:'POST',
             headers:{'Content-Type':'application/json', Authorization: `Bearer ${getToken()}`},
             body:JSON.stringify({movie_id,movie_title,rating,review})

@@ -15,12 +15,17 @@ import { requestLogger } from "./middleware/requestLogger.js";
 
 dotenv.config();
 
+// https://chill-time-three.vercel.app
 
 const port=process.env.PORT || 3000;
 const app=express();
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: "https://chill-time-three.vercel.app", 
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 app.use(requestLogger);
 const limiter =rateLimit({
@@ -55,3 +60,5 @@ app.use(errorHandler);
 app.listen(port,()=>{
  console.log(`http://localhost:${port} connected successfull`);
 })
+
+export default app;

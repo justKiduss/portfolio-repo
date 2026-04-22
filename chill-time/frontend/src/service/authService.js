@@ -1,4 +1,6 @@
-const API="http://localhost:5000/api/user";
+// const API="http://localhost:5000/api/user";
+const API=`https://chill-time-three.vercel.app/api/user`;
+
 export async function Login(email,password){
     const res=await fetch(`${API}/login`,{
         method:"POST",
