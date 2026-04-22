@@ -1,21 +1,18 @@
-
 import { useState,useReducer,useEffect } from "react"
 import ReviewReducer from "../reducer/reviewReducer";
 import useReview from "../hooks/useReview";
-import { getAllReviews } from "../service/reviewService";
-import Warning from "./Warning";
+// import { getAllReviews } from "../service/reviewService";
+// import Warning from "./Warning";
 export default function Comment({ movieId, moviename }) {
-    // 1. Initialize action IDs to null to keep 'Delete' button visible
-    const [reviewId, setReviewId] = useState(null); 
+    // const [reviewId, setReviewId] = useState(null); 
     const [reviewText, setReviewText] = useState("");
     const [editId, setEditId] = useState(null);
     const [editText, setEditText] = useState("");
-    const [removeId, setRemoveId] = useState(null);
+    // const [removeId, setRemoveId] = useState(null);
     const [rating, setRating] = useState(0);
-
     const [state, dispatch] = useReducer(ReviewReducer, { byIds: {}, allIds: [] });
     const reviews = useReview(state, dispatch);
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
     useEffect(()=>{
         reviews.hydrate(movieId);
