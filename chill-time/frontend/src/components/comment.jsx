@@ -14,9 +14,13 @@ export default function Comment({ movieId, moviename }) {
     const reviews = useReview(state, dispatch);
     // const [loading, setLoading] = useState(false);
 
-    useEffect(()=>{
+    // useEffect(()=>{
+    //     reviews.hydrate(movieId);
+    // },[movieId])
+
+    useEffect(() => {
         reviews.hydrate(movieId);
-    },[movieId])
+    }, [movieId, reviews]);
 
     // CREATE
     async function handleSubmit(e) {
