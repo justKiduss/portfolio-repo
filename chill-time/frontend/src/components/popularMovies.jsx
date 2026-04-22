@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { popularMovies, trendingMovies } from "../service/movieService"
+import { popularMovies } from "../service/movieService"
 export default function PopularMovies(){
     const [movies,setMovies]=useState([]);
     const [loading,setLoading]=useState(true);

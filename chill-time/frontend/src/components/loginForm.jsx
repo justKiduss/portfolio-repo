@@ -32,7 +32,7 @@ export function LoginForm() {
                         <input type="password" onChange={(e)=>setPassword(e.target.value)} value={password} className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                     </div>
                     <div className="text-right mb-4">
-                        <a href="#" className="text-sm text-blue-500 hover:underline">Forgot your Password</a>
+                        <a href="/forgot-password" className="text-sm text-blue-500 hover:underline">Forgot your Password</a>
                     </div>
                     <button className="w-full bg-black text-white py-2 rounded mb-2" type="submit">Login</button>
                 </form>

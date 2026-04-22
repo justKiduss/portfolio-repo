@@ -70,7 +70,7 @@ export default function useReview(state,dispatch){
             payload:{id}
         })
         try{
-            const payload=await deleteReviews(id);
+            await deleteReviews(id);
                 dispatch({
                     type:"DELETE_REVIEW_SUCCESS",
                     payload:id

@@ -20,7 +20,7 @@ export default function StreamingTv({movie,movieId,selectedEpisode,selectedNum})
         {/* Video Section */}
         <div className="w-full aspect-video bg-black rounded-lg overflow-hidden shadow">
             {src?
-                (<iframe src={src} className="w-full h-full" allowFullScreen/> ):
+                (<iframe src={src} title="TV Player" className="w-full h-full" allowFullScreen/> ):
                ( <p className="text-white p-4">Select season and episode</p> )    
             }
         </div>

@@ -6,7 +6,7 @@ export default function Streaming({movie,movieId}){
 
         {/* Video Section */}
         <div className="w-full aspect-video bg-black rounded-lg overflow-hidden shadow">
-                  <iframe src={src} className="w-full h-full" allowFullScreen/>
+                  <iframe src={src} title="Movie Player" className="w-full h-full" allowFullScreen/>
         </div>
         {/* Movie Info */}
 
