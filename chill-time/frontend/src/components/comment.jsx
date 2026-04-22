@@ -16,7 +16,7 @@ export default function Comment({ movieId, moviename }) {
 
     useEffect(()=>{
         reviews.hydrate(movieId);
-    },[movieId,reviews])
+    },[movieId])
 
     // CREATE
     async function handleSubmit(e) {
