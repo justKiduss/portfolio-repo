@@ -44,6 +44,11 @@ const authLimiter=rateLimit({
     standardHeaders:true,
     legacyHeaders:false
 })
+
+app.get("/", (req, res) => {
+    res.send("API running");
+});
+
 // this apply for login route only
 app.use("/api/user/login",authLimiter);
 
@@ -52,14 +57,11 @@ app.use("/api",limiter);
 app.use("/api/reviews",reviewRoutes);
 
 app.use('/api/user',router);
+
 // middleware
 app.use(notFound);
 // error handling
 app.use(errorHandler);
-
-app.get("/", (req, res) => {
-    res.send("API running");
-});
 
 app.listen(port,()=>{
  console.log(`http://localhost:${port} connected successfull`);
