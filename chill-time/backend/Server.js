@@ -57,6 +57,10 @@ app.use(notFound);
 // error handling
 app.use(errorHandler);
 
+app.get("/", (req, res) => {
+    res.send("API running");
+});
+
 app.listen(port,()=>{
  console.log(`http://localhost:${port} connected successfull`);
 })
