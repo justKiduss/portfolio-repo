@@ -15,6 +15,8 @@ export default function Comment({ movieId, moviename }) {
     // const [loading, setLoading] = useState(false);
 
     useEffect(()=>{
+        if (state.loading) return;
+        if (state.allIds.length > 0) return;
         reviews.hydrate(movieId);
     },[movieId])
 
