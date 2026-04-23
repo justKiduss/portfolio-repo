@@ -37,7 +37,7 @@ export function LoginForm() {
                     <button className="w-full bg-black text-white py-2 rounded mb-2" type="submit">Login</button>
                 </form>
                 <button className="w-full border py-2 rounded mb-4">Login With Google</button>
-                <p className="text-sm text-center">Don't have an account <a href="/sign-up" className="text-blue-500 hover:underline">Sign up</a></p>
+                <p className="text-sm text-center">Don't have an account <a href="/signup" className="text-blue-500 hover:underline">Sign up</a></p>
             </div>
         </div>
     </>

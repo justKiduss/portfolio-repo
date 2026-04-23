@@ -22,7 +22,7 @@ const app=express();
 
 app.use(helmet());
 app.use(cors({
-  origin: "https://chill-time-three.vercel.app", 
+  origin: "https://movix-psi-seven.vercel.app/", 
   methods: ["GET", "POST", "PATCH", "DELETE"],
   credentials: true
 }));
