@@ -3,6 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
 import Sidebar from "./sidebarMenu";
 import { CircleUser, Menu } from "lucide-react";
+import ThemeToggle from "./themeToggle";
 
 export default function Layout() {
   const [query, setQuery] = useState("");
@@ -162,6 +163,7 @@ export default function Layout() {
             )}
           </div>
         </div>
+        <ThemeToggle/>
         <Link to="/login">
           <CircleUser size={24}/>
         </Link>
