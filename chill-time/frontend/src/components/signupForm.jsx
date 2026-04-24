@@ -8,13 +8,14 @@ const [password,setPassword]=useState("");
 export default function SignUpForm(){
     const {signup}=useAuth();
 
-    function handleSubmit(e){
+    async function handleSubmit(e){
         e.preventDefault();
+        
         if(!username||!email||!password){
             throw new Error("Field are neccessary");
         }
         await signup(username,email,password);
-        
+
         setUsername("");
         setEmail("");
         setPassword("");
