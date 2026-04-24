@@ -1,3 +1,15 @@
+@layer base {
+  html {
+    /* This makes the 'over-scroll' area match your theme */
+    @apply bg-gray-100;
+  }
+  
+  html.dark {
+    @apply bg-black;
+    /* This tells the browser to use a dark scrollbar on Windows/Chrome */
+    color-scheme: dark;
+  }
+}
 .App {
   text-align: center;
 }
