@@ -4,6 +4,7 @@ import useMovies from "../hooks/useMovies";
 import Sidebar from "./sidebarMenu";
 import { CircleUser, Menu } from "lucide-react";
 import ThemeToggle from "./themeToggle";
+import useDebounce from "../hooks/useDebounce";
 
 export default function Layout() {
   const [query, setQuery] = useState("");
@@ -22,7 +23,8 @@ export default function Layout() {
   }
 
   const history = getHistory();
-  const movies = useMovies(query);
+  const debounceQuery=useDebounce(query,500);
+  const movies = useMovies(debounceQuery);
 
   function handleSubmit(e) {
     e.preventDefault();
