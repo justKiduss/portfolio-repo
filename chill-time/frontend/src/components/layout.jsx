@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, Link } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
 import Sidebar from "./sidebarMenu";
-import { CircleUser, Menu, User } from "lucide-react";
+import { CircleUser, Menu } from "lucide-react";
 
 export default function Layout() {
   const [query, setQuery] = useState("");
