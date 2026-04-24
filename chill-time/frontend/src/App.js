@@ -52,13 +52,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return 
-      (
+  return (
         <div>
           <RouterProvider router={router} />
           <Analytics/>
         </div>
-      )
+      );
 }
 
 export default App;
