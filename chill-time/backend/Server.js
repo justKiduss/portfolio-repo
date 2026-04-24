@@ -12,6 +12,7 @@ import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 import router from "./routes/userRoutes.js";
 import { requestLogger } from "./middleware/requestLogger.js";
+import passport from 'passport';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ dotenv.config();
 const port=process.env.PORT || 3000;
 const app=express();
 
+app.use(passport.initialize());
 app.use(helmet());
 app.use(cors({
   origin: "https://movix-psi-seven.vercel.app", 
