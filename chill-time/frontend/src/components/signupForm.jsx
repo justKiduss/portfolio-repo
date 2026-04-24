@@ -1,16 +1,15 @@
 import { useState } from "react";
 import useAuth from "../hooks/useAuth"
 
-const [username,setUsername]=useState("");
-const [email,setEmail]=useState("");
-const [password,setPassword]=useState("");
-
 export default function SignUpForm(){
+    const [username,setUsername]=useState("");
+    const [email,setEmail]=useState("");
+    const [password,setPassword]=useState("");
     const {signup}=useAuth();
 
     async function handleSubmit(e){
         e.preventDefault();
-        
+
         if(!username||!email||!password){
             throw new Error("Field are neccessary");
         }
