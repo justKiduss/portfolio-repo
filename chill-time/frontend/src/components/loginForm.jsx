@@ -15,6 +15,10 @@ export function LoginForm() {
         setPassword('');
     }
     
+    const handleGoogleLogin = () => {
+        // This sends the user directly to your backend route
+        window.location.href = "https://movix-twcp.onrender.com/api/user/google";
+    };
  return(
     <>
         <div className="h-screen flex items-center justify-center bg-gray-100 dark:bg-black transition-colors">
@@ -36,7 +40,7 @@ export function LoginForm() {
                     </div>
                     <button className="w-full bg-black text-white py-2 rounded mb-2 dark:bg-white dark:text-black font-semibold hover:opacity-90 transition-opacity" type="submit">Login</button>
                 </form>
-                <button className="w-full border py-2 rounded mb-4 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800 transition-colors">Login With Google</button>
+                <button className="w-full border py-2 rounded mb-4 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800 transition-colors" onClick={handleGoogleLogin}>Login With Google</button>
                 <p className="text-sm text-center dark:text-zinc-400">Don't have an account <a href="/signup" className="text-blue-500 hover:underline dark:text-blue-400">Sign up</a></p>
             </div>
         </div>

@@ -10,6 +10,7 @@ import Search from "./components/search";
 import Movie from "./page/movie";
 import Series from "./page/series";
 import { Analytics } from "@vercel/analytics/react"
+import { useEffect } from "react";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -52,6 +53,21 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+      // Save it exactly like your normal login does
+      localStorage.setItem("token", token);
+      
+      // Clean the URL so the token doesn't stay visible
+      window.history.replaceState({}, document.title, "/");
+      
+      // Optional: Refresh to ensure AuthContext picks up the new token
+      window.location.reload();
+    }
+  }, []);
   return (
         <div>
           <RouterProvider router={router} />
