@@ -12,7 +12,7 @@ export default function useAuth(){
         setUser(user);
         localStorage.setItem('token',token);
     }
-    
+
     async function signup(username,email,password){
         await Signup(username,email,password);
     }
@@ -22,5 +22,5 @@ export default function useAuth(){
         setToken(null);
         localStorage.removeItem('token');
     }
-    return {user,token,login,logout};
+    return {user,token,login,logout,signup};
 }
