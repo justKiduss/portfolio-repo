@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, Link } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
 import Sidebar from "./sidebarMenu";
-import { Menu } from "lucide-react";
+import { CircleUser, Menu, User } from "lucide-react";
 
 export default function Layout() {
   const [query, setQuery] = useState("");
@@ -59,7 +59,7 @@ export default function Layout() {
           <Menu className="w-6 h-6 text-gray-700" />
         </button>
 
-        <Link to="/" className="text-xl font-bold">Chill-Time</Link>
+        <Link to="/" className="text-xl font-bold">Movix</Link>
 
         <div className="flex gap-20">
           <Link to="/" className="text-sm font-bold hidden md:block">Home</Link>
@@ -162,6 +162,9 @@ export default function Layout() {
             )}
           </div>
         </div>
+        <Link to="/login">
+          <CircleUser size={24}/>
+        </Link>
       </header>
 
       <main className="flex-1 p-6" onClick={() => setDropDown(false)}>

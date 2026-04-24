@@ -28,7 +28,7 @@
                         style={{ transform: `translateX(-${currentIndex * 220}px)` }} 
                     >
                         {data.map((movie) => (
-                            <div key={movie.movieId} className="min-w-[200px] flex flex-col">
+                            <div key={movie.movieId} className="w-[200px] flex flex-col">
                                 <Link to={`/${movie.type || 'movie'}/${movie.movieId}`}>
                                     <img
                                         src={`https://image.tmdb.org/t/p/w500${movie.poster}`} alt={movie.title}

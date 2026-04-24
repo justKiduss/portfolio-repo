@@ -9,6 +9,7 @@ import TvDetail from "./page/tvDetail";
 import Search from "./components/search";
 import Movie from "./page/movie";
 import Series from "./page/series";
+import { Analytics } from "@vercel/analytics/react"
 const router = createBrowserRouter([
   {
     path: "/",
@@ -51,7 +52,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return 
+      (
+        <div>
+          <RouterProvider router={router} />
+          <Analytics/>
+        </div>
+      )
 }
 
 export default App;
