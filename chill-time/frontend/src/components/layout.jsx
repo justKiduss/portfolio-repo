@@ -164,7 +164,7 @@ export default function Layout() {
           </div>
         </div>
         <ThemeToggle/>
-        <Link to="/login" className="dark:text-white">
+        <Link to="/login" className="hidden md:block dark:text-white">
           <CircleUser size={24} />
         </Link>
       </header>
