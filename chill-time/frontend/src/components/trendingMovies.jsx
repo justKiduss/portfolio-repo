@@ -55,7 +55,7 @@ export default function TrendingMovies(){
                                 />
                                 </div>
                             </Link>
-                            <p className="mt-2 text-sm font-semibold truncate dark:text-zinc-800">
+                            <p className="mt-2 text-sm font-semibold truncate dark:text-zinc-200">
                                 {movie.title || movie.name}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-zinc-500">

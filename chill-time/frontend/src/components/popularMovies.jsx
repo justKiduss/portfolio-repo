@@ -41,7 +41,7 @@ export default function PopularMovies(){
         return(
             <> 
             <div className="p-4 bg-gray-100 dark:bg-black min-h-screen transition-colors">
-                <h1 className="text-2xl m-10">Popular Movies</h1>
+                <h1 className="text-2xl font-bold m-10 dark:text-white">Popular Movies</h1>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {movies.map((movie) => (
                         <div key={movie.id} className="group flex flex-col">
