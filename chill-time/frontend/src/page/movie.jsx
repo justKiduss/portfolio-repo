@@ -13,21 +13,26 @@ export default function Movie(){
     return(
         <>
         <div className="max-w-7xl mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8">All Movies</h1>
+            <h1 className="text-3xl font-bold mb-8 dark:text-white transition-colors">All Movies</h1>
 
             {/* Movie Grid - Replaces content every time page changes */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-6 min-h-[600px]">
                 {status === 'LOAING' ? (
-                    <div className="col-span-full text-center py-20 text-gray-400">Loading...</div>
+                    <div className="col-span-full text-center py-20 text-gray-400 dark:text-zinc-500 animate-pulse">Loading...</div>
                 ) : (
                     data?.map((movie) => (
                         <Link key={movie.id} to={`/movie/${movie.id}`} className="group">
+                            <div className="overflow-hidden rounded-xl shadow-lg dark:shadow-none border border-transparent dark:border-zinc-800">
                             <img
                                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                                 className="rounded-xl shadow-lg group-hover:scale-105 transition"
                                 alt={movie.title}
                             />
-                            <h2 className="mt-2 text-sm font-bold truncate">{movie.title}</h2>
+                            </div>
+                            <h2 className="mt-2 text-sm font-bold truncate dark:text-zinc-200 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">{movie.title}</h2>
+                            <p className="text-xs text-gray-500 dark:text-zinc-500">
+                                {(movie.release_date || movie.first_air_date)?.split("-")[0]}
+                            </p>
                         </Link>
                     ))
                 )}
