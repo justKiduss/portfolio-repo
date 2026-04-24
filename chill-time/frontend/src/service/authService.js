@@ -14,3 +14,13 @@ export async function Login(email,password){
         token:data.data.token
     };
 }
+
+export async function Signup(username,email,password){
+    const res=await fetch(`${API}`,{
+        method:"POST",
+        headers: {'Content-Type': 'application/json'},
+        body:JSON.stringify({username,email,password})
+    })
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error || "signing up failed");
+}

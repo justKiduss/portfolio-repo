@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Login } from "../service/authService";
+import { Login, Signup } from "../service/authService";
 
 export default function useAuth(){
     const [user,setUser]=useState(null);
@@ -11,6 +11,10 @@ export default function useAuth(){
         setToken(token);
         setUser(user);
         localStorage.setItem('token',token);
+    }
+    
+    async function signup(username,email,password){
+        await Signup(username,email,password);
     }
 
     function logout(){
