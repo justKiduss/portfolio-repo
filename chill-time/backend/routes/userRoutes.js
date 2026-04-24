@@ -4,11 +4,9 @@ import { validateUser } from "../middleware/validateUser.js";
 import { protect } from "../middleware/protect.js";
 import { authorized } from "../middleware/authorize.js";
 import {validateUserUpdate} from "../middleware/validateUserUpdate.js"
-
+import crypto from "crypto";
 import passport from "passport"; // 1. Import passport
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"; // 2. Import Strategy
-import jwt from "jsonwebtoken"; // 3. Import JWT to generate tokens
-import pool from "../config/db.js"; // Import your DB connection
 import model from "../models/userModel.js"; // Import your existing model
 import { generateToken } from "../utilis/generate.js";
 const router=express.Router();
@@ -28,9 +26,9 @@ const router=express.Router();
             if (!user) {
                 // 2. Prepare data to satisfy your existing model.create requirements
                 const newUser = {
-                    username: email.split('@')[0] + Math.floor(Math.random() * 1000), // satisfies NOT NULL
+                    username: `${email.split("@")[0]}_${Date.now()}`,
                     email: email,
-                    password: "google-auth-protected", // satisfies NOT NULL
+                    password: crypto.randomUUID(),
                     avatar: profile.photos[0]?.value || null
                 };
 
@@ -47,7 +45,7 @@ const router=express.Router();
 
     // Google Callback Route
     router.get('/google/callback', 
-        passport.authenticate('google', { failureRedirect: '/login', session: false }),
+        passport.authenticate('google', { failureRedirect: "https://movix-psi-seven.vercel.app/login", session: false }),
         (req, res) => {
             // 4. Use your existing generateToken utility
             const token = generateToken(req.user.id); 
@@ -56,6 +54,13 @@ const router=express.Router();
             res.redirect(`https://movix-psi-seven.vercel.app?token=${token}`);
         }
     );
+    router.get(
+        "/google",
+        passport.authenticate("google", {
+            scope: ["profile", "email"],
+            session: false
+        })
+        );
     router.get('/',protect,authorized('admin'),getUsers);
 
     router.post('/',validateUser, createUser);

@@ -20,12 +20,13 @@ dotenv.config();
 
 const port=process.env.PORT || 3000;
 const app=express();
+app.set("trust proxy", 1);
 
 app.use(passport.initialize());
 app.use(helmet());
 app.use(cors({
   origin: "https://movix-psi-seven.vercel.app", 
-  methods: ["GET", "POST", "PATCH", "DELETE"],
+  methods: ["GET", "POST","PUT","PATCH", "DELETE"],
   credentials: true
 }));
 app.use(express.json());
