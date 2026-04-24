@@ -9,11 +9,10 @@ import passport from "passport"; // 1. Import passport
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"; // 2. Import Strategy
 import jwt from "jsonwebtoken"; // 3. Import JWT to generate tokens
 import pool from "../config/db.js"; // Import your DB connection
-
+import model from "../models/userModel.js"; // Import your existing model
+import { generateToken } from "../utilis/generate.js";
 const router=express.Router();
 
-
-    // --- GOOGLE OAUTH STRATEGY ---
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -22,39 +21,38 @@ const router=express.Router();
     async (accessToken, refreshToken, profile, done) => {
         try {
             const email = profile.emails[0].value;
-            const name = profile.displayName;
+            
+            // 1. Check if user exists using your existing model
+            let user = await model.getByEmail(email);
 
-            // Check if user exists in PostgreSQL
-            let user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+            if (!user) {
+                // 2. Prepare data to satisfy your existing model.create requirements
+                const newUser = {
+                    username: email.split('@')[0] + Math.floor(Math.random() * 1000), // satisfies NOT NULL
+                    email: email,
+                    password: "google-auth-protected", // satisfies NOT NULL
+                    avatar: profile.photos[0]?.value || null
+                };
 
-            if (user.rows.length === 0) {
-                // If user doesn't exist, create them
-                user = await pool.query(
-                    "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
-                    [name, email, 'google-auth-no-password'] // Dummy password for Google users
-                );
+                // 3. Use your existing model to save the user
+                user = await model.create(newUser);
             }
             
-            return done(null, user.rows[0]);
+            return done(null, user);
         } catch (err) {
             return done(err, null);
         }
     }
     ));
 
-    // --- GOOGLE ROUTES ---
-
-    // Initial call from frontend handleGoogleLogin
-    router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-    // Callback from Google
+    // Google Callback Route
     router.get('/google/callback', 
         passport.authenticate('google', { failureRedirect: '/login', session: false }),
         (req, res) => {
-            // Generate a token for the user who just logged in
-            const token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+            // 4. Use your existing generateToken utility
+            const token = generateToken(req.user.id); 
             
-            // Redirect back to your Vercel frontend with the token in the URL
+            // Redirect back to Vercel
             res.redirect(`https://movix-psi-seven.vercel.app?token=${token}`);
         }
     );
