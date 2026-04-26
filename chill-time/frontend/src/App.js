@@ -9,7 +9,8 @@ import TvDetail from "./page/tvDetail";
 import Search from "./components/search";
 import Movie from "./page/movie";
 import Series from "./page/series";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useEffect } from "react";
 const router = createBrowserRouter([
   {
@@ -72,6 +73,7 @@ function App() {
         <div>
           <RouterProvider router={router} />
           <Analytics/>
+          <SpeedInsights/>
         </div>
       );
 }
