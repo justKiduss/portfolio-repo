@@ -1,6 +1,7 @@
 export function Header(){
     return(
         <>
+        <header className="w-full">
             <nav className="max-w-4xl mx-auto flex justify-between items-center px-6 py-6">
                 <div className="bg-white px-4 py-1 rounded">
                     <h2 className="text-black font-bold">Kidus</h2>
@@ -11,6 +12,7 @@ export function Header(){
                     <li><a href='/projects' className="hover:text-blue-500">Projects</a></li>
                 </ul>
             </nav>
+        </header>
         </>
     )
 }

@@ -4,8 +4,8 @@ export default function Hero(){
 
     return(
         <section>
-            <h1 className="text-5xl font-bold mb-6">Hey! I'm <span className="text-pink-500">Kidus</span></h1>
-            <p className="text-gray-400 text-lg leading-relaxed max-w-2xl">
+            <h1 className="text-5xl md:text-6xl font-bold leading-tight">Hey! I'm <span className="text-pink-500">Kidus</span></h1>
+            <p className="max-w-xl text-zinc-400 leading-8 text-lg">
                 I'm a developer focused on JavaScript internals and building 
                 full-stack applications. Currently mastering the path to job readiness.
             </p>
@@ -45,6 +45,20 @@ export default function Hero(){
                     <use href="/icons.svg#x-icon"></use>
                     </svg>
                     X.com
+                </a>
+                </li>
+
+                <li>
+                <a 
+                    href="https://gmail.com" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center gap-2 bg-[#242933] hover:bg-[#2e3440] text-white px-4 py-2 rounded-lg text-sm font-medium border border-[#3b4252] transition-colors"
+                >
+                    <svg className="w-[18px] h-[18px]" role="presentation" aria-hidden="true">
+                    <use href="/icons.svg#gmail.com"></use>
+                    </svg>
+                    Email
                 </a>
                 </li>
             </ul>
