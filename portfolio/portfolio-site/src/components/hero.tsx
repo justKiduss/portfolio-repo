@@ -3,22 +3,13 @@ import { Mail } from 'lucide-react';
 export default function Hero(){
 
     return(
-        <section className='space-y-6'>
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight">Hey! I'm <span className="text-purple-500">Kidus</span></h1>
-            <p className="text-zinc-400 leading-8 text-lg max-w-xl space-y-6 text-left">
+        <section className='space-y-4 h-auto'>
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight text-left">Hey! I'm <span className="text-purple-500">Kidus</span></h1>
+            <p className="text-zinc-400 leading-7 text-base max-w-xl text-left">
                 I build full-stack web applications and I'm actively looking for junior roles.
             </p>
-            <div className="m-6 flex gap-2">
-                <svg 
-                className="w-6 h-6 text-purple-500 mb-3 mt-6" 
-                role="presentation" 
-                aria-hidden="true"
-                >
-                    <use href="/icons.svg#social-icon"></use>
-                </svg>
-
-            {/* Button Container */}
-            <ul className="flex flex-wrap list-none p-4 gap-3">
+            <div className="flex gap-3 pt-2">
+            <ul className="flex flex-wrap list-none gap-3">
                 <li>
                 <a 
                     href="https://github.com" 

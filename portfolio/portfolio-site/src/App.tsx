@@ -1,4 +1,3 @@
-import Apps from "./apps";
 import { Header } from "./components/header";
 import Hero from "./components/hero";
 import Projects from "./components/projects";
@@ -12,7 +11,6 @@ export function App(){
                 <Hero/>
                 <Projects/>
             </main>
-            <Apps/>
         </div>
     )
 }
