@@ -5,9 +5,10 @@ import Projects from "./components/projects";
 
 export function App(){
     return (
-        <div className="min-h-screen bg-[#1a1b26] text-white">
+        // bg-[#1a1b26]
+        <div className="min-h-screen bg-[#0b0c10] text-white">
             <Header/>
-            <main className="max-w-4xl mx-auto px-6 pt-20 pb-28 space-y-24">
+            <main className="max-w-3xl mx-auto px-6 py-16">
                 <Hero/>
                 <Projects/>
             </main>
