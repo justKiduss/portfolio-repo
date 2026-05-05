@@ -1,5 +1,20 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600;700&display=swap');
+
+@theme {
+  /* 2. Map them to Tailwind utility names */
+  /* This creates font-italian */
+  --font-italian: "Playfair Display", serif;
+  
+  /* This overrides font-sans to use Poppins */
+  --font-sans: "Poppins", ui-sans-serif, system-ui;
+}
+
+/*  
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -13,8 +28,8 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: 'Poppins', system-ui, sans-serif;
+  /* --heading: system-ui, 'Segoe UI', Roboto, sans-serif; 
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
@@ -66,7 +81,7 @@
 
 body {
   margin: 0;
-}
+} */
 
 /* h1,
 h2 {
@@ -96,7 +111,7 @@ h2 {
 /* p {
   margin: 0;
 } */
-
+/*
 code,
 .counter {
   font-family: var(--mono);
@@ -111,3 +126,4 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+*/
