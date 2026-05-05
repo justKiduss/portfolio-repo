@@ -3,6 +3,7 @@ import movie from "../assets/movix.png";
 // import saas from "../assets/vite.svg";
 import { SiJavascript, SiTypescript, SiPostgresql, SiTailwindcss, SiReact, SiNodedotjs, SiMongodb } from "react-icons/si";
 import { ArrowRight } from "lucide-react";
+import { ProjectDetail } from "./project";
 export default function Projects(){
     return(
         <section className="pt-6">
@@ -19,6 +20,7 @@ export default function Projects(){
                     <div className="flex gap-5">
                         <a href="https://portfolio-repo-one-sigma.vercel.app/" className="text-sm hover:text-purple-500">Live Demo</a>
                         <a href="https://github.com/justKiduss/portfolio-repo/tree/main/Games/Strategy_Game" className="text-sm hover:text-purple-500">Source Code</a>
+                        <a href={`/projects/${ProjectDetail[0].id}`}>View More</a>
                     </div>  
                 </div>
                 <div className="bg-[#111318] border border-gray-800 rounded-xl p-4 space-y-4 h-auto">
@@ -34,17 +36,9 @@ export default function Projects(){
                       <div className="flex gap-5">
                         <a href="https://movix-psi-seven.vercel.app/" className="text-sm hover:text-purple-500">Live Demo</a>
                         <a href="https://github.com/justKiduss/portfolio-repo/tree/main/chill-time" className="text-sm hover:text-purple-500">Source Code</a>
+                        <a href={`/projects/${ProjectDetail[1].id}`}>View More</a>
                     </div> 
                 </div>
-                {/* <div className="bg-[#111318] border border-gray-800 rounded-xl p-4 space-y-4" h-auto>
-                    <img src={saas} alt="saas site" className="w-full h-auto"/>
-                    <p className="p-5">A Movie site users can stream their choosen movie for free and review for other</p>
-                    <div className="flex gap-2 flex-wrap text-xs text-gray-400 p-7">
-                        <code className="mr-2">Typescript</code>
-                        <code className="mr-2">tailwind</code>
-                    </div>
-
-                </div> */}
             </div>
             <div className="mt-8 mb-3 space-y-5">
                 <a href="/projects" className="flex hover:text-purple-500">
