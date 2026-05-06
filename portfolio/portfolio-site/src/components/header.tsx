@@ -7,7 +7,7 @@ export function Header(){
     .filter(Boolean); 
     return(
         <>
-        <header className="sticky top-0 z-50 w-full bg-[#0b0c10]/80 backdrop-blur-md">
+        <header className="sticky top-0 z-50 w-full bg-[#0b0c10]/80 backdrop-blur-md py-3">
             <nav className="max-w-4xl mx-auto flex justify-between items-center px-6 pt-4 pb-0">
                  
                   <div className="flex items-center gap-2 text-sm text-gray-400">
