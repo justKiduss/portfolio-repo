@@ -1,3 +1,4 @@
+import Commits from "./components/commits";
 import Hero from "./components/hero";
 import Projects from "./components/projects";
 import "./index.css";
@@ -7,6 +8,7 @@ export function App(){
                 <main className="max-w-3xl mx-auto px-6 py-16">
                     <Hero/>
                     <Projects/>
+                    <Commits/>
                 </main>
             </div>
     )
