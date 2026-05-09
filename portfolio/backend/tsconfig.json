@@ -1,16 +1,3 @@
-// {
-//   "compilerOptions": {
-//     "target": "ES2020",
-//     "module": "CommonJS",
-//     "moduleResolution": "NodeNext",
-//     "esModuleInterop": true,
-//     "strict": true,
-//     "outDir": "./dist",
-//     "rootDir": "./",
-//     "verbatimModuleSyntax": false
-//   }
-// }
-
 {
   "compilerOptions": {
     "target": "ES2020",
