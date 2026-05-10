@@ -22,7 +22,7 @@ sprites.P.onload = startGame;
 sprites.F.onload = startGame;
 sprites.R.onload = startGame;
 sprites.M.onload = startGame;
-// Set the source paths (Make sure these files exist in your folder!)
+
 sprites.P.src = 'asset/grass2.png';
 sprites.F.src = 'asset/forest2.png';
 sprites.R.src = 'asset/river2.png';
