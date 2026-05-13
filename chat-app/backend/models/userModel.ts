@@ -7,6 +7,12 @@ export function userModel(){
         profilePic?: string;
         isAdmin?: boolean;
     }
+    interface updateProfileDTO {
+        username: string;
+        email: string;
+        password: string;
+        profilePic?: string;
+    }
     return{
         getAllUsers:async()=>{
             const res=await pool.query('SELECT * from users');
@@ -33,10 +39,10 @@ export function userModel(){
             );
             return res.rows[0];
         },
-        update:async(id:number,data:CreateUserDTO)=>{
-            const {username,email,password,profilePic,isAdmin}=data;
-            const res=await pool.query(`UPDATE users SET username=$1,email=$2,password=$3,profilePic=$4,isAdmin=$5,updated_at=NOW() WHERE id=$6 RETURNING *,
-                [username,email,password,profilePic,isAdmin,id]`
+        update:async(id:number,data:updateProfileDTO)=>{
+            const {username,email,password,profilePic}=data;
+            const res=await pool.query(`UPDATE users SET username=$1,email=$2,password=$3,profilePic=$4,updated_at=NOW() WHERE id=$5 RETURNING *,
+                [username,email,password,profilePic,id]`
             );
             return res.rows[0];
         },
