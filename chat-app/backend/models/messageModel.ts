@@ -51,5 +51,5 @@ const messageModel=()=>{
     }
 }
 
-const model=messageModel;
+const model=messageModel();
 export default model;

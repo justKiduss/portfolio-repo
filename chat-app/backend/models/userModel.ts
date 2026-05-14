@@ -41,8 +41,8 @@ export function userModel(){
         },
         update:async(id:number,data:updateProfileDTO)=>{
             const {username,email,password,profilePic}=data;
-            const res=await pool.query(`UPDATE users SET username=$1,email=$2,password=$3,profilePic=$4,updated_at=NOW() WHERE id=$5 RETURNING *,
-                [username,email,password,profilePic,id]`
+            const res=await pool.query(`UPDATE users SET username=$1,email=$2,password=$3,profilePic=$4,updated_at=NOW() WHERE id=$5 RETURNING *`,
+                [username,email,password,profilePic,id]
             );
             return res.rows[0];
         },

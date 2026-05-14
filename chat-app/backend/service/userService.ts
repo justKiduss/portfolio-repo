@@ -2,6 +2,16 @@ import { generate } from "../config/generate";
 import { AppError } from "../middleware/error";
 import model from "../models/userModel"
 import bcrypt from "bcrypt";
+
+interface updateDTO{
+    username:string,
+    email:string,
+    profilePic:string,
+    currentPassword:string,
+    newPassword:string,
+    confirmPassword:string
+
+}
 export const getAllUserService=async ()=>{
     const res=await model.getAllUsers();
         return res;
@@ -27,7 +37,7 @@ export const getByEmailService=async(email:string)=>{
 
 
 export const create=async(username:string,email:string,password:string,profilePic:string,isAdmin:boolean)=>{
-    if(!username||!email||password){
+    if(!username||!email||!password){
         throw new AppError("Missing required Fiels",400);
     }
     const existingUser=await model.getByUsername(username);
@@ -39,7 +49,7 @@ export const create=async(username:string,email:string,password:string,profilePi
         throw new AppError("Email already Exists",409);
     }
 
-    const hashedPassword=await bcrypt.hash(password.trim(),10);
+    const hashedPassword=await bcrypt.hash(password,10);
     const normalized={
         username:username.trim(),
         email:email.trim(),
@@ -48,35 +58,35 @@ export const create=async(username:string,email:string,password:string,profilePi
     return await model.create(normalized);
 }
 
-export const update=async(id:number,username:string,email:string,profilePic:string,currentPassword:string,newPassword:string,confirmPassword:string)=>{
+export const update=async(id:number,data:updateDTO)=>{
 
     const user=await model.getById(id);
     if(!user){
         throw new AppError("User not found",404);
     }
-    const existingUser=await model.getByUsername(username);
+    const existingUser=await model.getByUsername(data.username);
     if(existingUser && existingUser.id !== id){
         throw new AppError("Username already Exists",409);
     }
-    const existingEmail=await model.getByEmail(email);
+    const existingEmail=await model.getByEmail(data.email);
     if(existingEmail){
         throw new AppError("Email already Exists",409);
     }
 
     const isMatch=await bcrypt.compare(
-        currentPassword,user.password
+        data.currentPassword,user.password
     );
 
     if(!isMatch){
         throw new AppError("Current Passowrd incorrect",401);
     }
 
-    if(newPassword !== confirmPassword){
+    if(data.newPassword !== data.confirmPassword){
         throw new AppError("passwords do not match",400);
     }
 
     const samePassword=await bcrypt.compare(
-        newPassword,
+        data.newPassword,
         user.password
     )
     if(samePassword){
@@ -84,14 +94,14 @@ export const update=async(id:number,username:string,email:string,profilePic:stri
     }
 
     let hashedPassword=user.password;
-    if(newPassword){
-        hashedPassword=await bcrypt.hash(newPassword,10);
+    if(data.newPassword){
+        hashedPassword=await bcrypt.hash(data.newPassword,10);
     }
     const normalized={
-        username:username?.trim()||user.username,
-        email:email?.trim() || user.email,
+        username:data.username?.trim()||user.username,
+        email:data.email?.trim() || user.email,
         password:hashedPassword || user.password,
-        profilePic:profilePic|| user.profilePic,
+        profilePic:data.profilePic|| user.profilePic,
     }
 
     return await model.update(id,normalized);
