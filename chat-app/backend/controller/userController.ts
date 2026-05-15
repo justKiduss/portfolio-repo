@@ -101,7 +101,7 @@ export async function updateController(req:Request,res:Response,next:NextFunctio
 
 export const deleteController=async(req:Request,res:Response,next:NextFunction)=>{
     try{
-        const deleted=await deleteUser(Number(req.params.id),req.body);
+        const deleted=await deleteUser(Number(req.params.id),req.body.password);
         if(!deleted){
             throw new AppError("user not found",404);
         }

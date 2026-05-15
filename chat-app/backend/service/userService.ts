@@ -10,7 +10,18 @@ interface updateDTO{
     currentPassword:string,
     newPassword:string,
     confirmPassword:string
+}
+interface createDTO{
+    username:string,
+    email:string,
+    password:string,
+    profilePic:string,
+    isAdmin:boolean
+}
 
+interface loginDTO{
+    username:string,
+    password:string
 }
 export const getAllUserService=async ()=>{
     const res=await model.getAllUsers();
@@ -36,23 +47,23 @@ export const getByEmailService=async(email:string)=>{
 }
 
 
-export const create=async(username:string,email:string,password:string,profilePic:string,isAdmin:boolean)=>{
-    if(!username||!email||!password){
+export const create=async(data:createDTO)=>{
+    if(!data.username||!data.email||!data.password){
         throw new AppError("Missing required Fiels",400);
     }
-    const existingUser=await model.getByUsername(username);
+    const existingUser=await model.getByUsername(data.username);
     if(existingUser){
         throw new AppError("Username already Exists",409);
     }
-    const existingEmail=await model.getByEmail(email);
+    const existingEmail=await model.getByEmail(data.email);
     if(existingEmail){
         throw new AppError("Email already Exists",409);
     }
 
-    const hashedPassword=await bcrypt.hash(password,10);
+    const hashedPassword=await bcrypt.hash(data.password,10);
     const normalized={
-        username:username.trim(),
-        email:email.trim(),
+        username:data.username.trim(),
+        email:data.email.trim(),
         password:hashedPassword
     }
     return await model.create(normalized);
@@ -121,13 +132,13 @@ export const deleteUser=async(id:number,password:string)=>{
     return await model.delete(id);
 }
 
-export const login=async(username:string,password:string)=>{
-    if(!username||!password){
+export const login=async(data:loginDTO)=>{
+    if(!data.username||!data.password){
         throw new AppError("All fields requires",400);
     }
     const normalized={
-        username:username.trim(),
-        password:password.trim()
+        username:data.username.trim(),
+        password:data.password.trim()
     }
 
     const user=await model.getByUsername(normalized.username);

@@ -1,7 +1,6 @@
 import pool from "../config/db";
 const messageModel=()=>{
     interface CreateMessageDTO {
-        senderId: number;
         receiverId: number;
         text: string;
         image?: string;
@@ -19,8 +18,9 @@ const messageModel=()=>{
             const res=await pool.query(`SELECT * from message WHERE id=$1`,[id]);
             return res.rows[0];
         },
-        create:async(data:CreateMessageDTO)=>{
-            const {senderId,receiverId,text,image}=data;
+        create:async(senderId:number,data:CreateMessageDTO)=>{
+            const {receiverId,text,image}=data;
+    
             const res=await pool.query(`INSERT INTO message (senderId,receiverId,text,image) VALUES ($1,$2,$3,$4) RETURNING *`,
                 [senderId,receiverId,text,image]);
             return res.rows[0];
@@ -32,16 +32,16 @@ const messageModel=()=>{
             );
             return res.rows[0];
         },
-        delete:async(id:number)=>{
-            const res=await pool.query('DELETE from message WHERE id=$1 RETURNING *',[id]
+        delete:async(id:number,userId:number)=>{
+            const res=await pool.query('DELETE from message WHERE id=$1 AND senderId=$2 RETURNING *',[id,userId]
             );
             return res.rows[0];
         },
-        getMessagesByUserId:async(userId:number)=>{
-            const res=await pool.query(`SELECT * from message WHERE senderId=$1 or receiverId=$1`,[userId]
-            )
-            return res.rows
-        },
+        // getMessagesByUserId:async(userId:number)=>{
+        //     const res=await pool.query(`SELECT * from message WHERE senderId=$1 or receiverId=$1`,[userId]
+        //     )
+        //     return res.rows
+        // },
         getConversationMessages:async(senderId:number,receiverId:number)=>{
             const res=await pool.query(`SELECT * from message WHERE 
                 (senderId=$1 AND receiverId=$2)

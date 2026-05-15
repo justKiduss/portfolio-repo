@@ -29,7 +29,7 @@ export function userModel(){
         },
         create:async(data:CreateUserDTO)=>{
             const {username,email,password,profilePic,isAdmin}=data;
-            const res=await pool.query(`INSERT INTO users (username,email,password,profilePic,isAdmin)
+            const res=await pool.query(`INSERT INTO users (username,email,password_hash,profile_pic,is_admin)
                 VALUES ($1,$2,$3,$4,$5) RETURNING *`,[username,email,password,profilePic,isAdmin]
             );
             return res.rows[0];
