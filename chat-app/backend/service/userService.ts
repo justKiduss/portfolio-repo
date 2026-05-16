@@ -49,7 +49,7 @@ export const getByEmailService=async(email:string)=>{
 
 export const create=async(data:createDTO)=>{
     if(!data.username||!data.email||!data.password){
-        throw new AppError("Missing required Fiels",400);
+        throw new AppError("Missing required Fields",400);
     }
     const existingUser=await model.getByUsername(data.username);
     if(existingUser){
@@ -61,10 +61,14 @@ export const create=async(data:createDTO)=>{
     }
 
     const hashedPassword=await bcrypt.hash(data.password,10);
-    const normalized={
-        username:data.username.trim(),
-        email:data.email.trim(),
-        password:hashedPassword
+    const normalized = {
+        username: data.username.trim(),
+        email: data.email.trim(),
+        password: hashedPassword,
+        profilePic:
+            data.profilePic ??
+            "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+        isAdmin: data.isAdmin ?? false
     }
     return await model.create(normalized);
 }
@@ -83,52 +87,51 @@ export const update=async(id:number,data:updateDTO)=>{
     if(existingEmail){
         throw new AppError("Email already Exists",409);
     }
+    
+    let hashedPassword = user.password_hash;
+    const isChangingPassword =
+        data.newPassword || data.confirmPassword || data.currentPassword;
 
-    const isMatch=await bcrypt.compare(
-        data.currentPassword,user.password
-    );
+    if(isChangingPassword){
+        if (!data.currentPassword || !data.newPassword || !data.confirmPassword) {
+            throw new AppError("All password fields are required", 400);
+        }
+        const isMatch=await bcrypt.compare(
+            data.currentPassword,user.password_hash
+        );
+        if(!isMatch){
+            throw new AppError("Current Passowrd incorrect",401);
+        }
 
-    if(!isMatch){
-        throw new AppError("Current Passowrd incorrect",401);
-    }
-
-    if(data.newPassword !== data.confirmPassword){
-        throw new AppError("passwords do not match",400);
-    }
-
-    const samePassword=await bcrypt.compare(
-        data.newPassword,
-        user.password
-    )
-    if(samePassword){
-        throw new AppError('New Password must be different',400);
-    }
-
-    let hashedPassword=user.password;
-    if(data.newPassword){
+        if(data.newPassword !== data.confirmPassword){
+            throw new AppError("passwords do not match",400);
+        }
+        const samePassword=await bcrypt.compare(
+            data.newPassword,
+            user.password_hash
+        )
+        if(samePassword){
+            throw new AppError('New Password must be different',400);
+        }
         hashedPassword=await bcrypt.hash(data.newPassword,10);
+
     }
     const normalized={
         username:data.username?.trim()||user.username,
         email:data.email?.trim() || user.email,
-        password:hashedPassword || user.password,
+        password:hashedPassword,
         profilePic:data.profilePic|| user.profilePic,
     }
 
     return await model.update(id,normalized);
 }
 
-export const deleteUser=async(id:number,password:string)=>{
-    if(!id || !password) throw new AppError("required all inputs",400);
+export const deleteUser=async(id:number)=>{
+    if(!id ) throw new AppError("required all inputs",400);
     const user=await model.getById(id);
     if(!user){
         throw new AppError("user not found",404);
     }
-    const isMatch=await bcrypt.compare(password,user.password);
-    if(!isMatch){
-        throw new AppError("Wrong Password",401);
-    }
-
     return await model.delete(id);
 }
 
@@ -145,11 +148,11 @@ export const login=async(data:loginDTO)=>{
     if(!user){
         throw new AppError("user doesn't exist",401);
     }
-    const isMatch=await bcrypt.compare(normalized.password,user.password);
+    const isMatch=await bcrypt.compare(normalized.password,user.password_hash);
     if(!isMatch){
         throw new AppError("Invalid credientials",401);
     }
 
-    const token=await generate(user);
+    const token=generate(user);
     return {token,user}
 }

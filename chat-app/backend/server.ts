@@ -2,13 +2,12 @@ import type {Request,Response,NextFunction} from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import cookieParser from "cookie-parser";
-
 import express from 'express'
 
 import cors from "cors";
-import router from "./routes/userRoutes";
 import messageRouter from "./routes/messageRoute";
 import { AppError } from "./middleware/error";
+import userRouter from "./routes/userRoutes";
 const app=express();
 const Port=process.env.PORT;
 
@@ -24,10 +23,12 @@ app.get("/api",(req:Request,res:Response)=>{
     res.send("api is working");
 })
 
-app.use('/api/users',router);
+app.use('/api/users',userRouter);
 app.use('/api/messages',messageRouter);
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+    console.error(err);
+
     if (err instanceof AppError) {
         return res.status(err.status).json({
             success: false,

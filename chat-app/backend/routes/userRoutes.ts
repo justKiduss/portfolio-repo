@@ -1,14 +1,14 @@
 import express from "express";
-import { createController, deleteController, getAllUserController, getByIdController, loginController, updateController } from "../controller/userController";
+import { createController, deleteController, getAllUserController, getByIdController, loginController, updateController,logout} from "../controller/userController";
 import protect from "../middleware/protect";
 
-const router=express.Router()
+const userRouter=express.Router()
 
-router.get('/',protect,getAllUserController);
-router.get('/:id',protect,getByIdController);
-router.post('/signup',createController);
-router.post('login',loginController);
-router.put('/:id',protect,updateController);
-router.delete('/:id',protect,deleteController);
-
-export default router;
+userRouter.get('/',protect,getAllUserController);
+userRouter.get('/:id',protect,getByIdController);
+userRouter.post('/signup',createController);
+userRouter.post('/login',loginController);
+userRouter.put('/:id',protect,updateController);
+userRouter.delete('/:id',protect,deleteController);
+userRouter.post("/id",protect,logout)
+export default userRouter;

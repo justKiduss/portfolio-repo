@@ -36,7 +36,7 @@ export async function createController(req:Request,res:Response,next:NextFunctio
         if(!result){
             throw new AppError("user not created",400);
         }
-        const {password,...safeUser}=result;
+        const {password_hash,...safeUser}=result;
         return res.status(201).json({
             success:true,
             data:safeUser,
@@ -55,7 +55,7 @@ export async function loginController(req:Request,res:Response,next:NextFunction
 
         const {user,token}=result;
 
-        const {password,...safeUser}=user;
+        const {password_hash,...safeUser}=user;
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -77,7 +77,7 @@ export async function loginController(req:Request,res:Response,next:NextFunction
 
 export async function updateController(req:Request,res:Response,next:NextFunction){
     try{
-        const isOwner=Number(req.params.id)===req.user.id;
+        const isOwner=Number(req.params.id)===Number(req.user.id);
 
         if(!isOwner){
             throw new AppError("forbidden",403);
@@ -87,7 +87,7 @@ export async function updateController(req:Request,res:Response,next:NextFunctio
         if(!updated){
             throw new AppError("user not found",404);
         }
-        const {password,...safeUser}=updated;
+        const {password_hash,...safeUser}=updated;
         return res.status(200).json({
             success:true,
             data:safeUser,
@@ -101,19 +101,38 @@ export async function updateController(req:Request,res:Response,next:NextFunctio
 
 export const deleteController=async(req:Request,res:Response,next:NextFunction)=>{
     try{
-        const deleted=await deleteUser(Number(req.params.id),req.body.password);
+        if(Number(req.params.id)!==Number(req.user.id)){
+            throw new AppError("forbidden",403);
+        }
+        const deleted=await deleteUser(Number(req.params.id));
         if(!deleted){
             throw new AppError("user not found",404);
         }
 
-        const {password,...safeUser}=deleted;
+        const {password_hash,...safeUser}=deleted;
         res.status(200).json({
             success:true,
             data:safeUser,
             msg:"user deleted successfuly"
         })
     }catch(error){
-        next("error")
+        next(error)
+    }
+}
+
+export async function logout(req:Request,res:Response,next:NextFunction){
+    try{
+        res.clearCookie("token",{
+            httpOnly:true,
+            sameSite:"strict",
+            secure:process.env.NODE_ENV==="production"
+        });
+        res.status(200).json({
+            success:true,
+            msg:"logged out"
+        })
+    }catch(error){
+        next(error)
     }
 }
 

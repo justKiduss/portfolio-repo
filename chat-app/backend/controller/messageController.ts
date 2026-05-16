@@ -23,11 +23,12 @@ export async function getAllConversationController(req:Request,res:Response,next
 export async function sendMessageController(req:Request,res:Response,next:NextFunction){
     try{
         const senderId=req.user.id;
-        const {data}=req.body;
-        if(!data){
+        const receiverId=req.params.id
+        const {text,image}=req.body;
+        if(!text&& !image){
             throw new AppError('message required',400);
         }
-        const result =await sendMessageService(senderId,data);
+        const result =await sendMessageService(Number(senderId),Number(receiverId),{text,image});
 
         res.status(201).json({
             success:true,
