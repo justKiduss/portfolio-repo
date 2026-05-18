@@ -8,8 +8,47 @@ import cors from "cors";
 import messageRouter from "./routes/messageRoute";
 import { AppError } from "./middleware/error";
 import userRouter from "./routes/userRoutes";
-const app=express();
+import {app,server } from "./socket/socket";
+
 const Port=process.env.PORT;
+
+// socket.io connection 
+
+// const io=new Server();
+
+// const pubClient=createClient({ host:"localhost",port:8000 });
+// const subClient=pubClient.duplicate();
+
+// io.adapter(createAdapter(pubClient, subClient));
+
+// io.on("connection",(socket)=>{
+
+// })
+
+// // redis@3
+// io.listen(3000);
+
+// // redis@4
+// Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+//   io.listen(3000);
+// })
+
+// app.listen(Port);
+// io.on("connection", (socket) => {
+//   // ...
+// });
+// fired upon the connection with client
+
+// io.on("new_namespace",(namespace)=>{
+ 
+// })
+// fired when a new namespace is created
+
+// io.of("/").emit("hi","sport fans")
+// This only sends to users connected to the "/sports" namespace
+// io.of("/sports").emit("hi", "sports fans");
+//
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -41,7 +80,7 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-app.listen(Port,()=>{
+server.listen(Port,()=>{
     console.log(`Server is running on http://localhost:${Port}`);
 })
 

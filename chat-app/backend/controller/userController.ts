@@ -1,6 +1,7 @@
 import type {Request,Response,NextFunction} from "express";
 import { create, deleteUser, getAllUserService,getByIdService,login, update } from "../service/userService";
 import { AppError } from "../middleware/error";
+import { Result } from "pg";
 
 
 
@@ -33,13 +34,24 @@ export async function getByIdController(req:Request,res:Response,next:NextFuncti
 export async function createController(req:Request,res:Response,next:NextFunction){
     try{
         const result=await create(req.body);
+        const {user,token}=result;
         if(!result){
             throw new AppError("user not created",400);
         }
-        const {password_hash,...safeUser}=result;
-        return res.status(201).json({
+        const {password_hash,...safeUser}=result.user;
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+        return res.status(200).json({
             success:true,
-            data:safeUser,
+            msg:"user signed in",
+            data:{
+                user:safeUser
+            },
+            token:token
         })
     }catch(error){
         next(error)
@@ -68,7 +80,8 @@ export async function loginController(req:Request,res:Response,next:NextFunction
             msg:"user logged in",
             data:{
                 user:safeUser
-            }
+            },
+            token:token
         })
     }catch(error){
         next(error)

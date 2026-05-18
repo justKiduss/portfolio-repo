@@ -70,7 +70,10 @@ export const create=async(data:createDTO)=>{
             "https://cdn-icons-png.flaticon.com/512/149/149071.png",
         isAdmin: data.isAdmin ?? false
     }
-    return await model.create(normalized);
+    await model.create(normalized);
+    const user=await model.getByUsername(normalized.username);
+    const token=generate(user);
+    return {user,token}
 }
 
 export const update=async(id:number,data:updateDTO)=>{

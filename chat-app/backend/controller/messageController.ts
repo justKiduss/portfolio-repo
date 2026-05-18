@@ -1,6 +1,7 @@
 import type {Request,Response,NextFunction} from "express";
 import { AppError } from "../middleware/error";
 import { deleteMessageService, getAllConversationService, sendMessageService, updateMessageService } from "../service/messageService";
+import { getReceiverSocketId,io } from "../socket/socket";
 
 export async function getAllConversationController(req:Request,res:Response,next:NextFunction){
     try{
@@ -30,6 +31,10 @@ export async function sendMessageController(req:Request,res:Response,next:NextFu
         }
         const result =await sendMessageService(Number(senderId),Number(receiverId),{text,image});
 
+        const receiverSocketId=getReceiverSocketId(Number(receiverId));
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("newMessage",result);
+        }
         res.status(201).json({
             success:true,
             data:result
