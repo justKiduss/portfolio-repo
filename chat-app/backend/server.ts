@@ -8,6 +8,10 @@ import cors from "cors";
 
 const app=express();
 const Port=8000
+app.set("trust proxy",1);
+
+
+
 app.use(express.json());
 
 app.get("/api",(req:Request,res:Response)=>{
