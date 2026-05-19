@@ -1,5 +1,5 @@
 import express from "express";
-import { createController, deleteController, getAllUserController, getByIdController, loginController, updateController,logout} from "../controller/userController";
+import { createController, deleteController, getAllUserController, getByIdController, loginController, updateController,logout, checkAuth} from "../controller/userController";
 import protect from "../middleware/protect";
 
 const userRouter=express.Router()
@@ -10,5 +10,6 @@ userRouter.post('/signup',createController);
 userRouter.post('/login',loginController);
 userRouter.put('/:id',protect,updateController);
 userRouter.delete('/:id',protect,deleteController);
-userRouter.post("/id",protect,logout)
+userRouter.post("/logout",protect,logout)
+userRouter.get('/checkauth',protect,checkAuth)
 export default userRouter;

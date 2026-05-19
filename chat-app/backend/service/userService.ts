@@ -159,3 +159,4 @@ export const login=async(data:loginDTO)=>{
     const token=generate(user);
     return {token,user}
 }
+

@@ -1,22 +1,19 @@
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import type { FormEvent } from "react";
-export function LoginForm() {
+export default function LoginForm() {
     const [username,setUserName]=useState("");
-    const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
-    const { signup }=useAuth();
+    const { login }=useAuth();
     async function handleSubmit(e:FormEvent<HTMLFormElement>){
         e.preventDefault();
-        if(!username||!email||!password){
-            throw new Error("Field are neccessary");
-        }
-        await signup(username,email,password);
+        await login(username,password);
               
         setUserName('');
-        setEmail('');
         setPassword('');
     }
+
+    
  return(
     <>
         <div className="h-screen flex items-center justify-center bg-gray-100 dark:bg-black transition-colors">
@@ -27,11 +24,11 @@ export function LoginForm() {
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-2 mb-4">
                         <label className="text-sm font-medium dark:text-zinc-300">Email</label>
-                        <input type="text" onChange={(e)=>setUserName(e.target.value)} value={username} className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                        <input type="text" onChange={(e)=>setUserName(e.target.value)} value={username} className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"/>
                     </div>
                     <div className="flex flex-col gap-2 mb-2">
                         <label className="text-sm font-medium dark:text-zinc-300">Password</label>
-                        <input type="password" onChange={(e)=>setPassword(e.target.value)} value={password} className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"/>
+                        <input type="password" onChange={(e)=>setPassword(e.target.value)} value={password} className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-white"/>
                     </div>
                     <div className="text-right mb-4">
                         <a href="/forgot-password" className="text-sm text-blue-500 hover:underline dark:text-blue-400">Forgot your Password</a>

@@ -1,8 +1,8 @@
 import type {Request,Response,NextFunction} from "express";
 import { create, deleteUser, getAllUserService,getByIdService,login, update } from "../service/userService";
 import { AppError } from "../middleware/error";
-import { Result } from "pg";
-
+import jwt from "jsonwebtoken";
+import model from "../models/userModel";
 
 
 export async function getAllUserController(req:Request,res:Response,next:NextFunction){
@@ -41,8 +41,8 @@ export async function createController(req:Request,res:Response,next:NextFunctio
         const {password_hash,...safeUser}=result.user;
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            secure: false,
+            sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         return res.status(200).json({
@@ -71,8 +71,8 @@ export async function loginController(req:Request,res:Response,next:NextFunction
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            secure: false,
+            sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         return res.status(200).json({
@@ -146,6 +146,40 @@ export async function logout(req:Request,res:Response,next:NextFunction){
         })
     }catch(error){
         next(error)
+    }
+}
+
+export async function checkAuth(req:Request,res:Response,next:NextFunction){
+    try{
+        const token=req.cookies.token;
+        if(!token){
+            throw new AppError("unauthorized",401);
+        }
+        
+        const decoded=jwt.verify(token,process.env.JWT_SECRET!) as {
+            id:number;
+            isAdmin:boolean;
+        };
+        if (!decoded || typeof decoded === "string" || !decoded.id) {
+            throw new AppError("Invalid token token structure", 401);
+        }
+        const user=await model.getById(decoded.id);
+        if(!user){
+            throw new AppError("user not authnicated",401);
+        }
+        res.status(200).json({
+            msg:"user authenticated",
+            success:true,
+            data:{
+                user:{
+                    id:user.id,
+                    username:user.username,
+                    email:user.email
+                }
+            }
+        })
+    }catch(error){
+        next(error);
     }
 }
 
