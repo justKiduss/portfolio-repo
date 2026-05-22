@@ -45,3 +45,11 @@ export async function deleteMessageService(id:number,userId:number){
     return await model.delete(id,userId);
 }
 
+export async function getInteractedUsersService(id:number){
+    const userId=id;
+    if(!userId){
+        throw new AppError("user id is missing",400);
+    }
+    return await model.getInteractedUsers(userId);
+}
+

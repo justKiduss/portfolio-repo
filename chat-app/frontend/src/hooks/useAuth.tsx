@@ -1,3 +1,4 @@
+import { getUserInteraction } from "../service/MessageService";
 import { signUp,loginApi, logOut, checkAuth} from "../service/UserService";
 import { useChatStore } from "../store/useChatStore";
 export default function useAuth(){
@@ -5,6 +6,12 @@ export default function useAuth(){
     const setUser=useChatStore((state)=>state.setUser);
     const isLoading=useChatStore((state)=>state.isLoading);
     const setIsLoading=useChatStore((state)=>state.setIsLoading);
+    const users=useChatStore((state)=>state.users);
+    const setUsers=useChatStore((state)=>state.setUsers);
+    const messages=useChatStore((state)=>state.messages);
+    const setMessages=useChatStore((state)=>state.setMessages);
+    const addMessage=useChatStore((state)=>state.addMessage);
+
     async function signup(username:string,email:string,password:string){
         const userPayload=await signUp(username,email,password);
             setUser(userPayload);
@@ -30,7 +37,5 @@ export default function useAuth(){
             setIsLoading(false); // Drops the loading screen
         }
     }
-
-
     return {user, login, signup, logout, checkauth, isLoading};
 }

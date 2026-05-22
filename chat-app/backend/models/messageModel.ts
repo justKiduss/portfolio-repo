@@ -53,9 +53,23 @@ const messageModel=()=>{
                 (sender_id=$1 AND receiver_id=$2)
                 or (receiver_id=$1 AND sender_id=$2) ORDER BY created_at ASC`,[senderId,receiverId])
                 return res.rows;
+        },
+        getInteractedUsers:async(userId:number)=>{
+            const query=`WITH conversation_partners AS (
+                    SELECT DISTINCT CASE 
+                        WHEN sender_id = $1 THEN receiver_id
+                        ELSE sender_id
+                    END as partner_id
+                    FROM message
+                    WHERE sender_id = $1 OR receiver_id = $1
+                )
+                SELECT u.id, u.username, u.email
+                FROM users u
+                JOIN conversation_partners cp ON u.id = cp.partner_id;`;
+                const res=await pool.query(query,[userId]);
+                return res.rows;
         }
     }
 }
-
 const model=messageModel();
 export default model;

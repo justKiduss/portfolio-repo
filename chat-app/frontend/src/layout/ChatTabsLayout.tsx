@@ -1,21 +1,39 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
+import { getUserInteraction } from "../service/MessageService";
+import { useChatStore } from "../store/useChatStore";
 
 type TabOption = "active" | "online";
 
 export default function ChatsTabsLayout() {
   const [activeTab, setActiveTab] = useState<TabOption>("active");
   const [onlineUsers, setOnlineUsers] = useState<number[]>([]);
-  const { id: activeChatId } = useParams(); // Detects which user is currently clicked
-
-  // Mock Active Threads History
-  const activeChatsMock = [
-    { id: 101, name: "Alexander" },
-    { id: 102, name: "Helen" }
-  ];
+  const { id: activeChatId } = useParams(); 
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  
+  // Connect cleanly to your dynamic Zustand global array state
+  const users = useChatStore((state) => state.users);
+  const setUsers = useChatStore((state) => state.setUsers);
+  
+  useEffect(() => {
+    async function fetchSidebarThreads() {
+      try {
+        setLoadingUsers(true);
+        const data = await getUserInteraction();
+        setUsers(data || []);
+      } catch (err) {
+        console.error("Could not load interactions:", err);
+        setUsers([]);
+      } finally {
+        setLoadingUsers(false);
+      }
+    }
+    fetchSidebarThreads();
+  }, [setUsers]);
 
   useEffect(() => {
+    // Note: Make sure to map query: { userId: currentLoggedInUser.id } dynamically later!
     const socket = io("http://localhost:3000", {
       query: { userId: 42 },
       withCredentials: true
@@ -61,18 +79,31 @@ export default function ChatsTabsLayout() {
 
         {/* Dynamic Lists View Render */}
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
-          {activeTab === "active" ? (
-            activeChatsMock.map((chat) => (
-              <Link
-                key={chat.id}
-                to={`/chats/${chat.id}`}
-                className={`flex items-center p-3 rounded-lg text-sm transition-colors ${
-                  Number(activeChatId) === chat.id ? "bg-zinc-100 dark:bg-zinc-900" : "hover:bg-zinc-50 dark:hover:bg-zinc-900/40"
-                }`}
-              >
-                {chat.name}
-              </Link>
-            ))
+          {loadingUsers ? (
+            <div className="p-4 text-center font-mono text-xs text-zinc-400 dark:text-zinc-500">
+              Loading conversations...
+            </div>
+          ) : activeTab === "active" ? (
+            users.length === 0 ? (
+              <div className="p-4 text-center text-xs text-zinc-400 dark:text-zinc-500">
+                No active conversations yet.
+              </div>
+            ) : (
+              // Map through real data array containing {id, username, email}
+              users.map((chat) => (
+                <Link
+                  key={chat.id}
+                  to={`${chat.id}`}
+                  className={`flex items-center p-3 rounded-lg text-sm transition-colors font-medium ${
+                    String(activeChatId) === String(chat.id) 
+                      ? "bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white" 
+                      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900/40"
+                  }`}
+                >
+                  {chat.username}
+                </Link>
+              ))
+            )
           ) : (
             onlineUsers.map((userId) => (
               <Link
@@ -82,7 +113,9 @@ export default function ChatsTabsLayout() {
                   Number(activeChatId) === userId ? "bg-zinc-100 dark:bg-zinc-900" : "hover:bg-zinc-50 dark:hover:bg-zinc-900/40"
                 }`}
               >
-                <span>User {userId} {userId === 42 ? "(You)" : ""}</span>
+                <span className="text-zinc-700 dark:text-zinc-300">
+                  User {userId} {userId === 42 ? "(You)" : ""}
+                </span>
                 <span className="w-2 h-2 bg-green-500 rounded-full shadow-sm animate-pulse" />
               </Link>
             ))
