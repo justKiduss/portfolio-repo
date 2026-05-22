@@ -11,7 +11,7 @@ export async function signUp(username:string,email:string,password:string){
     const data=await res.json();
 
     if(!res.ok) throw new AppError("signing up failed res is wrong",404)
-    return await data.data.user;
+    return data.data.user;
 }
 
 export async function loginApi(username:string,password:string){
@@ -23,7 +23,7 @@ export async function loginApi(username:string,password:string){
     });
     const data=await res.json();
     if(!res.ok) throw new AppError("logging failed",401);
-    return await data.data.user;
+    return data.data.user;
 }
 
 export async function logOut(){

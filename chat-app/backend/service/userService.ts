@@ -29,13 +29,13 @@ export const getAllUserService=async ()=>{
 }
 
 export const getByIdService=async (id:number)=>{
-    if(!id) throw new AppError("Email required",400);
+    if(!id) throw new AppError("userId required",400);
     const res=await model.getById(id);
         return res;
 }
 
 export const getByUsernameService=async(username:string)=>{
-    if(!username) throw new AppError("Email required",400);
+    if(!username) throw new AppError("Username required",400);
     const res=await model.getByUsername(username);
     return res;
 }

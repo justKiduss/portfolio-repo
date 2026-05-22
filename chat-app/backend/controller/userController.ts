@@ -151,19 +151,8 @@ export async function logout(req:Request,res:Response,next:NextFunction){
 
 export async function checkAuth(req:Request,res:Response,next:NextFunction){
     try{
-        const token=req.cookies.token;
-        if(!token){
-            throw new AppError("unauthorized",401);
-        }
-        
-        const decoded=jwt.verify(token,process.env.JWT_SECRET!) as {
-            id:number;
-            isAdmin:boolean;
-        };
-        if (!decoded || typeof decoded === "string" || !decoded.id) {
-            throw new AppError("Invalid token token structure", 401);
-        }
-        const user=await model.getById(decoded.id);
+        const {id}=req.user;
+        const user=await model.getById(id);
         if(!user){
             throw new AppError("user not authnicated",401);
         }
