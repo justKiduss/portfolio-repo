@@ -18,7 +18,8 @@ export async function SendMessage(id:number,text:string,image:string){
     const res=await fetch(`${API}/${id}`,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({text,image})
+        body:JSON.stringify({text,image}),
+        credentials:'include'
     });
     const data=await res.json();
     if(!res.ok) throw new AppError('failed to send a message',401);

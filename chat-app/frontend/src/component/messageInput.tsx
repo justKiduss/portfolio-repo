@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Send, Image } from 'lucide-react';
 
 interface MessageInputProps {
-  onSendMessage?: (text: string) => void;
+  onSendMessage: (text: string,image?:string) => void;
 }
 
 export default function MessageInput({ onSendMessage }: MessageInputProps) {
@@ -11,7 +11,8 @@ export default function MessageInput({ onSendMessage }: MessageInputProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;
-    if (onSendMessage) onSendMessage(text);
+
+    onSendMessage(text,"");
     setText('');
   };
 

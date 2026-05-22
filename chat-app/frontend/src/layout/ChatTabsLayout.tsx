@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link, useParams } from "react-router-dom";
-import { io } from "socket.io-client";
 import { getUserInteraction } from "../service/MessageService";
 import { useChatStore } from "../store/useChatStore";
 
@@ -31,23 +30,6 @@ export default function ChatsTabsLayout() {
     }
     fetchSidebarThreads();
   }, [setUsers]);
-
-  useEffect(() => {
-    // Note: Make sure to map query: { userId: currentLoggedInUser.id } dynamically later!
-    const socket = io("http://localhost:3000", {
-      query: { userId: 42 },
-      withCredentials: true
-    });
-
-    socket.on("onlineUsers", (users: number[]) => {
-      setOnlineUsers(users);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
   return (
     <div className="flex-1 flex h-full min-w-0">
       
@@ -113,9 +95,9 @@ export default function ChatsTabsLayout() {
                   Number(activeChatId) === userId ? "bg-zinc-100 dark:bg-zinc-900" : "hover:bg-zinc-50 dark:hover:bg-zinc-900/40"
                 }`}
               >
-                <span className="text-zinc-700 dark:text-zinc-300">
+                {/* <span className="text-zinc-700 dark:text-zinc-300">
                   User {userId} {userId === 42 ? "(You)" : ""}
-                </span>
+                </span> */}
                 <span className="w-2 h-2 bg-green-500 rounded-full shadow-sm animate-pulse" />
               </Link>
             ))
