@@ -29,7 +29,7 @@ export function Header(){
                         );
                     })}
                     </div>
-                <ul className="flex list-none gap-4 md:gap-8 sm:gap-0.5">
+                <ul className="flex list-none gap-4 md:gap-8 sm:gap-0.5 ">
                     <li><a href="/about" className="hover:text-purple-500 text-sm md:text-base">About me</a></li>
                     <li><a href='/resume' className="hover:text-purple-500 text-sm md:text-base">Resume</a></li>
                     <li><a href='/projects' className="hover:text-purple-500 text-sm md:text-base">Projects</a></li>

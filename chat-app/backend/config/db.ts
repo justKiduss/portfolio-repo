@@ -15,13 +15,14 @@ pool.on('connect',()=>{
 })
 
 pool.on('error',(err)=>{
-    console.log('❌ Unexpected error on idle client', err);
+    console.log('❌ Unexpected esrror on idle client', err);
     process.exit(-1);
 })
 
 export default pool;
 
 const testConnection = async () => {
+    console.log("Attempting to test db connection");
     try {
         const res = await pool.query('SELECT NOW()');
         console.log('Database Time:', res.rows[0].now);
@@ -34,8 +35,8 @@ const testConnection = async () => {
         }
     }
 };
-if (process.env.NODE_ENV === "development") {
+// if (process.env.NODE_ENV === "development") {
     testConnection()
-}
+// }
 
 
