@@ -15,8 +15,11 @@ interface Message{
 
 interface ChatState{
     socket: Socket | null;
+    onlineUsers:number[];
+
     connectSocket: (userId: number) => void;
     disconnectSocket: () => void;
+    setOnlineUsers: (users: number[]) => void;
 
     //auth state data
     user:User | null;
@@ -52,12 +55,21 @@ export const useChatStore=create<ChatState>((set)=>({
 
     socket: null,
 
+    onlineUsers:[],
+    setOnlineUsers:(onlineUsers)=>
+        set({onlineUsers}),
+
     connectSocket: (userId) => set((state) => {
         if (state.socket?.connected) return state;
         const socket = io("http://localhost:8000", {
             query: { userId },
             withCredentials: true
         });
+
+        socket.on("onlineUsers",(users)=>{
+            set({onlineUsers:users})
+        });
+        
         return { socket };
         }),
     disconnectSocket: () => set((state) => {
