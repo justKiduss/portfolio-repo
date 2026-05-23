@@ -60,7 +60,7 @@ app.use(cors({
 app.set("trust proxy",1);
 app.use(express.json());
 app.use(cookieParser());
-
+app.use('/uploads',express.static("uploads"));
 app.get("/api",(req:Request,res:Response)=>{
     res.send("api is working");
 })

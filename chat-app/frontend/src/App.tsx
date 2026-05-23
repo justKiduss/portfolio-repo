@@ -7,7 +7,8 @@ import SignupForm from "./pages/signupPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import GuestRoute from "./routes/GuestRoute";
 import { useEffect } from "react";
-import { checkAuth } from "./service/UserService";
+import useAuth from "./hooks/useAuth";
+import ChatArea from "./component/chatArea";
 
 const router = createBrowserRouter([
   {
@@ -39,15 +40,15 @@ const router = createBrowserRouter([
             path: "chats",
             element: <ChatsTabsLayout />,
             children: [
-              {
-                index: true,
-                element: (
-                  <div>
-                    Select a chat thread to get started
-                  </div>
-                ),
-              },
-            ],
+            {
+              index: true,
+              element: <div className="p-6 text-zinc-400 text-center">Select a conversation to start chatting</div>
+            },
+            {
+              path: ":id",
+              element: <ChatArea />
+            },
+            ]
           },
         ],
       },
@@ -56,10 +57,19 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const {checkauth,isLoading}=useAuth();
 
   useEffect(()=>{
-    checkAuth();
+    checkauth();
   },[])
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-zinc-950 text-white font-mono">
+        Checking session...
+      </div>
+    );
+  }
   return <RouterProvider router={router} />;
 }
 

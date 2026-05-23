@@ -1,6 +1,6 @@
 import type {Request,Response,NextFunction} from "express";
 import { AppError } from "../middleware/error";
-import { deleteMessageService, getAllConversationService, sendMessageService, updateMessageService } from "../service/messageService";
+import { deleteMessageService, getAllConversationService, getInteractedUsersService, sendMessageService, updateMessageService } from "../service/messageService";
 import { getReceiverSocketId,io } from "../socket/socket";
 
 export async function getAllConversationController(req:Request,res:Response,next:NextFunction){
@@ -25,7 +25,8 @@ export async function sendMessageController(req:Request,res:Response,next:NextFu
     try{
         const senderId=req.user.id;
         const receiverId=req.params.id
-        const {text,image}=req.body;
+        const {text}=req.body.text;
+        const image=req.file?`/upload/${req.file.filename}`: null;
         if(!text&& !image){
             throw new AppError('message required',400);
         }
@@ -79,5 +80,21 @@ export async function deleteService(req:Request,res:Response,next:NextFunction){
         })
     }catch(error){
         next(error);
+    }
+}
+
+export async function getInteractedUsersController(req:Request,res:Response,next:NextFunction){
+    try{
+        const userId=req.user.id;
+        if(!userId){
+            throw new AppError("could get the user id",400);
+        }
+        const result=await getInteractedUsersService(userId);
+        res.status(200).json({
+            success:true,
+            data:result
+        })
+    }catch(error){
+        next(error)
     }
 }

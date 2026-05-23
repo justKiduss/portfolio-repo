@@ -16,7 +16,7 @@ const io=new Server(server,{
 const onlineUsers: {[key:number]:string}={};
 
 io.on("connection",(socket)=>{
-    const userId=Number(socket.handshake.query.id);
+    const userId=Number(socket.handshake.query.userId);
     
     if(userId){
         onlineUsers[userId]=socket.id;

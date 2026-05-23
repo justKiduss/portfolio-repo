@@ -2,7 +2,7 @@ import { AppError } from "../middleware/error";
 import model from "../models/messageModel";
 interface sendMessageDTO{
     text:string;
-    image:string;
+    image?:string|null;
 }
 
 interface updateMessageDTO{
@@ -43,5 +43,13 @@ export async function deleteMessageService(id:number,userId:number){
     const senderId=message.senderId===userId;
     if(!senderId) throw new AppError("sender id is mandatory",400);
     return await model.delete(id,userId);
+}
+
+export async function getInteractedUsersService(id:number){
+    const userId=id;
+    if(!userId){
+        throw new AppError("user id is missing",400);
+    }
+    return await model.getInteractedUsers(userId);
 }
 
