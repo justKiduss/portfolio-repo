@@ -2,7 +2,7 @@ import pool from "../config/db";
 const messageModel=()=>{
     interface CreateMessageDTO {
         text: string;
-        image?: string;
+        image?: string | null;
     }
     interface updateMessage{
         text:string;

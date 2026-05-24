@@ -1,11 +1,11 @@
 import express from "express";
-
+import { upload } from "../config/storage";
 import protect from "../middleware/protect";
 import { deleteService, getAllConversationController, getInteractedUsersController, sendMessageController, updateMessageController } from "../controller/messageController";
 const messageRouter=express.Router();
 
 messageRouter.get('/:id',protect,getAllConversationController);
-messageRouter.post('/:id',protect,sendMessageController);
+messageRouter.post('/:id',protect,upload.single("image"),sendMessageController);
 messageRouter.put('/:id',protect,updateMessageController);
 messageRouter.delete('/:id',protect,deleteService);
 messageRouter.get('/',protect,getInteractedUsersController);

@@ -25,7 +25,8 @@ export async function sendMessageController(req:Request,res:Response,next:NextFu
     try{
         const senderId=req.user.id;
         const receiverId=req.params.id
-        const {text,image}=req.body;
+        const {text}=req.body.text;
+        const image=req.file?`/upload/${req.file.filename}`: null;
         if(!text&& !image){
             throw new AppError('message required',400);
         }

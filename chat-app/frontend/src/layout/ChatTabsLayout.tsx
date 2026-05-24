@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Outlet, Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 import { getUserInteraction } from "../service/MessageService";
 import { useChatStore } from "../store/useChatStore";
 import {MessageSquare } from "lucide-react";
@@ -36,6 +36,8 @@ export default function ChatsTabsLayout() {
     fetchSidebarThreads();
   }, [setUsers]);
 
+
+  console.log("users",users)
   return (
     <div className="w-full h-screen flex bg-zinc-50 dark:bg-zinc-900/40 overflow-hidden">
       <div className="flex-1 flex h-full min-w-0 relative">

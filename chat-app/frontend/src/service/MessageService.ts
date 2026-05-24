@@ -14,11 +14,15 @@ export async function GetConversation(id:number){
     return await data.data;
 }
 
-export async function SendMessage(id:number,text:string,image:string){
+export async function SendMessage(id:number,text:string,image?:File | null){
+    const formData=new FormData();
+    formData.append("text",text);
+    if(image){
+        formData.append("image",image);
+    }
     const res=await fetch(`${API}/${id}`,{
         method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({text,image}),
+        body:formData,
         credentials:'include'
     });
     const data=await res.json();

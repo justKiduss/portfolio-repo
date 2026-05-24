@@ -12,8 +12,9 @@ export default function ChatArea() {
     const [loadingMessages,setLoadingMessages]=useState(false);
     const {id}=useParams();
     const addMessage=useChatStore((state)=>state.addMessage);
-    const user=useChatStore((state) => state.user);
     const socket=useChatStore((state)=>state.socket);
+    const users = useChatStore((state) => state.users);
+
     useEffect(()=>{
         async function fetchMessage(id:number){
             try{
@@ -43,10 +44,13 @@ export default function ChatArea() {
       }
     },[socket,addMessage])
     
-  const handleSend = async (text: string,image:string="") => {
+    const targetUser=users.find((u)=>Number(u.id)===Number(id));
+    const headerName=targetUser?.username || 'Chat';
+
+
+  const handleSend = async (text: string,image?:File | null) => {
     if (!id) return;
     try {
-      // 1. Fire the server request (Express reads senderId from your cookie)
       const newMessage = await SendMessage(Number(id), text,image);
       
       // 2. Push the returned message object directly to Zustand
@@ -63,7 +67,7 @@ export default function ChatArea() {
       <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
         <div>
           <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
-            {user?.username}
+            {headerName}
           </h2>
           <p className="text-[11px] text-green-500 font-medium">online</p>
         </div>
@@ -88,6 +92,13 @@ export default function ChatArea() {
               const messageSenderId = msg.sender_id ?? msg.senderId;
               const isIncoming = String(messageSenderId) === String(id);
 
+              const BACKEND_URL = "http://localhost:8000";
+              const rawPath = msg.image;
+
+              // Prepend URL and cleanly encode characters like spaces
+              const imageSource = rawPath 
+                ? encodeURI(rawPath.startsWith("http") ? rawPath : `${BACKEND_URL}${rawPath}`)
+                : null;
               return (
                 <div 
                   key={msg.id} // Uses the unique message id from your DB
@@ -100,12 +111,16 @@ export default function ChatArea() {
                         : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
                     }`}
                   >
-                    {msg.image && (
+                    {imageSource && (
                       <img 
-                        src={msg.image} 
+                        src={imageSource} 
                         alt="Chat attachment" 
-                        className="max-w-full h-auto max-h-60 rounded-lg object-cover mb-1"
+                        className="max-w-full h-auto max-h-60 rounded-lg object-cover mb-1 border border-zinc-200/20"
                         loading="lazy"
+                        onError={(e) => {
+                          // Quick backup indicator if the path misses an asset match boundary
+                          console.error("Image failed to render from target source:", imageSource);
+                        }}
                       />
                     )}
                     {msg.text || msg.image}

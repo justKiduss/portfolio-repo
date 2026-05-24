@@ -2,7 +2,7 @@ import { AppError } from "../middleware/error";
 import model from "../models/messageModel";
 interface sendMessageDTO{
     text:string;
-    image:string;
+    image?:string|null;
 }
 
 interface updateMessageDTO{
