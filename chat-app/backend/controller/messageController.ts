@@ -2,6 +2,7 @@ import type {Request,Response,NextFunction} from "express";
 import { AppError } from "../middleware/error";
 import { deleteMessageService, getAllConversationService, getInteractedUsersService, sendMessageService, updateMessageService } from "../service/messageService";
 import { getReceiverSocketId,io } from "../socket/socket";
+import { uploadToCloudinary } from "../config/cloudinary";
 
 export async function getAllConversationController(req:Request,res:Response,next:NextFunction){
     try{
@@ -24,9 +25,10 @@ export async function getAllConversationController(req:Request,res:Response,next
 export async function sendMessageController(req:Request,res:Response,next:NextFunction){
     try{
         const senderId=req.user.id;
-        const receiverId=req.params.id
-        const {text}=req.body.text;
-        const image=req.file?`/upload/${req.file.filename}`: null;
+        const receiverId=req.params.id;
+        const text=req.body.text?.trim();
+        // const image=req.file?`/uploads/${req.file.filename}`: null;
+        const image=req.file? await uploadToCloudinary(req.filter.buffer):null;
         if(!text&& !image){
             throw new AppError('message required',400);
         }

@@ -6,4 +6,16 @@ cloudinary.config({
     cloud_api_secret:process.env.CLOUD_API_SECRET,
 });
 
+export async function uploadToCloudinary(buffer: Buffer): Promise<string> {
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+            { folder: "chat-images" },
+            (error, result) => {
+                if (error || !result) return reject(error);
+                resolve(result.secure_url);
+            }
+        ).end(buffer);
+    });
+}
+
 export default cloudinary;
