@@ -28,10 +28,17 @@ export async function sendMessageController(req:Request,res:Response,next:NextFu
         const receiverId=req.params.id;
         const text=req.body.text?.trim();
         // const image=req.file?`/uploads/${req.file.filename}`: null;
-        const image=req.file? await uploadToCloudinary(req.filter.buffer):null;
+        let image=null;
+
+        if (req.file) {
+            image = await uploadToCloudinary(req.file.buffer);
+        }
+
         if(!text&& !image){
             throw new AppError('message required',400);
         }
+        // const result=req.file? await uploadToCloudinary(req.filter.buffer):null;
+        
         const result =await sendMessageService(Number(senderId),Number(receiverId),{text,image});
 
         const receiverSocketId=getReceiverSocketId(Number(receiverId));
