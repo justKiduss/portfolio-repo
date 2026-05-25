@@ -125,7 +125,7 @@ export default function ChatArea() {
                                                 alt="Chat attachment" 
                                                 className="max-w-full h-auto max-h-60 rounded-lg object-cover mb-1 border border-zinc-200/20"
                                                 loading="lazy"
-                                                onError={(e) => {
+                                                onError={(e: React.FormEvent) => {
                                                     console.error("Image failed to render from target source:", imageSource);
                                                 }}
                                             />
