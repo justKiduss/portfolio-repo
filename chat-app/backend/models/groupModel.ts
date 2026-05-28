@@ -48,7 +48,7 @@ export const groupModel=()=>{
                 INSERT INTO "group" (
                 group_name,
                 group_admin,
-                group_profile_pic,
+                group_profile_pic
                 )
                 VALUES ($1,$2,$3) 
                 RETURNING 
@@ -60,7 +60,7 @@ export const groupModel=()=>{
                 `,[
                     group_name,
                     group_admin,
-                    group_profile_pic,
+                    finalPic
                 ]);
                 return res.rows[0];
         },
@@ -82,5 +82,5 @@ export const groupModel=()=>{
     }
 }
 
-const model=groupModel();
-export default model;
+const groupmodel=groupModel();
+export default groupmodel;
