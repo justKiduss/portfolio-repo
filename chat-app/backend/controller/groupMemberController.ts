@@ -1,5 +1,5 @@
 import type {Request,Response,NextFunction} from "express";
-import { addGroupMemberSerice, getAllMembersService, leaveGroupService, searchMembersService } from "../service/groupMessageService";
+import { addGroupMemberSerice, getAllMembersService, leaveGroupService, searchMembersService } from "../service/groupMemberService";
 import { AppError } from "../middleware/error";
 import { getGroupsByIdService } from "../service/groupService";
 

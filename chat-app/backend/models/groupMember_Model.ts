@@ -68,8 +68,21 @@ function groupMembers_Model() {
 
             // Returns the deleted row if successful, or null if no match was found
             return res.rows[0] || null;
+        },
+        // Add this inside your groupMembers_Model return block
+        checkExactMember: async (group_id: number, username: string) => {
+            const res = await pool.query(`
+                SELECT 1 
+                FROM public.group_members gm
+                INNER JOIN public.users u ON gm.user_id = u.id
+                WHERE gm.group_id = $1 AND u.username = $2
+                LIMIT 1
+            `, [group_id, username]);
+            
+            return res.rows[0] || null; // Returns row if found, null if not
         }
     }
+    
 }
 
 const model=groupMembers_Model();

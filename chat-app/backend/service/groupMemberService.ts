@@ -33,13 +33,9 @@ export async function addGroupMemberSerice(group_id:number,username:string){
     //     throw new AppError("this user is already in this group",404);
     // }
 
-    const existing=
-    await model.searchGroupMembers(
-    group_id,
-    username
-    );
+    const existing=await model.checkExactMember(group_id,username );
 
-    if(existing.length > 0){
+    if(existing){
         throw new AppError(
             "user already exists in group",
             409
@@ -56,10 +52,13 @@ export async function leaveGroupService(group_id: number, loggedInUserId: number
     if (!group) {
         throw new AppError("Group not found", 404);
     }
+    console.log(loggedInUserId);
+    console.log(targetUserId);
 
     // CASE 1: The user is trying to leave voluntarily
-    if (loggedInUserId === targetUserId) {
+    if(Number(loggedInUserId)===Number(targetUserId)){
         // Rule: Group admins cannot leave and create adminless groups
+        console.log("true, are loggedInUserId === targetUserId equal")
         if (group.group_admin === loggedInUserId) {
             throw new AppError("Admin cannot leave the group. You must delete the group or transfer ownership first.", 400);
         }

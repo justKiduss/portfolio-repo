@@ -1,7 +1,7 @@
 import type {Request,Response,NextFunction} from "express";
 import { createService, getByGroupNameService,getAllGroupsService, getGroupsByIdService, deleteService} from "../service/groupService";
 import { AppError } from "../middleware/error";
-import { addGroupMemberSerice } from "../service/groupMessageService";
+import { addGroupMemberSerice } from "../service/groupMemberService";
 
 export async function getAllGroupsController(req:Request,res:Response,next:NextFunction){
     try{

@@ -1,7 +1,7 @@
 import { AppError } from "../middleware/error";
 import groupmodel from "../models/groupModel";
 import model from "../models/userModel";
-import { addGroupMemberSerice } from "./groupMessageService";
+import { addGroupMemberSerice } from "./groupMemberService";
 
 interface createGroupDTO {
     group_name:string,
