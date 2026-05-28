@@ -16,10 +16,10 @@ export async function getAllGroupsController(req:Request,res:Response,next:NextF
 }
 export async function getGroupsByNameController(req:Request,res:Response,next:NextFunction){
     try{
-        const res=await getByGroupNameService(req.body.group_name);
+        const result=await getByGroupNameService(req.body.group_name);
         return res.status(200).json({
             success:true,
-            data:res
+            data:result
         })
     }catch(error){
         next(error)
