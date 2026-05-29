@@ -80,6 +80,16 @@ function groupMembers_Model() {
             `, [group_id, username]);
             
             return res.rows[0] || null; // Returns row if found, null if not
+        },
+        isUserInGroup: async (group_id: number, user_id: number) => {
+            const res = await pool.query(`
+                SELECT 1 
+                FROM public.group_members
+                WHERE group_id = $1 AND user_id = $2
+                LIMIT 1
+            `, [group_id, user_id]);
+
+            return res.rows[0] || null; // Returns { ?column?: 1 } if true, null if false
         }
     }
     

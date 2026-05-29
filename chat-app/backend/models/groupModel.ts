@@ -77,6 +77,17 @@ export const groupModel=()=>{
                     created_at
                     `,[group_id]);
                     return res.rows[0] || null ;
+        },
+        // Add this inside your groupModel return block
+        isAdmin: async (group_id: number, user_id: number): Promise<boolean> => {
+            const res = await pool.query(`
+                SELECT 1 
+                FROM public.groups
+                WHERE id = $1 AND group_admin = $2
+                LIMIT 1
+            `, [group_id, user_id]);
+
+            return res.rows.length > 0;
         }
 
     }

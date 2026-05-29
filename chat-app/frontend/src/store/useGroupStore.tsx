@@ -1,9 +1,10 @@
 import { create } from "zustand";
 
 export interface Group {
-    id: number;
+    group_id: number;
     group_name: string;
     group_admin: number;
+    group_profile_pic:string;
     created_at?: string;
 }
 
@@ -25,12 +26,15 @@ export interface GroupMessage {
 }
 
 interface GroupState {
+    // group state
+
     groups: Group[];
+    isLoading:boolean;
     currentGroup: Group | null;
     groupMembers: GroupMember[];
     groupMessages: GroupMessage[];
     
-    // Actions
+    setIsLoading:(loading:boolean)=>void;
     setGroups: (groups: Group[]) => void;
     setCurrentGroup: (group: Group | null) => void;
     setGroupMembers: (members: GroupMember[]) => void;
@@ -44,12 +48,14 @@ interface GroupState {
     // stopListeningToGroupMessages: () => void;
 }
 
-export const useGroupStore = create<GroupState>((set, get) => ({
+export const useGroupStore = create<GroupState>((set) => ({
     groups: [],
     currentGroup: null,
     groupMembers: [],
     groupMessages: [],
+    isLoading:true,
 
+    setIsLoading:(isLoading)=>set({isLoading}),
     setGroups: (groups) => set({ groups }),
     setCurrentGroup: (currentGroup) => set({ currentGroup }),
     setGroupMembers: (groupMembers) => set({ groupMembers }),

@@ -9,10 +9,11 @@ import GuestRoute from "./routes/GuestRoute";
 import { useEffect } from "react";
 import useAuth from "./hooks/useAuth";
 import ChatArea from "./component/chatArea";
+import GroupTabsLayout from "./layout/groupTabsLayout";
 
 const router = createBrowserRouter([
   {
-    element: <GuestRoute/>,
+    element: <GuestRoute />,
     children: [
       {
         path: "/",
@@ -35,21 +36,37 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <MainLayout />,
+        // Combined into a SINGLE children array
         children: [
           {
             path: "chats",
             element: <ChatsTabsLayout />,
             children: [
-            {
-              index: true,
-              element: <div className="p-6 text-zinc-400 text-center">Select a conversation to start chatting</div>
-            },
-            {
-              path: ":id",
-              element: <ChatArea />
-            },
+              {
+                index: true,
+                element: <div className="p-6 text-zinc-400 text-center">Select a conversation to start chatting</div>
+              },
+              {
+                path: ":id",
+                element: <ChatArea />
+              },
             ]
           },
+          {
+            // Fixed path to perfectly match your SidebarLink path: "/dashboard/group_chats"
+            path: "group_chats", 
+            element: <GroupTabsLayout />,
+            children: [
+              {
+                index: true,
+                element: <div className="p-6 text-zinc-400 text-center">Select a group conversation to start chatting</div>
+              },
+              {
+                path: ":id",
+                element: <ChatArea />
+              }
+            ]
+          }
         ],
       },
     ],

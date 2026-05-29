@@ -2,6 +2,15 @@ import { AppError } from "../middleware/error";
 import model from "../models/groupMember_Model";
 import groupModel from "../models/groupModel";
 
+
+export async function checkMember(group_id:number,user_id:number){
+    if(!group_id || !user_id){
+        throw new AppError("group_id and user id is needed",400);
+    }
+    const res=await model.isUserInGroup(group_id,user_id);
+    return res;
+}
+
 export async function getAllMembersService(group_id:number){
     if(!group_id){
             throw new AppError("group not found",400);
@@ -33,7 +42,7 @@ export async function addGroupMemberSerice(group_id:number,username:string){
     //     throw new AppError("this user is already in this group",404);
     // }
 
-    const existing=await model.checkExactMember(group_id,username );
+    const existing=await model.checkExactMember(group_id,username.trim() );
 
     if(existing){
         throw new AppError(
@@ -79,3 +88,4 @@ export async function leaveGroupService(group_id: number, loggedInUserId: number
 
     return res;
 }
+
