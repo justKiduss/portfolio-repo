@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import useAuth from "./hooks/useAuth";
 import ChatArea from "./component/chatArea";
 import GroupTabsLayout from "./layout/groupTabsLayout";
+import GroupChat from "./component/groupChat";
+import CreateGroup from "./component/createGroup";
 
 const router = createBrowserRouter([
   {
@@ -63,7 +65,11 @@ const router = createBrowserRouter([
               },
               {
                 path: ":id",
-                element: <ChatArea />
+                element: <GroupChat />
+              },
+              {
+                path:"create-group",
+                element:<CreateGroup/>
               }
             ]
           }

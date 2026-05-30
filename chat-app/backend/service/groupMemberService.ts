@@ -8,7 +8,7 @@ export async function checkMember(group_id:number,user_id:number){
         throw new AppError("group_id and user id is needed",400);
     }
     const res=await model.isUserInGroup(group_id,user_id);
-    return res;
+    return res !==null;
 }
 
 export async function getAllMembersService(group_id:number){

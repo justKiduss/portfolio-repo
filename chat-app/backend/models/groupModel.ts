@@ -32,11 +32,14 @@ export const groupModel=()=>{
         },
 
         getByGroupName:async(group_name:string)=>{
+
+            const searchPattern = `%${group_name}%`;
+
             const res=await pool.query(`
                 SELECT group_id,group_name,group_admin,group_profile_pic,created_at FROM "group"
-                WHERE group_name=$1
-                `,[group_name]);
-                return res.rows[0] || null;
+                WHERE group_name ILIKE $1
+                `,[searchPattern]);
+                return res.rows;
         },
 
         create:async(data:createGroupDTO)=>{
@@ -78,12 +81,11 @@ export const groupModel=()=>{
                     `,[group_id]);
                     return res.rows[0] || null ;
         },
-        // Add this inside your groupModel return block
         isAdmin: async (group_id: number, user_id: number): Promise<boolean> => {
             const res = await pool.query(`
                 SELECT 1 
-                FROM public.groups
-                WHERE id = $1 AND group_admin = $2
+                FROM "group"
+                WHERE group_id = $1 AND group_admin = $2
                 LIMIT 1
             `, [group_id, user_id]);
 

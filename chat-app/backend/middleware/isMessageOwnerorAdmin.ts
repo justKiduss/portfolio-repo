@@ -6,10 +6,10 @@ import groupModel from "../models/groupModel";
 export default async function isMessageOwnerOrAdmin(req: Request, res: Response, next: NextFunction) {
     try {
         const user_id = req.user.id;
-        const id = req.params.id; 
-        const message_id = req.params.id;
+        const group_id = req.params.id; 
+        const message_id = req.params.messageId;
 
-        if (!message_id || !id) {
+        if (!message_id || !group_id) {
             throw new AppError("Group ID and Message ID are required for authorization", 400);
         }
 
@@ -20,7 +20,7 @@ export default async function isMessageOwnerOrAdmin(req: Request, res: Response,
         }
 
         // 2. Fallback: Check if the user is the group admin
-        const isAdmin = await groupModel.isAdmin(Number(id), user_id);
+        const isAdmin = await groupModel.isAdmin(Number(message_id), user_id);
         if (isAdmin) {
             return next(); // User is the admin, allow deletion!
         }

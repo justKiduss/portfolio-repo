@@ -49,6 +49,7 @@ export async function addGroupMemberController(req:Request,res:Response,next:Nex
             success:true,
             data:result
         })
+        
     }catch(error){
         next(error);
     }

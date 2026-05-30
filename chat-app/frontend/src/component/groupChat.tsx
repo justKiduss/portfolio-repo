@@ -1,20 +1,19 @@
 import { Search, MoreVertical } from "lucide-react";
 import MessageInput from "./messageInput";
 import { ChatMessagesSkeleton } from "../skeleton/chatMessageSkeleton";
-import { useChatStore } from "../store/useChatStore";
-// 1. Added useRef here
 import { useEffect, useState, useRef } from "react"; 
-import { GetConversation, SendMessage } from "../service/MessageService";
 import { useParams } from "react-router-dom";
+import { useGroupStore } from "../store/useGroupStore";
+import { allMessage,sendMessage,updateMessage,deleteMessage } from "../service/groupMessage_Service";
 
-export default function ChatArea() {
-    const messages = useChatStore((state) => state.messages);
-    const setMessages = useChatStore((state) => state.setMessages);
+export default function GroupChat() {
+    const groupMessages=useGroupStore((state)=>state.groupMessages);
+    const setGroupMessages=useGroupStore((state)=>state.setGroupMessages);
     const [loadingMessages, setLoadingMessages] = useState(false);
-    const { id } = useParams();
-    const addMessage = useChatStore((state) => state.addMessage);
-    const socket = useChatStore((state) => state.socket);
-    const users = useChatStore((state) => state.users);
+    const {id}=useParams();
+    const {messageId}=useParams();
+    const addGroupMessage=useGroupStore((state)=>state.addGroupMessage);
+    const groups=useGroupStore((state)=>state.groups);
 
     // 2. Created the scroll reference anchor hook
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -22,17 +21,17 @@ export default function ChatArea() {
     // 3. Effect to seamlessly slide down whenever a new item is appended to messages
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+    }, [groupMessages]);
 
     useEffect(() => {
         async function fetchMessage(id: number) {
             try {
                 setLoadingMessages(true);
-                const data = await GetConversation(id);
-                setMessages(data || []);
+                const data = await allMessage(id);
+                setGroupMessages(data || []);
             } catch (err) {
                 console.error("could not load messages: ", err);
-                setMessages([]);
+                setGroupMessages([]);
             } finally {
                 setLoadingMessages(false);
             }
@@ -40,32 +39,29 @@ export default function ChatArea() {
         if (id) {
             fetchMessage(Number(id));
         }
-    }, [id, setMessages]);
+    }, [id, setGroupMessages]);
 
-    useEffect(() => {
-        if (!socket) return;
+    // useEffect(() => {
+    //     if (!socket) return;
 
-        const handler = (msg: any) => {
-            addMessage(msg);
-        };
-
-        socket.on("newMessage", handler);
-        
-        return () => {
-            socket.off("newMessage", handler); // remove specific handler, not all
-        };
-    }, [socket]);
+    //     socket.on("newMessage", (msg) => {
+    //         addMessage(msg);
+    //     });
+    //     return () => {
+    //         socket.off("newMessage");
+    //     };
+    // }, [socket, addMessage]);
     
-    const targetUser = users.find((u) => Number(u.id) === Number(id));
-    const headerName = targetUser?.username || 'Chat';
+    const targetUser = groups.find((u) => Number(u.group_id) === Number(id));
+    const headerName = targetUser?.group_name || 'Chat';
 
-    const handleSend = async (text: string, image?: File | null) => {
+    const handleSend = async (text: string, image?: File | null, voice?: File | null, video?: File | null) => {
         if (!id) return;
         try {
-            const newMessage = await SendMessage(Number(id), text, image);
+            const newMessage = await sendMessage(Number(id), text, image,voice,video);
             
             if (newMessage) {
-                addMessage(newMessage); 
+                addGroupMessage(newMessage); 
             }
         } catch (err) {
             console.error("Failed to route message transaction:", err);
@@ -99,7 +95,7 @@ export default function ChatArea() {
                     <ChatMessagesSkeleton />
                 ) : (
                     <div className="flex flex-col justify-end min-h-full space-y-3">
-                        {messages.map((msg: any) => {
+                        {groupMessages.map((msg: any) => {
                             const messageSenderId = msg.sender_id ?? msg.senderId;
                             const isIncoming = String(messageSenderId) === String(id);
 

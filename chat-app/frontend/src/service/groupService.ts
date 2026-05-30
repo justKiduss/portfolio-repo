@@ -12,20 +12,21 @@ export async function allGroups(){
     return data.data;
 } 
 
-export async function getGroupsByName(group_name:string){
-    const res=await fetch(`${API}/group_name`,{
-        method:'GET',
-        headers:{'Content-Type':'application/json'},
-        credentials:'include',
-        body:JSON.stringify({group_name})
+// Inside your groupService.ts file
+export async function getGroupsByName(group_name: string) {
+    const res = await fetch(`${API}/group_name?name=${encodeURIComponent(group_name)}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
     });
-    const data=await res.json();
-    if(!res.ok) throw new AppError("could get the group by name",404);
+    
+    const data = await res.json();
+    if (!res.ok) throw new AppError("Could not get the group by name", 404);
     return data.data;
 }
 
 export async function createAgroup(group_name:string){
-    const res=await fetch(`S{API}/`,{
+    const res=await fetch(`${API}/`,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         credentials:'include',

@@ -17,7 +17,7 @@ export default function useAuth(){
     async function login(username:string,password:string){
         const userPayload=await loginApi(username,password);
         setUser(userPayload);
-        connectSocket(userPayload.id);
+        connectSocket(userPayload);
     }
     async function logout(){
         await logOut();
@@ -30,7 +30,7 @@ export default function useAuth(){
             setIsLoading(true); 
             const userPayload = await checkAuth();
             setUser(userPayload);
-            connectSocket(userPayload.id);
+            connectSocket(userPayload);
         } catch (error) {
             console.error("Session verification failed:", error);
             setUser(null);

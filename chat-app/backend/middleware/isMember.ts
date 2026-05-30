@@ -7,8 +7,8 @@ export default async function isMember(req:Request,res:Response,next:NextFunctio
         const group_id=req.params.id;
         const user_id=req.user.id;
 
-        const result=await checkMember(Number(group_id),user_id);
-        if(!result.ok){
+        const hasMemberShip=await checkMember(Number(group_id),user_id);
+        if(!hasMemberShip){
             throw new AppError("user is not member in the group",404);
         }
         next();

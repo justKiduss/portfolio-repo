@@ -41,9 +41,21 @@ export async function sendMessageController(req:Request,res:Response,next:NextFu
         
         const result =await sendMessageService(Number(senderId),Number(receiverId),{text,image});
 
-        const receiverSocketId=getReceiverSocketId(Number(receiverId));
+        const receiverSocketId =
+            getReceiverSocketId(
+                Number(receiverId)
+            );
+
+            console.log(
+                "receiver:",
+                receiverSocketId
+                );
         if(receiverSocketId){
-            io.to(receiverSocketId).emit("newMessage",result);
+            io.to(receiverSocketId)
+            .emit(
+                "newMessage",
+                result
+            );
         }
         res.status(201).json({
             success:true,

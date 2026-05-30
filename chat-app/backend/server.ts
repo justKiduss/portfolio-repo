@@ -11,6 +11,7 @@ import userRouter from "./routes/userRoutes";
 import {app,server } from "./socket/socket";
 import groupRoute from "./routes/groupRoute";
 import groupMember_route from "./routes/groupMember_Route";
+import groupMessage_route from "./routes/groupMessage_Route";
 
 const Port=process.env.PORT;
 
@@ -71,6 +72,8 @@ app.use('/api/users',userRouter);
 app.use('/api/messages',messageRouter);
 app.use('/api/group',groupRoute);
 app.use('/api/group-member',groupMember_route);
+app.use('/api/group-message',groupMessage_route);
+
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
     console.error(err);

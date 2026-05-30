@@ -13,23 +13,41 @@ const io=new Server(server,{
     }
 });
 
-const onlineUsers: {[key:number]:string}={};
+const onlineUsers: {[key:number]: { socketId: string; username: string } }={};
 
 io.on("connection",(socket)=>{
     const userId=Number(socket.handshake.query.userId);
-    
+    const username = socket.handshake.query.username as string;
+
     if(userId){
-        onlineUsers[userId]=socket.id;
-        io.emit('onlineUsers',Object.keys(onlineUsers).map(Number));
+        onlineUsers[userId]={
+            socketId:socket.id,
+            username:username
+        };
+        const broadcastList = Object.entries(onlineUsers).map(([id, data]) => ({
+            userId: Number(id),
+            username: data.username
+        }));
+
+        io.emit('onlineUsers', broadcastList);
     }
-    socket.on("disconnect",()=>{
-        delete onlineUsers[userId];
-        io.emit("onlineUsers",Object.keys(onlineUsers).map(Number))
+    socket.on("disconnect", () => {
+        if (userId) {
+            delete onlineUsers[userId];
+            
+            const broadcastList = Object.entries(onlineUsers).map(([id, data]) => ({
+                userId: Number(id),
+                username: data.username
+            }));
+            
+            io.emit("onlineUsers", broadcastList);
+        }
     });
 });
 
 export function getReceiverSocketId(receiverId: number) {
-    return onlineUsers[receiverId];
+    // Safely look up via both string and numeric variants
+    return onlineUsers[receiverId]?.socketId || onlineUsers[String(receiverId) as any]?.socketId;
 }
 
 export { io, app, server };

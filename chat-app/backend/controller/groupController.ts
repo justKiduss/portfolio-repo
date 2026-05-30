@@ -16,7 +16,12 @@ export async function getAllGroupsController(req:Request,res:Response,next:NextF
 }
 export async function getGroupsByNameController(req:Request,res:Response,next:NextFunction){
     try{
-        const result=await getByGroupNameService(req.body.group_name);
+        const group_name = req.query.name as string; 
+
+        if (!group_name) {
+            return res.status(400).json({ success: false, message: "Group name query is required" });
+        }
+        const result=await getByGroupNameService(group_name);
         return res.status(200).json({
             success:true,
             data:result
