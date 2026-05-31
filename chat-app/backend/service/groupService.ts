@@ -34,7 +34,7 @@ export async function createService(data:createGroupDTO){
     if (!existingUser) {
         throw new AppError("Admin user not found", 404);
     }
-    const existingGroup=await groupmodel.getByGroupName(data.group_name);
+    const existingGroup=await groupmodel.getGroupByFullName(data.group_name);
     if(existingGroup){
         throw new AppError("group_name already Exists",409);
     }

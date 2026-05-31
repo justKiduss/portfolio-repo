@@ -67,3 +67,25 @@ export async function deleteController(req:Request,res:Response,next:NextFunctio
         next(error);
     }
 }
+
+export async function checkGroupAdmin(req:Request,res:Response,next:NextFunction){
+    try{
+        const group_id = req.params.id; 
+        const user_id=req.user.id;
+
+        const group=await getGroupsByIdService(Number(group_id));
+        if(!group){
+            throw new AppError("group not found",404);
+        }
+
+
+        const isAdmin=Number(user_id) === Number(group.group_admin);
+
+        res.status(200).json({
+            succss:true,
+            isAdmin:isAdmin
+        })
+    } catch (error) {
+        next(error);
+    }
+}

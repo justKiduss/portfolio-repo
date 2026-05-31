@@ -12,6 +12,7 @@ import ChatArea from "./component/chatArea";
 import GroupTabsLayout from "./layout/groupTabsLayout";
 import GroupChat from "./component/groupChat";
 import CreateGroup from "./component/createGroup";
+import AddGroupMember from "./component/addGroupMembers";
 
 const router = createBrowserRouter([
   {
@@ -55,7 +56,6 @@ const router = createBrowserRouter([
             ]
           },
           {
-            // Fixed path to perfectly match your SidebarLink path: "/dashboard/group_chats"
             path: "group_chats", 
             element: <GroupTabsLayout />,
             children: [
@@ -64,12 +64,23 @@ const router = createBrowserRouter([
                 element: <div className="p-6 text-zinc-400 text-center">Select a group conversation to start chatting</div>
               },
               {
-                path: ":id",
-                element: <GroupChat />
+                path: "create-group", // 🚀 Sibling to dynamic groups is fine for global creation
+                element: <CreateGroup />
               },
               {
-                path:"create-group",
-                element:<CreateGroup/>
+                path: ":id",
+                // We remove the direct element self-closure here if we want sub-layouts, 
+                // or we handle it as a nesting layout wrapper.
+                children: [
+                  {
+                    index: true, // This renders <GroupChat /> when hitting exactly /dashboard/group_chats/:id
+                    element: <GroupChat />
+                  },
+                  {
+                    path: "add-member", // 🚀 Renders when hitting /dashboard/group_chats/:id/add-member
+                    element: <AddGroupMember /> 
+                  }
+                ]
               }
             ]
           }

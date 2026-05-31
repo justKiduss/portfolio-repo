@@ -41,7 +41,15 @@ export const groupModel=()=>{
                 `,[searchPattern]);
                 return res.rows;
         },
+        getGroupByFullName:async(group_name:string)=>{
 
+
+            const res=await pool.query(`
+                SELECT group_id,group_name,group_admin,group_profile_pic,created_at FROM "group"
+                WHERE group_name=$1
+                `,[group_name]);
+                return res.rows[0];
+        },
         create:async(data:createGroupDTO)=>{
             const {group_name,group_admin,group_profile_pic}=data;
             
@@ -91,7 +99,6 @@ export const groupModel=()=>{
 
             return res.rows.length > 0;
         }
-
     }
 }
 

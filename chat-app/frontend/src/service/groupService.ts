@@ -33,16 +33,28 @@ export async function createAgroup(group_name:string){
         body:JSON.stringify({group_name})
     })
     const data=await res.json();
-    if(!res.ok) throw new AppError("could create a group",404);
+    if(!res.ok) throw new AppError("couldn't create a group",404);
     return data.data;
 }
 
 export async function deleteGroup(group_id:number,){
-    const res=await fetch(`S{API}/${group_id}`,{
+    const res=await fetch(`${API}/${group_id}`,{
         method:'DELETE',
         headers:{'Content-Type':'application/json'},
         credentials:'include',
     })
-    await res.json();
+    const data=await res.json();
     if(!res.ok) throw new AppError("couldn't delete the group",404);
+    return data;
+}
+
+export async function checkGroupAdmin(group_id:number){
+    const res=await fetch(`${API}/${group_id}/isAdmin`,{
+        method:'GET',
+        headers:{'Content-Type':'application/json'},
+        credentials:'include'
+    });
+    const data=await res.json();
+    if(!res.ok) throw new AppError("couldn't get if admin or not",404);
+    return data.isAdmin;
 }

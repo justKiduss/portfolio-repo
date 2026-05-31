@@ -5,7 +5,8 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useGroupStore } from "../store/useGroupStore";
 import { allMessage,sendMessage,updateMessage,deleteMessage } from "../service/groupMessage_Service";
-
+import { checkGroupAdmin, deleteGroup } from "../service/groupService";
+import { useNavigate } from "react-router-dom";
 export default function GroupChat() {
     const groupMessages=useGroupStore((state)=>state.groupMessages);
     const setGroupMessages=useGroupStore((state)=>state.setGroupMessages);
@@ -14,11 +15,47 @@ export default function GroupChat() {
     const {messageId}=useParams();
     const addGroupMessage=useGroupStore((state)=>state.addGroupMessage);
     const groups=useGroupStore((state)=>state.groups);
-
-    // 2. Created the scroll reference anchor hook
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-    // 3. Effect to seamlessly slide down whenever a new item is appended to messages
+    const [isAdmin,setIsAdmin]=useState(false);
+    const {id:group_id}=useParams();
+    const [More,setMore]=useState(false);
+    const navigate=useNavigate();
+
+    const handleDeleteGroup = async () => {
+        if (!id) return;
+        
+        const confirmDelete = window.confirm("Are you sure you want to delete this group?");
+        if (!confirmDelete) return;
+
+        try {
+            await deleteGroup(Number(id)); 
+            
+            navigate("/dashboard/group_chats"); 
+        } catch (err) {
+            console.error("Failed to delete the target group database layout:", err);
+            alert("Could not delete this group. Please try again.");
+        }
+    };
+
+    useEffect(()=>{
+        async function fetchAdminStatus(){
+            if(!id) return;
+            try{
+                setIsAdmin(false);
+                setMore(false); 
+                
+                const adminStatus = await checkGroupAdmin(Number(group_id));
+                console.log("admin",adminStatus);
+                setIsAdmin(adminStatus);
+            }catch(err){
+                console.error("Role authorization failed:", err);
+                setIsAdmin(false);
+            }
+        }
+        fetchAdminStatus();
+    },[group_id])
+
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [groupMessages]);
@@ -83,9 +120,34 @@ export default function GroupChat() {
                     <button type="button" className="p-2 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 rounded-lg transition-colors">
                         <Search size={18} />
                     </button>
-                    <button type="button" className="p-2 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 rounded-lg transition-colors">
+                    <button type="button" className="p-2 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 rounded-lg transition-colors"
+                        onClick={()=>setMore(!More)}>
                         <MoreVertical size={18} />
                     </button>
+                    {More && isAdmin && (
+                        <div className="absolute right-0 top-11 w-44 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-lg py-1 z-50">
+                            {/* 🚀 Add Member Action Option */}
+                            <button 
+                                className="w-full px-3 py-2 text-left text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
+                                onClick={() => {
+                                    setMore(false);
+                                    navigate("add-member")
+                                }}
+                                
+                            >
+                                Add members
+                            </button>
+                            
+                            <hr className="border-zinc-100 dark:border-zinc-800" />
+                            
+                            <button 
+                                className="w-full px-3 py-2 text-left text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+                                onClick={handleDeleteGroup}
+                            >
+                                Delete this group
+                            </button>
+                        </div>
+                    )}
                 </div>
             </header>
 
