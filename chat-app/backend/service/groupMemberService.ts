@@ -1,6 +1,7 @@
 import { AppError } from "../middleware/error";
 import model from "../models/groupMember_Model";
 import groupModel from "../models/groupModel";
+import { getByIdService } from "./userService";
 
 
 export async function checkMember(group_id:number,user_id:number){
@@ -33,25 +34,24 @@ export async function searchMembersService(group_id: number, username: string) {
     return res;
 }
 
-export async function addGroupMemberSerice(group_id:number,username:string){
-    if(!group_id || !username){
-        throw new AppError("group_name not found",400);
+export async function addGroupMemberSerice(group_id:number,userIds:string []){
+    if(!group_id || !userIds || Number(userIds.length) === 0){
+        throw new AppError("groupid or the user selection are required fields",400);
     }
-    // const userExistingInGroup=await model.searchGroupMembers(group_id,username);
-    // if(userExistingInGroup){
-    //     throw new AppError("this user is already in this group",404);
-    // }
-
-    const existing=await model.checkExactMember(group_id,username.trim() );
-
-    if(existing){
-        throw new AppError(
-            "user already exists in group",
-            409
-        );
+    for(const userId of userIds){
+        const numericId=Number(userId);
+        const userExists=await getByIdService(numericId);
+         if(!userExists){
+                throw new AppError("user not found",409);
+            }
+        const userExistInTheGroup=await checkMember(group_id,numericId);
+        if(userExistInTheGroup){
+            throw new AppError("user already exist in this group",409);
+        }
     }
 
-    const res=await model.addGroupMember(group_id,username.trim());
+    const numericIdsArray=userIds.map(id=>Number(id));
+    const res=await model.addGroupMember(group_id,numericIdsArray);
     return res;
 }
 

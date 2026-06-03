@@ -65,10 +65,10 @@ export function userModel() {
                     is_admin AS "isAdmin",
                     created_at AS "createdAt"
                 FROM users
-                WHERE username=$1
-            `,[username]);
+                WHERE username ILIKE $1
+            `,[`%${username}%`]);
 
-            return res.rows[0];
+            return res.rows;
         },
 
         getByEmail: async (email: string) => {

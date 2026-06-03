@@ -24,15 +24,15 @@ export async function searchMember(group_name:string,group_id:number){
     return data.data;
 }
 
-export async function addMember(username:string,group_id:number,adminId:number){
-    const res=await fetch(`S{API}/`,{
+export async function addMember(group_id:number,userIds:number[]){
+    const res=await fetch(`${API}/`,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         credentials:'include',
-        body:JSON.stringify({group_id,username})
+        body:JSON.stringify({group_id,userIds})
     })
     const data=await res.json();
-    if(!res.ok) throw new AppError("could create a member",404);
+    if(!res.ok) throw new AppError(data.message || "could create a member",404);
     return data.data;
 }
 

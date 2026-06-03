@@ -1,5 +1,5 @@
 import { create } from "zustand";
-
+import { useChatStore } from "./useChatStore";
 export interface Group {
     group_id: number;
     group_name: string;
@@ -41,14 +41,13 @@ interface GroupState {
     setGroupMessages: (messages: GroupMessage[]) => void;
     addGroupMessage: (msg: GroupMessage) => void;
     
-    // Group Socket Event Listeners
-    // joinGroupRoom: (groupId: number) => void;
-    // leaveGroupRoom: (groupId: number) => void;
-    // listenToGroupMessages: () => void;
-    // stopListeningToGroupMessages: () => void;
+    joinGroupRoom: (groupId: number) => void;
+    leaveGroupRoom: (groupId: number) => void;
+    listenToGroupMessages: () => void;
+    stopListeningToGroupMessages: () => void;
 }
 
-export const useGroupStore = create<GroupState>((set) => ({
+export const useGroupStore = create<GroupState>((set,get) => ({
     groups: [],
     currentGroup: null,
     groupMembers: [],
@@ -65,43 +64,41 @@ export const useGroupStore = create<GroupState>((set) => ({
         groupMessages: [...state.groupMessages, msg]
     })),
 
-    // ==========================================
-    // Socket Actions (Reuses socket from useChatStore)
-    // ==========================================
-    // joinGroupRoom: (groupId) => {
-    //     const socket = useChatStore.getState().socket;
-    //     if (socket) {
-    //         socket.emit("joinGroup", { groupId });
-    //     }
-    // },
 
-    // leaveGroupRoom: (groupId) => {
-    //     const socket = useChatStore.getState().socket;
-    //     if (socket) {
-    //         socket.emit("leaveGroup", { groupId });
-    //     }
-    // },
+    joinGroupRoom: (groupId) => {
+        const socket = useChatStore.getState().socket;
+        if (socket) {
+            socket.emit("joinGroup", { groupId });
+        }
+    },
 
-    // listenToGroupMessages: () => {
-    //     const socket = useChatStore.getState().socket;
-    //     if (!socket) return;
+    leaveGroupRoom: (groupId) => {
+        const socket = useChatStore.getState().socket;
+        if (socket) {
+            socket.emit("leaveGroup", { groupId });
+        }
+    },
 
-    //     // Prevent duplicate listeners
-    //     socket.off("newGroupMessage");
+    listenToGroupMessages: () => {
+        const socket = useChatStore.getState().socket;
+        if (!socket) return;
 
-    //     socket.on("newGroupMessage", (message: GroupMessage) => {
-    //         // Only push the message if it belongs to the active group screen
-    //         const activeGroup = get().currentGroup;
-    //         if (activeGroup && activeGroup.id === message.group_id) {
-    //             get().addGroupMessage(message);
-    //         }
-    //     });
-    // },
+        // Prevent duplicate listeners
+        socket.off("newGroupMessage");
 
-    // stopListeningToGroupMessages: () => {
-    //     const socket = useChatStore.getState().socket;
-    //     if (socket) {
-    //         socket.off("newGroupMessage");
-    //     }
-    // }
+        socket.on("newGroupMessage", (message: GroupMessage) => {
+            // Only push the message if it belongs to the active group screen
+            const activeGroup = get().currentGroup;
+            if (activeGroup && activeGroup.id === message.group_id) {
+                get().addGroupMessage(message);
+            }
+        });
+    },
+
+    stopListeningToGroupMessages: () => {
+        const socket = useChatStore.getState().socket;
+        if (socket) {
+            socket.off("newGroupMessage");
+        }
+    }
 }));

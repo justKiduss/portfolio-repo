@@ -1,6 +1,18 @@
 import { AppError } from "../middleware/AppError";
 
-const API=`/api/users`
+const API=`/api/users`;
+
+export async function searchByName(username:string){
+    const res=await fetch(`${API}/name?name=${encodeURIComponent(username)}`,{
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+    });
+    const data = await res.json();
+    if (!res.ok) throw new AppError("Could not get the user by name", 404);
+    return data.data;
+}
+
 export async function signUp(username:string,email:string,password:string){
     const res=await fetch(`${API}/signup`,{
         method:"POST",

@@ -32,8 +32,11 @@ export async function searchMembersController(req:Request,res:Response,next:Next
 
 export async function addGroupMemberController(req:Request,res:Response,next:NextFunction){
     try{
-        const {group_id,username}=req.body;
+        const {group_id,userIds}=req.body;
         const adminId=req.user.id;
+        if (!group_id) {
+            throw new AppError("Group ID is required.", 400);
+        }
         const group=await getGroupsByIdService(group_id);
 
         if(!group){
@@ -44,7 +47,7 @@ export async function addGroupMemberController(req:Request,res:Response,next:Nex
             throw new AppError("only admin can add members",403);
         }
 
-        const result=await addGroupMemberSerice(Number(group_id),username);
+        const result=await addGroupMemberSerice(Number(group_id),userIds);
         return res.status(200).json({
             success:true,
             data:result

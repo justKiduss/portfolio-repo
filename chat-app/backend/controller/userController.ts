@@ -1,5 +1,5 @@
 import type {Request,Response,NextFunction} from "express";
-import { create, deleteUser, getAllUserService,getByIdService,login, update } from "../service/userService";
+import { create, deleteUser, getAllUserService,getByIdService,getByUsernameService,login, update } from "../service/userService";
 import { AppError } from "../middleware/error";
 import jwt from "jsonwebtoken";
 import model from "../models/userModel";
@@ -19,6 +19,22 @@ export async function getAllUserController(req:Request,res:Response,next:NextFun
     }
 }
 
+export async function getByUsernameController(req:Request,res:Response,next:NextFunction){
+    try{
+        const username = req.query.name as string;
+        
+        if (!username) {
+            throw new AppError("Name query parameter is missing", 400);
+        }
+        const result=await getByUsernameService(username);
+        return res.status(200).json({
+            success:true,
+            data:result,
+        })
+    }catch(error){
+        next(error);
+    }
+} 
 export async function getByIdController(req:Request,res:Response,next:NextFunction){
     try{
         const result=await getByIdService(Number(req.params.id));

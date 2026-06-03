@@ -1,9 +1,10 @@
 import express from "express";
-import { createController, deleteController, getAllUserController, getByIdController, loginController, updateController,logout, checkAuth} from "../controller/userController";
+import { createController, deleteController, getAllUserController, getByIdController, loginController, updateController,logout, checkAuth, getByUsernameController} from "../controller/userController";
 import protect from "../middleware/protect";
 
 const userRouter=express.Router()
 
+userRouter.get('/name',protect,getByUsernameController);
 userRouter.get('/',protect,getAllUserController);
 userRouter.get('/checkauth',protect,checkAuth);
 userRouter.get('/:id',protect,getByIdController);

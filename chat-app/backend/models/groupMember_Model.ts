@@ -35,29 +35,20 @@ function groupMembers_Model() {
             
             return res.rows;
         },
-        addGroupMember: async (group_id: number, username: string) => {
-            // 1. Find the user ID matching the username
-            const userRes = await pool.query(`
-                SELECT id FROM public.users 
-                WHERE username = $1
-            `, [username]);
+        addGroupMember: async (group_id: number, userIds:number[]) => {
+            if(!userIds || userIds.length === 0) return [];
 
-            const user = userRes.rows[0];
+            const valuesPlaceholders=userIds.map((_, index)=> `($1,$${index + 2})`).join(", ");
 
-            // If the username doesn't exist in your database, return null or throw an error
-            if (!user) {
-                return null; 
-            }
+            const query=`
+            INSERT INTO public.group_members (group_id, user_id)
+            VALUES ${valuesPlaceholders}
+            ON CONFLICT (group_id, user_id) DO NOTHING
+            RETURNING id, group_id, user_id, joined_at;
+            `;
 
-            // 2. Insert the new member into the group_members table
-            const res = await pool.query(`
-                INSERT INTO public.group_members (group_id, user_id)
-                VALUES ($1, $2)
-                ON CONFLICT (group_id, user_id) DO NOTHING
-                RETURNING id, group_id, user_id, joined_at
-            `, [group_id, user.id]);
-
-            return res.rows[0];
+            const res=await pool.query(query, [group_id,...userIds]);
+            return res.rows;
         },
         leaveGroup: async (group_id: number, user_id: number) => {
             const res = await pool.query(`
