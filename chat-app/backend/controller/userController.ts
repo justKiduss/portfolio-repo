@@ -57,8 +57,8 @@ export async function createController(req:Request,res:Response,next:NextFunctio
         const {password_hash,...safeUser}=result.user;
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         return res.status(200).json({
@@ -87,8 +87,8 @@ export async function loginController(req:Request,res:Response,next:NextFunction
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         return res.status(200).json({
