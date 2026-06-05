@@ -1,6 +1,6 @@
 import { AppError } from "../middleware/AppError";
 
-const API=`/api/group`;
+const API=`https://wavvy-drzx.onrender.com/api/group`;
 
 export async function allGroups(){
     const res=await fetch(`${API}/`,{

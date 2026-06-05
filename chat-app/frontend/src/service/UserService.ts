@@ -1,6 +1,6 @@
 import { AppError } from "../middleware/AppError";
 
-const API=`/api/users`;
+const API=`https://wavvy-drzx.onrender.com/api/users`;
 
 export async function searchByName(username:string){
     const res=await fetch(`${API}/name?name=${encodeURIComponent(username)}`,{

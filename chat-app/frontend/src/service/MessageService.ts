@@ -1,6 +1,6 @@
 import { AppError } from "../middleware/AppError";
 
-const API='http://localhost:8000/api/messages'
+const API='https://wavvy-drzx.onrender.com/api/messages'
 
 export async function GetConversation(id:number){
     const res=await fetch(`${API}/${id}`,{
