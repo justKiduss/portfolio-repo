@@ -83,15 +83,31 @@ export const useGroupStore = create<GroupState>((set,get) => ({
         const socket = useChatStore.getState().socket;
         if (!socket) return;
 
-        // Prevent duplicate listeners
         socket.off("newGroupMessage");
+        socket.off("updateGroupMessage");
+        socket.off("deleteGroupMessage");
 
         socket.on("newGroupMessage", (message: GroupMessage) => {
             // Only push the message if it belongs to the active group screen
             const activeGroup = get().currentGroup;
-            if (activeGroup && activeGroup.id === message.group_id) {
+            if (activeGroup && activeGroup.group_id === message.group_id) {
                 get().addGroupMessage(message);
             }
+        });
+        // Add these right below your socket.on("newGroupMessage", ...) block:
+
+        socket.on("updateGroupMessage", (updatedMessage: GroupMessage) => {
+            set((state) => ({
+                groupMessages: state.groupMessages.map((msg) =>
+                    msg.id === updatedMessage.id ? updatedMessage : msg
+                )
+            }));
+        });
+
+        socket.on("deleteGroupMessage", ({ messageId }: { messageId: number }) => {
+            set((state) => ({
+                groupMessages: state.groupMessages.filter((msg) => msg.id !== messageId)
+            }));
         });
     },
 
@@ -99,6 +115,8 @@ export const useGroupStore = create<GroupState>((set,get) => ({
         const socket = useChatStore.getState().socket;
         if (socket) {
             socket.off("newGroupMessage");
+            socket.off("updateGroupmessage");
+            socket.off("deleteGroupmessage");
         }
     }
 }));

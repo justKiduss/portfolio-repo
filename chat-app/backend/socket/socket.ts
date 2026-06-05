@@ -31,6 +31,7 @@ io.on("connection",(socket)=>{
 
         io.emit('onlineUsers', broadcastList);
     }
+
     socket.on("disconnect", () => {
         if (userId) {
             delete onlineUsers[userId];
@@ -43,7 +44,22 @@ io.on("connection",(socket)=>{
             io.emit("onlineUsers", broadcastList);
         }
     });
+
+    socket.on("joinGroup",({groupId})=>{
+        const roomName=`group_${groupId}`;
+        socket.join(roomName);
+        console.log(`Socket ${socket.id} joined room: ${roomName}`);
+    });
+
+    socket.on("leaveGroup",({groupId})=>{
+        const roomName=`group_${groupId}`;
+        socket.leave(roomName);
+        console.log(`Socket ${socket.id} left room: ${roomName}`);
+    })
 });
+
+
+
 
 export function getReceiverSocketId(receiverId: number) {
     // Safely look up via both string and numeric variants
