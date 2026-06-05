@@ -37,7 +37,7 @@ export async function updateMessage(group_id:number,messageId:number,text:string
     return data.data;
 }
 
-export async function deleteMessage(group_id:number,messageId:number,text:string,image:string,voice:string,video:string){
+export async function deleteMessage(group_id:number,messageId:number){
     const res=await fetch(`${API}/${group_id}/message/${messageId}`,{
         method:"DELETE",
         headers:{'Content-Type':'application/json'},
