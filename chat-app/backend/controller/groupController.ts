@@ -34,6 +34,9 @@ export async function getGroupsByNameController(req:Request,res:Response,next:Ne
 export async function createGroupController(req:Request,res:Response,next:NextFunction){
     try{
         const adminId=req.user.id;
+
+
+        console.log(req.body,adminId);
         const result=await createService({...req.body,group_admin:adminId});
         res.status(201).json({
             success:true,
