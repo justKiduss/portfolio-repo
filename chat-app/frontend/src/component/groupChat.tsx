@@ -165,73 +165,94 @@ export default function GroupChat() {
                     <GroupChatMessagesSkeleton/>
                 ) : (
                     <div className="flex flex-col justify-end min-h-full space-y-3">
+                    {/* Replace your current groupMessages.map section with this refined UI block */}
                     {groupMessages.map((msg: any) => {
                         const messageSenderId = msg.sender_id ?? msg.senderId;
                         const isIncoming = String(messageSenderId) !== String(user?.id);
 
                         const BACKEND_URL = "http://localhost:8000";
                         
-                        // Resolve asset media asset locations
                         const buildSrc = (path: string | null) => {
                             if (!path) return null;
                             return encodeURI(path.startsWith("http") ? path : `${BACKEND_URL}${path}`);
                         };
 
-                        const imageSource = buildSrc(msg.image);
-                        const videoSource = buildSrc(msg.video);
-                        const voiceSource = buildSrc(msg.voice || msg.audio); // Fallback depending on your column key naming
+                        const imageSource = buildSrc(msg.image ?? msg.image_url ?? msg.imageUrl);
+                        const videoSource = buildSrc(msg.video ?? msg.video_url ?? msg.videoUrl);
+                        const voiceSource = buildSrc(msg.voice ?? msg.voice_url ?? msg.voiceUrl ?? msg.audio ?? msg.audio_url);
 
                         return (
                             <div 
-                                key={msg.id} 
+                                key={msg.id || Math.random()} 
                                 className={`flex flex-col ${isIncoming ? "items-start" : "items-end"}`}
                             >
+                                {/* Group Sender Name */}
                                 {isIncoming && msg.username && (
-                                    <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mb-0.5 px-1">
+                                    <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mb-1 px-1">
                                         {msg.username}
                                     </span>
                                 )}
 
-                                <div 
-                                    className={`max-w-[70%] px-4 py-2.5 text-sm shadow-sm transition-all space-y-2 ${
-                                        isIncoming
-                                            ? "rounded-2xl rounded-tl-none bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700/50"
-                                            : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
-                                    }`}
-                                >
-                                    {/* Image Element */}
+                                {/* Media & Text Flow Container */}
+                                <div className={`max-w-[70%] space-y-1.5 flex flex-col ${isIncoming ? "items-start" : "items-end"}`}>
+                                    
+                                    {/* Image Component */}
                                     {imageSource && (
-                                        <img 
-                                            src={imageSource} 
-                                            alt="Attachment" 
-                                            className="max-w-full h-auto max-h-60 rounded-lg object-cover border border-zinc-200/20"
-                                            loading="lazy"
-                                        />
-                                    )}
-
-                                    {/* Video Element */}
-                                    {videoSource && (
-                                        <video 
-                                            src={videoSource} 
-                                            controls 
-                                            className="max-w-full max-h-60 rounded-lg bg-black border border-zinc-200/20"
-                                        />
-                                    )}
-
-                                    {/* Audio Voice Element */}
-                                    {voiceSource && (
-                                        <div className="pt-1">
-                                            <audio 
-                                                src={voiceSource} 
-                                                controls 
-                                                className={`w-full max-w-xs scale-95 origin-left ${!isIncoming ? "invert dark:invert-0" : ""}`} 
+                                        <div className="rounded-2xl overflow-hidden border border-zinc-200/20 shadow-sm bg-zinc-950">
+                                            <img 
+                                                src={imageSource} 
+                                                alt="Attachment" 
+                                                className="max-w-full h-auto max-h-60 object-cover"
+                                                loading="lazy"
                                             />
                                         </div>
                                     )}
 
-                                    {/* Text Node */}
+                                    {/* Video Component */}
+                                    {videoSource && (
+                                        <div className="rounded-2xl overflow-hidden border border-zinc-200/20 shadow-sm bg-zinc-950 p-0.5">
+                                            <video 
+                                                key={videoSource}
+                                                src={videoSource} 
+                                                controls 
+                                                className="max-w-full max-h-60 rounded-xl bg-black"
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Modernized Audio Voice Note Layout */}
+                                    {voiceSource && (
+                                        <div 
+                                            key={voiceSource}
+                                            className={`px-3 py-2 rounded-2xl shadow-sm border flex items-center min-w-[260px] ${
+                                                isIncoming
+                                                    ? "rounded-tl-none bg-white dark:bg-zinc-800 border-zinc-100 dark:border-zinc-700/50"
+                                                    : "rounded-tr-none bg-zinc-900 dark:bg-zinc-800 border-zinc-800 dark:border-zinc-700"
+                                            }`}
+                                        >
+                                            <audio 
+                                                src={voiceSource} 
+                                                controls 
+                                                className={`w-full h-8 scale-95 origin-left ${
+                                                    !isIncoming 
+                                                        ? "invert dark:invert-0 brightness-90 contrast-125" 
+                                                        : "dark:brightness-90"
+                                                }`} 
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Text Node Box (Only renders if text actually exists) */}
                                     {msg.text && (
-                                        <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                                        <div 
+                                            className={`px-4 py-2.5 text-sm shadow-sm transition-all ${
+                                                isIncoming
+                                                    ? "rounded-2xl rounded-tl-none bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700/50"
+                                                    : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
+                                            }`}
+                                        >
+                                            <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                                        </div>
                                     )}
                                 </div>
                             </div>
