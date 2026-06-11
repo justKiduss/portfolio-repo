@@ -24,6 +24,7 @@ import {
     sendMessageController, 
     updateMessageController 
 } from "../controller/groupMessageController";
+import { upload } from "../config/storage";
 
 const groupMessage_route = express.Router();
 
@@ -31,7 +32,11 @@ const groupMessage_route = express.Router();
 groupMessage_route.get('/message/:id', protect, isMember, getAllConversationController);
 
 // Send message (Group Context)
-groupMessage_route.post('/:id', protect, isMember, sendMessageController);
+groupMessage_route.post('/:id', protect, isMember,upload.fields([
+        { name: 'image', maxCount: 1 },
+        { name: 'voice', maxCount: 1 },
+        { name: 'video', maxCount: 1 }
+    ]),sendMessageController);
 
 // Update/Delete message (Group Context + Specific Message Context)
 groupMessage_route.put('/:id/message/:messageId', protect, isMember, isMessageOwnerOrAdmin, updateMessageController);
