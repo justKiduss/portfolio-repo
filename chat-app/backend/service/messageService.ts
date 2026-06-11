@@ -2,16 +2,15 @@ import { AppError } from "../middleware/error";
 import model from "../models/messageModel";
 
 interface sendMessageDTO {
-    text?: string | null,
-    image?: string | null,
-    voice?: string | null,
-    video?: string | null,
+    text?: string | null;
+    image?: string | null;
+    voice?: string | null;
+    video?: string | null;
 }
 
 interface updateMessageDTO {
-    text: string;
-    image: string;
-    // 🚀 Added media fallbacks to update layout if you ever allow replacing files later
+    text?: string | null;
+    image?: string | null;
     voice?: string | null;
     video?: string | null;
 }
@@ -27,7 +26,7 @@ export async function getAllConversationService(senderId: number, receiverId: nu
 export async function sendMessageService(senderId: number, receiverId: number, data: sendMessageDTO) {
     if (!senderId || !receiverId) throw new AppError("Missing required fields", 400);
     
-    // 🚀 CRITICAL FIX: Allow the transaction if ANY of the asset fields are populated
+    // 🚀 SERVICE LAYER FIX: Allows file payloads to pass without text
     if (!data.text && !data.image && !data.voice && !data.video) {
         throw new AppError("Message cannot be empty", 400);
     }
@@ -35,7 +34,6 @@ export async function sendMessageService(senderId: number, receiverId: number, d
     return await model.create(senderId, receiverId, data);
 }
 
-// id is for the userid
 export async function updateMessageService(id: number, data: updateMessageDTO) {
     if (!data.text && !data.image && !data.voice && !data.video) {
         throw new AppError("can't be empty", 400);
@@ -43,7 +41,6 @@ export async function updateMessageService(id: number, data: updateMessageDTO) {
     return await model.update(id, data);
 }
 
-// deletes by message id
 export async function deleteMessageService(id: number, userId: number) {
     if (!id) {
         throw new AppError("id is needded", 400);
@@ -52,8 +49,11 @@ export async function deleteMessageService(id: number, userId: number) {
     if (!message) {
         throw new AppError("message not found", 400);
     }
-    const senderId = message.senderId === userId;
-    if (!senderId) throw new AppError("sender id is mandatory", 400);
+    
+    // Safety verification check: map schema properties to runtime values accurately
+    const isSender = Number(message.sender_id ?? message.senderId) === Number(userId);
+    if (!isSender) throw new AppError("sender id is mandatory", 400);
+    
     return await model.delete(id, userId);
 }
 

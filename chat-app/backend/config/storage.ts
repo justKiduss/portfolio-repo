@@ -1,15 +1,10 @@
 import multer from "multer";
 
-// const storage=multer.memoryStorage({
-//     destination:(req,file,cb)=>{
-//         cb(null,"uploads/");
-//     },
+const storage = multer.memoryStorage();
 
-//     filename:(req,file,cb)=>{
-//         const unique=Date.now()+"-"+file.originalname;
-//         cb(null,unique);
-//     }
-// });
-const storage = multer.memoryStorage(); // no callback, it's memory not disk
-
-export const upload=multer({storage});
+export const upload = multer({
+    storage,
+    limits: {
+        fileSize: 50 * 1024 * 1024, // 🚀 Max file size limit 50MB (handles video recordings smoothly)
+    }
+});
