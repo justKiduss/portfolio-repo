@@ -14,12 +14,14 @@ export async function GetConversation(id:number){
     return await data.data;
 }
 
-export async function SendMessage(id:number,text:string,image?:File | null){
+export async function SendMessage(id:number,text:string,image?:File | null,voice?:File | null,video?:File | null){
     const formData=new FormData();
-    formData.append("text",text);
-    if(image){
-        formData.append("image",image);
-    }
+    formData.append("text",text|| "");
+    
+    if(image) formData.append("image",image);
+    if(voice) formData.append("voice",voice);
+    if(video) formData.append("video",video);
+
     const res=await fetch(`${API}/${id}`,{
         method:'POST',
         body:formData,

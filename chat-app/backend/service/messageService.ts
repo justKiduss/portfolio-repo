@@ -1,55 +1,66 @@
 import { AppError } from "../middleware/error";
 import model from "../models/messageModel";
-interface sendMessageDTO{
-    text:string;
-    image?:string|null;
+
+interface sendMessageDTO {
+    text?: string | null,
+    image?: string | null,
+    voice?: string | null,
+    video?: string | null,
 }
 
-interface updateMessageDTO{
-    text:string;
-    image:string;
+interface updateMessageDTO {
+    text: string;
+    image: string;
+    // 🚀 Added media fallbacks to update layout if you ever allow replacing files later
+    voice?: string | null;
+    video?: string | null;
 }
-export async function getAllConversationService(senderId:number,receiverId:number){
-    if(!senderId || !receiverId){
-        throw new AppError("Both user id is needed",400);
+
+export async function getAllConversationService(senderId: number, receiverId: number) {
+    if (!senderId || !receiverId) {
+        throw new AppError("Both user id is needed", 400);
     }
 
-    return await model.getConversationMessages(senderId,receiverId)
+    return await model.getConversationMessages(senderId, receiverId);
 }
 
-export async function sendMessageService(senderId:number,receiverId:number,data:sendMessageDTO){
+export async function sendMessageService(senderId: number, receiverId: number, data: sendMessageDTO) {
     if (!senderId || !receiverId) throw new AppError("Missing required fields", 400);
-    if (!data.text && !data.image) throw new AppError("Message cannot be empty", 400);
-    return await model.create(senderId,receiverId,data);
-
+    
+    // 🚀 CRITICAL FIX: Allow the transaction if ANY of the asset fields are populated
+    if (!data.text && !data.image && !data.voice && !data.video) {
+        throw new AppError("Message cannot be empty", 400);
+    }
+    
+    return await model.create(senderId, receiverId, data);
 }
+
 // id is for the userid
-export async function updateMessageService(id:number,data:updateMessageDTO){
-    if(!data.text && !data.image){
-        throw new AppError("can't be empty",400);
+export async function updateMessageService(id: number, data: updateMessageDTO) {
+    if (!data.text && !data.image && !data.voice && !data.video) {
+        throw new AppError("can't be empty", 400);
     }
-    return await model.update(id,data);
+    return await model.update(id, data);
 }
 
-// delets by message id
-export async function deleteMessageService(id:number,userId:number){
-    if(!id){
-        throw new AppError("id is needded",400);
+// deletes by message id
+export async function deleteMessageService(id: number, userId: number) {
+    if (!id) {
+        throw new AppError("id is needded", 400);
     }
-    const message=await model.getById(id);
-    if(!message){
-        throw new AppError("message not found",400);
+    const message = await model.getById(id);
+    if (!message) {
+        throw new AppError("message not found", 400);
     }
-    const senderId=message.senderId===userId;
-    if(!senderId) throw new AppError("sender id is mandatory",400);
-    return await model.delete(id,userId);
+    const senderId = message.senderId === userId;
+    if (!senderId) throw new AppError("sender id is mandatory", 400);
+    return await model.delete(id, userId);
 }
 
-export async function getInteractedUsersService(id:number){
-    const userId=id;
-    if(!userId){
-        throw new AppError("user id is missing",400);
+export async function getInteractedUsersService(id: number) {
+    const userId = id;
+    if (!userId) {
+        throw new AppError("user id is missing", 400);
     }
     return await model.getInteractedUsers(userId);
 }
-

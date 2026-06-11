@@ -2,7 +2,6 @@ import { Search, MoreVertical } from "lucide-react";
 import MessageInput from "./messageInput";
 import { ChatMessagesSkeleton } from "../skeleton/chatMessageSkeleton";
 import { useChatStore } from "../store/useChatStore";
-// 1. Added useRef here
 import { useEffect, useState, useRef } from "react"; 
 import { GetConversation, SendMessage } from "../service/MessageService";
 import { useParams } from "react-router-dom";
@@ -16,10 +15,8 @@ export default function ChatArea() {
     const socket = useChatStore((state) => state.socket);
     const users = useChatStore((state) => state.users);
 
-    // 2. Created the scroll reference anchor hook
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-    // 3. Effect to seamlessly slide down whenever a new item is appended to messages
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
@@ -52,17 +49,19 @@ export default function ChatArea() {
         socket.on("newMessage", handler);
         
         return () => {
-            socket.off("newMessage", handler); // remove specific handler, not all
+            socket.off("newMessage", handler);
         };
-    }, [socket]);
+    }, [socket, addMessage]);
     
     const targetUser = users.find((u) => Number(u.id) === Number(id));
     const headerName = targetUser?.username || 'Chat';
 
-    const handleSend = async (text: string, image?: File | null) => {
+    const handleSend = async (text: string, image?: File | null, voice?: File | null, video?: File | null) => {
         if (!id) return;
         try {
-            const newMessage = await SendMessage(Number(id), text, image);
+            // 🚀 Upgraded payload matching group routing scheme
+            const response = await SendMessage(Number(id), text, image, voice, video);
+            const newMessage = response?.data ? response.data : response;
             
             if (newMessage) {
                 addMessage(newMessage); 
@@ -104,42 +103,87 @@ export default function ChatArea() {
                             const isIncoming = String(messageSenderId) === String(id);
 
                             const BACKEND_URL = "http://localhost:8000";
-                            const rawPath = msg.image;
+                            
+                            const buildSrc = (path: string | null) => {
+                                if (!path) return null;
+                                return encodeURI(path.startsWith("http") ? path : `${BACKEND_URL}${path}`);
+                            };
 
-                            const imageSource = rawPath 
-                                ? encodeURI(rawPath.startsWith("http") ? rawPath : `${BACKEND_URL}${rawPath}`)
-                                : null;
+                            // Multi-media structural definitions
+                            const imageSource = buildSrc(msg.image ?? msg.image_url ?? msg.imageUrl);
+                            const videoSource = buildSrc(msg.video ?? msg.video_url ?? msg.videoUrl);
+                            const voiceSource = buildSrc(msg.voice ?? msg.voice_url ?? msg.voiceUrl ?? msg.audio ?? msg.audio_url);
 
                             return (
                                 <div 
-                                    key={msg.id} 
-                                    className={`flex ${isIncoming ? "justify-start" : "justify-end"}`}
+                                    key={msg.id || Math.random()} 
+                                    className={`flex flex-col ${isIncoming ? "items-start" : "items-end"}`}
                                 >
-                                    <div 
-                                        className={`max-w-[70%] px-4 py-2.5 text-sm shadow-sm transition-all ${
-                                            isIncoming
-                                                ? "rounded-2xl rounded-tl-none bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700/50"
-                                                : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
-                                        }`}
-                                    >
+                                    <div className={`max-w-[70%] space-y-1.5 flex flex-col ${isIncoming ? "items-start" : "items-end"}`}>
+                                        
+                                        {/* Image Box */}
                                         {imageSource && (
-                                            <img 
-                                                src={imageSource} 
-                                                alt="Chat attachment" 
-                                                className="max-w-full h-auto max-h-60 rounded-lg object-cover mb-1 border border-zinc-200/20"
-                                                loading="lazy"
-                                                onError={() => {
-                                                    console.error("Image failed to render from target source:", imageSource);
-                                                }}
-                                            />
+                                            <div className="rounded-2xl overflow-hidden border border-zinc-200/20 shadow-sm bg-zinc-950">
+                                                <img 
+                                                    src={imageSource} 
+                                                    alt="Attachment" 
+                                                    className="max-w-full h-auto max-h-60 object-cover"
+                                                    loading="lazy"
+                                                />
+                                            </div>
                                         )}
-                                        {msg.text}
+
+                                        {/* Video Box */}
+                                        {videoSource && (
+                                            <div className="rounded-2xl overflow-hidden border border-zinc-200/20 shadow-sm bg-zinc-950 p-0.5">
+                                                <video 
+                                                    key={videoSource}
+                                                    src={videoSource} 
+                                                    controls 
+                                                    className="max-w-full max-h-60 rounded-xl bg-black"
+                                                />
+                                            </div>
+                                        )}
+
+                                        {/* Isolated Clean Voice Note Box */}
+                                        {voiceSource && (
+                                            <div 
+                                                key={voiceSource}
+                                                className={`px-3 py-2 rounded-2xl shadow-sm border flex items-center min-w-[260px] ${
+                                                    isIncoming
+                                                        ? "rounded-tl-none bg-white dark:bg-zinc-800 border-zinc-100 dark:border-zinc-700/50"
+                                                        : "rounded-tr-none bg-zinc-900 dark:bg-zinc-800 border-zinc-800 dark:border-zinc-700"
+                                                }`}
+                                            >
+                                                <audio 
+                                                    src={voiceSource} 
+                                                    controls 
+                                                    className={`w-full h-8 scale-95 origin-left ${
+                                                        !isIncoming 
+                                                            ? "invert dark:invert-0 brightness-90 contrast-125" 
+                                                            : "dark:brightness-90"
+                                                    }`} 
+                                                />
+                                            </div>
+                                        )}
+
+                                        {/* Text Node Bubble */}
+                                        {msg.text && (
+                                            <div 
+                                                className={`px-4 py-2.5 text-sm shadow-sm transition-all ${
+                                                    isIncoming
+                                                        ? "rounded-2xl rounded-tl-none bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700/50"
+                                                        : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
+                                                }`}
+                                            >
+                                                <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             );
                         })}
 
-                        {/* 4. Scroll Anchor Point — pushes the window viewport context here */}
                         <div ref={messagesEndRef} />
                     </div>
                 )}

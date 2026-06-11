@@ -5,7 +5,11 @@ import { deleteService, getAllConversationController, getInteractedUsersControll
 const messageRouter=express.Router();
 
 messageRouter.get('/:id',protect,getAllConversationController);
-messageRouter.post('/:id',protect,upload.single("image"),sendMessageController);
+messageRouter.post('/:id',protect,upload.fields([
+        { name: 'image', maxCount: 1 },
+        { name: 'voice', maxCount: 1 },
+        { name: 'video', maxCount: 1 }
+    ]),sendMessageController);
 messageRouter.put('/:id',protect,updateMessageController);
 messageRouter.delete('/:id',protect,deleteService);
 messageRouter.get('/',protect,getInteractedUsersController);

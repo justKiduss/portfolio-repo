@@ -27,19 +27,31 @@ export async function sendMessageController(req:Request,res:Response,next:NextFu
         const senderId=req.user.id;
         const receiverId=req.params.id;
         const text=req.body.text?.trim();
-        // const image=req.file?`/uploads/${req.file.filename}`: null;
-        let image=null;
+        let image=null;let voice = null; let video = null;
 
-        if (req.file) {
-            image = await uploadToCloudinary(req.file.buffer);
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+
+        if (files) {
+            // 1. Process Image if attached
+            if (files['image'] && files['image'][0]) {
+                image = await uploadToCloudinary(files['image'][0].buffer);
+            }
+            // 2. Process Voice if attached
+            if (files['voice'] && files['voice'][0]) {
+                voice = await uploadToCloudinary(files['voice'][0].buffer);
+            }
+            // 3. Process Video if attached
+            if (files['video'] && files['video'][0]) {
+                video = await uploadToCloudinary(files['video'][0].buffer);
+            }
         }
 
-        if(!text&& !image){
+        if(!text&& !image && !voice && !video){
             throw new AppError('message required',400);
         }
         // const result=req.file? await uploadToCloudinary(req.filter.buffer):null;
         
-        const result =await sendMessageService(Number(senderId),Number(receiverId),{text,image});
+        const result =await sendMessageService(Number(senderId),Number(receiverId),{text,image,voice,video});
 
         const receiverSocketId =
             getReceiverSocketId(
