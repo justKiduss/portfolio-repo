@@ -15,15 +15,14 @@ export async function allMessage(group_id:number){
 
 export async function sendMessage(group_id:number,text:string,image?:File | null,voice?:File | null,video?:File | null){
     const formData=new FormData();
-    formData.append("text",text);
+    formData.append("text",text || " ");
     if(image) formData.append("image",image);
     if(voice) formData.append("voice",voice);
     if(video) formData.append("video",video);
     const res=await fetch(`${API}/${group_id}`,{
         method:"POST",
-        headers:{'Content-Type':'application/json'},
         credentials:"include",
-        body:JSON.stringify({text,image,voice,video})
+        body:formData
     });
     const data=await res.json();
     if(!res.ok) throw new AppError("couldn't send message",404);
