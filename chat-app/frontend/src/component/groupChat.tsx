@@ -44,7 +44,7 @@ export default function GroupChat() {
             leaveGroupRoom(groupIdNum);
             stopListeningToGroupMessages();
         }
-    },[id,groups,setCurrentGroup,joinGroupRoom,leaveGroupRoom,stopListeningToGroupMessages,listenToGroupMessages]);
+    },[id,setCurrentGroup,joinGroupRoom,leaveGroupRoom,stopListeningToGroupMessages,listenToGroupMessages]);
 
     const handleDeleteGroup = async () => {
         if (!id) return;
@@ -103,6 +103,10 @@ export default function GroupChat() {
 
     const handleSend = async (text: string, image?: File | null, voice?: File | null, video?: File | null) => {
         if (!id) return;
+
+        console.log("=== UI EMISSION DEBUG ===");
+        console.log("text value:", text);
+        console.log("image instance:", image);
         try {
             const newMessage = await sendMessage(Number(id), text, image, voice, video);
             if (newMessage) {
@@ -203,7 +207,9 @@ export default function GroupChat() {
                                                 loading="lazy"
                                             />
                                         )}
-                                        <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                                        {msg.text &&(
+                                            <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                                        )}
                                     </div>
                                 </div>
                             );
