@@ -50,7 +50,7 @@ export async function createService(data:createGroupDTO){
 
     await addGroupMemberSerice(
         group.group_id,
-        existingUser.id
+        [existingUser.id.toString()]
     );
 
     return group;
