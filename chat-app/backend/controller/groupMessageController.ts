@@ -7,6 +7,7 @@ import {
     updateMessageService 
 } from "../service/groupMessageService";
 import { io } from "../socket/socket";
+import { uploadToCloudinary } from "../config/cloudinary";
 
 export async function getAllConversationController(req: Request, res: Response, next: NextFunction) {
     try {
@@ -33,6 +34,23 @@ export async function sendMessageController(req: Request, res: Response, next: N
         const text = req.body.text?.trim() || null;
         let image = null; let voice = null; let video = null;
 
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+
+        if (files) {
+            // 1. Process Image if attached
+            if (files['image'] && files['image'][0]) {
+                image = await uploadToCloudinary(files['image'][0].buffer);
+            }
+            // 2. Process Voice if attached
+            if (files['voice'] && files['voice'][0]) {
+                voice = await uploadToCloudinary(files['voice'][0].buffer);
+            }
+            // 3. Process Video if attached
+            if (files['video'] && files['video'][0]) {
+                video = await uploadToCloudinary(files['video'][0].buffer);
+            }
+        }
+        
         if (!text && !image && !voice && !video) {
             throw new AppError('Message required', 400);
         }
