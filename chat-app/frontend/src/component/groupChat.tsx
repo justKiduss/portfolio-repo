@@ -165,54 +165,80 @@ export default function GroupChat() {
                     <GroupChatMessagesSkeleton/>
                 ) : (
                     <div className="flex flex-col justify-end min-h-full space-y-3">
-                        {groupMessages.map((msg: any) => {
-                            const messageSenderId = msg.sender_id ?? msg.senderId;
-                            
-                            // 🚀 Fix 3: Incoming means the sender ID is NOT my authenticated user ID!
-                            const isIncoming = String(messageSenderId) !== String(user?.id);
+                    {groupMessages.map((msg: any) => {
+                        const messageSenderId = msg.sender_id ?? msg.senderId;
+                        const isIncoming = String(messageSenderId) !== String(user?.id);
 
-                            const BACKEND_URL = "http://localhost:8000";
-                            const rawPath = msg.image;
-                            const imageSource = rawPath 
-                                ? encodeURI(rawPath.startsWith("http") ? rawPath : `${BACKEND_URL}${rawPath}`)
-                                : null;
+                        const BACKEND_URL = "http://localhost:8000";
+                        
+                        // Resolve asset media asset locations
+                        const buildSrc = (path: string | null) => {
+                            if (!path) return null;
+                            return encodeURI(path.startsWith("http") ? path : `${BACKEND_URL}${path}`);
+                        };
 
-                            return (
+                        const imageSource = buildSrc(msg.image);
+                        const videoSource = buildSrc(msg.video);
+                        const voiceSource = buildSrc(msg.voice || msg.audio); // Fallback depending on your column key naming
+
+                        return (
+                            <div 
+                                key={msg.id} 
+                                className={`flex flex-col ${isIncoming ? "items-start" : "items-end"}`}
+                            >
+                                {isIncoming && msg.username && (
+                                    <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mb-0.5 px-1">
+                                        {msg.username}
+                                    </span>
+                                )}
+
                                 <div 
-                                    key={msg.id} 
-                                    className={`flex flex-col ${isIncoming ? "items-start" : "items-end"}`}
+                                    className={`max-w-[70%] px-4 py-2.5 text-sm shadow-sm transition-all space-y-2 ${
+                                        isIncoming
+                                            ? "rounded-2xl rounded-tl-none bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700/50"
+                                            : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
+                                    }`}
                                 >
-                                    {/* Optional Group Context: Show sender names above incoming text */}
-                                    {isIncoming && msg.username && (
-                                        <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mb-0.5 px-1">
-                                            {msg.username}
-                                        </span>
+                                    {/* Image Element */}
+                                    {imageSource && (
+                                        <img 
+                                            src={imageSource} 
+                                            alt="Attachment" 
+                                            className="max-w-full h-auto max-h-60 rounded-lg object-cover border border-zinc-200/20"
+                                            loading="lazy"
+                                        />
                                     )}
 
-                                    <div 
-                                        className={`max-w-[70%] px-4 py-2.5 text-sm shadow-sm transition-all ${
-                                            isIncoming
-                                                ? "rounded-2xl rounded-tl-none bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700/50"
-                                                : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
-                                        }`}
-                                    >
-                                        {imageSource && (
-                                            <img 
-                                                src={imageSource} 
-                                                alt="Chat attachment" 
-                                                className="max-w-full h-auto max-h-60 rounded-lg object-cover mb-1 border border-zinc-200/20"
-                                                loading="lazy"
+                                    {/* Video Element */}
+                                    {videoSource && (
+                                        <video 
+                                            src={videoSource} 
+                                            controls 
+                                            className="max-w-full max-h-60 rounded-lg bg-black border border-zinc-200/20"
+                                        />
+                                    )}
+
+                                    {/* Audio Voice Element */}
+                                    {voiceSource && (
+                                        <div className="pt-1">
+                                            <audio 
+                                                src={voiceSource} 
+                                                controls 
+                                                className={`w-full max-w-xs scale-95 origin-left ${!isIncoming ? "invert dark:invert-0" : ""}`} 
                                             />
-                                        )}
-                                        {msg.text &&(
-                                            <p className="whitespace-pre-wrap break-words">{msg.text}</p>
-                                        )}
-                                    </div>
+                                        </div>
+                                    )}
+
+                                    {/* Text Node */}
+                                    {msg.text && (
+                                        <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                                    )}
                                 </div>
-                            );
-                        })}
-                        <div ref={messagesEndRef} />
-                    </div>
+                            </div>
+                        );
+                    })}
+                <div ref={messagesEndRef} />
+               </div>
                 )}
             </section>
 
@@ -221,3 +247,65 @@ export default function GroupChat() {
         </div>
     );
 }
+
+
+
+
+
+
+                    {/* //                         {groupMessages.map((msg: any) => { */}
+//                             const messageSenderId = msg.sender_id ?? msg.senderId;
+                            
+//                             // 🚀 Fix 3: Incoming means the sender ID is NOT my authenticated user ID!
+//                             const isIncoming = String(messageSenderId) !== String(user?.id);
+
+//                             const BACKEND_URL = "http://localhost:8000";
+//                             const rawPath = msg.image;
+//                             const imageSource = rawPath 
+//                                 ? encodeURI(rawPath.startsWith("http") ? rawPath : `${BACKEND_URL}${rawPath}`)
+//                                 : null;
+
+//                             return (
+//                                 <div 
+//                                     key={msg.id} 
+//                                     className={`flex flex-col ${isIncoming ? "items-start" : "items-end"}`}
+//                                 >
+//                                     {/* Optional Group Context: Show sender names above incoming text */}
+//                                     {isIncoming && msg.username && (
+//                                         <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mb-0.5 px-1">
+//                                             {msg.username}
+//                                         </span>
+//                                     )}
+
+//                                     <div 
+//                                         className={`max-w-[70%] px-4 py-2.5 text-sm shadow-sm transition-all ${
+//                                             isIncoming
+//                                                 ? "rounded-2xl rounded-tl-none bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700/50"
+//                                                 : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
+//                                         }`}
+//                                     >
+//                                         {imageSource && (
+//                                             <img 
+//                                                 src={imageSource} 
+//                                                 alt="Chat attachment" 
+//                                                 className="max-w-full h-auto max-h-60 rounded-lg object-cover mb-1 border border-zinc-200/20"
+//                                                 loading="lazy"
+//                                             />
+//                                         )}
+//                                         {msg.text &&(
+//                                             <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+//                                         )}
+//                                     </div>
+//                                 </div>
+//                             );
+//                         })}
+//                         <div ref={messagesEndRef} />
+//                     </div>
+//                 )}
+//             </section>
+
+//             {/* Message Input Bottom Frame */}
+//             <MessageInput onSendMessage={handleSend} />
+//         </div>
+//     );
+// }
