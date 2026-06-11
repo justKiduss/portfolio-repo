@@ -1,86 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Image } from 'lucide-react';
+import { Send, Image, Mic, Video, X } from 'lucide-react';
 
 interface MessageInputProps {
-  onSendMessage: (text: string, image?: File | null) => void;
+  onSendMessage: (text: string, image?: File | null, voice?: File | null, video?: File | null) => void;
 }
 
 export default function MessageInput({ onSendMessage }: MessageInputProps) {
   const [text, setText] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [voice, setVoice] = useState<File | null>(null);
+  const [video, setVideo] = useState<File | null>(null);
 
-  // 1. Compute the preview URL directly during render. No extra state needed!
-  const previewUrl = image ? URL.createObjectURL(image) : null;
+  // Preview URLs
+  const imagePreview = image ? URL.createObjectURL(image) : null;
+  const voicePreview = voice ? voice.name : null; // Just show name for audio
+  const videoPreview = video ? URL.createObjectURL(video) : null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!text.trim() && !image) return;
+    if (!text.trim() && !image && !voice && !video) return;
 
-    onSendMessage(text, image);
+    onSendMessage(text, image, voice, video);
+    
+    // Reset state
     setText('');
     setImage(null);
+    setVoice(null);
+    setVideo(null);
   };
-  
-  // 2. This clean effect handles ONLY the memory management cleanup
-  useEffect(() => {
-    if (!previewUrl) return;
 
-    // When the image changes or the component unmounts, release the object URL
-    return () => URL.revokeObjectURL(previewUrl);
-  }, [previewUrl]);
+  useEffect(() => {
+    return () => {
+      if (imagePreview) URL.revokeObjectURL(imagePreview);
+      if (videoPreview) URL.revokeObjectURL(videoPreview);
+    };
+  }, [imagePreview, videoPreview]);
 
   return (
     <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
-      {previewUrl && (
-        <div className="relative mb-2 inline-block">
-          <img
-            src={previewUrl}
-            className="max-h-40 rounded-lg object-cover"
-            alt="Upload preview"
-          />
-          <button
-            type="button"
-            onClick={() => setImage(null)}
-            className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full shadow-md transition-colors"
-          >
-            ×
-          </button>
-        </div>
-      )}
+      {/* Previews */}
+      <div className="flex gap-2 mb-2">
+        {imagePreview && (
+          <div className="relative">
+            <img src={imagePreview} className="h-20 w-20 rounded-lg object-cover" alt="Preview" />
+            <button onClick={() => setImage(null)} className="absolute -top-1 -right-1 bg-red-500 rounded-full p-0.5 text-white"><X size={12}/></button>
+          </div>
+        )}
+        {videoPreview && (
+          <div className="relative">
+            <video src={videoPreview} className="h-20 w-20 rounded-lg bg-zinc-800" />
+            <button onClick={() => setVideo(null)} className="absolute -top-1 -right-1 bg-red-500 rounded-full p-0.5 text-white"><X size={12}/></button>
+          </div>
+        )}
+        {voicePreview && (
+          <div className="bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg text-xs flex items-center gap-2">
+            <Mic size={14} /> {voicePreview}
+            <button onClick={() => setVoice(null)} className="text-red-500"><X size={12}/></button>
+          </div>
+        )}
+      </div>
+
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
-        <label 
-          htmlFor="chat-image-input" 
-          className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900"
-        >
-          <Image size={20} />
-        </label>
-        
-        <input
-          id="chat-image-input"
-          type="file"
-          accept="image/*" 
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              setImage(file);
-            }
-            e.target.value = ''; 
-          }}
-        />
+        {/* File Inputs */}
+        <input id="img" type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] || null)} />
+        <input id="mic" type="file" accept="audio/*" className="hidden" onChange={(e) => setVoice(e.target.files?.[0] || null)} />
+        <input id="vid" type="file" accept="video/*" className="hidden" onChange={(e) => setVideo(e.target.files?.[0] || null)} />
+
+        <label htmlFor="img" className="p-2 cursor-pointer hover:bg-zinc-100 rounded-lg"><Image size={20} /></label>
+        <label htmlFor="mic" className="p-2 cursor-pointer hover:bg-zinc-100 rounded-lg"><Mic size={20} /></label>
+        <label htmlFor="vid" className="p-2 cursor-pointer hover:bg-zinc-100 rounded-lg"><Video size={20} /></label>
 
         <input 
           type="text" 
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Type a message..."
-          className="flex-1 px-4 py-2 text-sm bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-700 transition"
+          className="flex-1 px-4 py-2 bg-zinc-100 dark:bg-zinc-900 rounded-lg focus:outline-none"
         />
         
         <button 
           type="submit"
-          disabled={!text.trim() && !image}
-          className="p-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 disabled:opacity-40 disabled:hover:bg-zinc-900 disabled:dark:hover:bg-zinc-100 transition-all shadow-sm"
+          disabled={!text.trim() && !image && !voice && !video}
+          className="p-2 bg-zinc-900 text-white rounded-lg disabled:opacity-40"
         >
           <Send size={16} />
         </button>
