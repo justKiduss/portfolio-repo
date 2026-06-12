@@ -1,6 +1,6 @@
 import { AppError } from "../middleware/AppError";
 
-const API='https://wavvy-drzx.onrender.com/api/messages'
+const API='${import.meta.env.VITE_API_URL}/messages'
 
 export async function GetConversation(id:number){
     const res=await fetch(`${API}/${id}`,{

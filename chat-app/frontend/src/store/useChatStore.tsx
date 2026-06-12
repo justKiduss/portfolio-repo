@@ -69,7 +69,7 @@ export const useChatStore = create<ChatState>((set) => ({
         if (state.socket?.connected) return state;
 
         // 2. Pass both matching variables down the handshake stream
-        const socket = io("https://wavvy-drzx.onrender.com", {
+        const socket = io(`${import.meta.env.VITE_SOCKET_URL}`, {
             query: { 
                 userId: userProfile.id,
                 username: userProfile.username // 👈 Extracted safely here
