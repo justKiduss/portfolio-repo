@@ -37,7 +37,7 @@ export async function addMember(group_id:number,userIds:number[]){
 }
 
 export async function kickOutMember(group_id:number,target_user_id:number){
-    const res=await fetch(`S{API}/${group_id}`,{
+    const res=await fetch(`${API}/${group_id}`,{
         method:'DELETE',
         headers:{'Content-Type':'application/json'},
         credentials:'include',
