@@ -164,7 +164,7 @@ export default function GroupTabsLayout() {
                         : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900/40"
                     }`}
                   >
-                    <Users size={16} className="text-zinc-400 shrink-0" />
+                    <img src={group.group_profile_pic} alt="group profile" className="w-10 rounded-3xl"/>
                     <span className="truncate">{group.group_name}</span>
                   </Link>
                 ))

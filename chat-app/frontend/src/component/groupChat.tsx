@@ -27,7 +27,7 @@ export default function GroupChat() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [More, setMore] = useState(false);
     const navigate = useNavigate();
-
+    console.log("groupMessages",groupMessages);
     useEffect(()=>{
         if(!id) return;
 
@@ -44,7 +44,7 @@ export default function GroupChat() {
             leaveGroupRoom(groupIdNum);
             stopListeningToGroupMessages();
         }
-    },[id,setCurrentGroup,joinGroupRoom,leaveGroupRoom,stopListeningToGroupMessages,listenToGroupMessages]);
+    },[id,groups,setCurrentGroup,joinGroupRoom,leaveGroupRoom,stopListeningToGroupMessages,listenToGroupMessages]);
 
     const handleDeleteGroup = async () => {
         if (!id) return;
@@ -268,65 +268,3 @@ export default function GroupChat() {
         </div>
     );
 }
-
-
-
-
-
-
-                    {/* //                         {groupMessages.map((msg: any) => { */}
-//                             const messageSenderId = msg.sender_id ?? msg.senderId;
-                            
-//                             // 🚀 Fix 3: Incoming means the sender ID is NOT my authenticated user ID!
-//                             const isIncoming = String(messageSenderId) !== String(user?.id);
-
-//                             const BACKEND_URL = "http://localhost:8000";
-//                             const rawPath = msg.image;
-//                             const imageSource = rawPath 
-//                                 ? encodeURI(rawPath.startsWith("http") ? rawPath : `${BACKEND_URL}${rawPath}`)
-//                                 : null;
-
-//                             return (
-//                                 <div 
-//                                     key={msg.id} 
-//                                     className={`flex flex-col ${isIncoming ? "items-start" : "items-end"}`}
-//                                 >
-//                                     {/* Optional Group Context: Show sender names above incoming text */}
-//                                     {isIncoming && msg.username && (
-//                                         <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mb-0.5 px-1">
-//                                             {msg.username}
-//                                         </span>
-//                                     )}
-
-//                                     <div 
-//                                         className={`max-w-[70%] px-4 py-2.5 text-sm shadow-sm transition-all ${
-//                                             isIncoming
-//                                                 ? "rounded-2xl rounded-tl-none bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700/50"
-//                                                 : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
-//                                         }`}
-//                                     >
-//                                         {imageSource && (
-//                                             <img 
-//                                                 src={imageSource} 
-//                                                 alt="Chat attachment" 
-//                                                 className="max-w-full h-auto max-h-60 rounded-lg object-cover mb-1 border border-zinc-200/20"
-//                                                 loading="lazy"
-//                                             />
-//                                         )}
-//                                         {msg.text &&(
-//                                             <p className="whitespace-pre-wrap break-words">{msg.text}</p>
-//                                         )}
-//                                     </div>
-//                                 </div>
-//                             );
-//                         })}
-//                         <div ref={messagesEndRef} />
-//                     </div>
-//                 )}
-//             </section>
-
-//             {/* Message Input Bottom Frame */}
-//             <MessageInput onSendMessage={handleSend} />
-//         </div>
-//     );
-// }

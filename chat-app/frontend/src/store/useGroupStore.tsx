@@ -90,7 +90,7 @@ export const useGroupStore = create<GroupState>((set,get) => ({
         socket.on("newGroupMessage", (message: GroupMessage) => {
             // Only push the message if it belongs to the active group screen
             const activeGroup = get().currentGroup;
-            if (activeGroup && activeGroup.group_id === Number(message.group_id)) {
+            if (activeGroup && Number(activeGroup.group_id) === Number(message.group_id)) {
                 get().addGroupMessage(message);
             }
         });

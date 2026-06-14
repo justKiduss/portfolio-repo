@@ -35,8 +35,7 @@ export default function ChatsTabsLayout() {
     fetchSidebarThreads();
   }, [setUsers]);
   
-
-  console.log("console.log",users);
+  console.log("users",users);
   console.log("onine",onlineUsers);
   return (
     <div className="w-full h-screen flex bg-zinc-50 dark:bg-zinc-900/40 overflow-hidden">
@@ -86,15 +85,13 @@ export default function ChatsTabsLayout() {
                   <Link
                     key={chat.id}
                     to={`${chat.id}`}
-                    className={`flex items-center justify-between p-3 rounded-lg text-sm transition-colors font-medium ${
+                    className={`flex items-center justify-start gap-4 p-3 rounded-lg text-sm transition-colors font-medium ${
                       String(activeChatId) === String(chat.id) 
                         ? "bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white" 
                         : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900/40"
                     }`}
                   >
-                    <span>
-                      {/* <img src={chat.profilePic} alt="profile pic"/> */}
-                    </span>
+                    <img src={chat.profile_pic} alt="profile pic" className="w-10 rounded-3xl"/>
                     <span>{chat.username}</span>
                     {onlineUsers.some((u) => Number(u.userId) === Number(chat.id)) && (
                       <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />

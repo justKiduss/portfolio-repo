@@ -5,6 +5,7 @@ interface User {
     id: number;
     username: string;
     email: string;
+    profile_pic?: string;
 }
 
 interface Message {
@@ -70,7 +71,8 @@ export const useChatStore = create<ChatState>((set) => ({
         if (state.socket?.connected) return state;
 
         // 2. Pass both matching variables down the handshake stream
-        const socket = io(`${import.meta.env.VITE_SOCKET_URL}`, {
+        const socket =io(import.meta.env.DEV?`${import.meta.env.VITE_API_BASE}`
+            :`${import.meta.env.VITE_SOCKET_URL}`, {
             query: { 
                 userId: userProfile.id,
                 username: userProfile.username // 👈 Extracted safely here

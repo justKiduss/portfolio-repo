@@ -8,7 +8,9 @@ const server=http.createServer(app);
 
 const io=new Server(server,{
     cors:{
-        origin:"https://wavvy.kidus.codes",
+        origin:process.env.MODE==="DEVELOPMENT"?
+        'http://localhost:5173' :
+        "https://wavvy.kidus.codes",
         credentials:true
     }
 });

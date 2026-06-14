@@ -92,7 +92,7 @@ const messageModel = () => {
                     FROM message
                     WHERE sender_id = $1 OR receiver_id = $1
                 )
-                SELECT u.id, u.username, u.email
+                SELECT u.id, u.username, u.email,u.profile_pic
                 FROM users u
                 JOIN conversation_partners cp ON u.id = cp.partner_id;
             `;
