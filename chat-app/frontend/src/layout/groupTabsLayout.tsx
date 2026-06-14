@@ -1,7 +1,7 @@
 import { useState, useEffect,useRef } from "react";
 import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 import { useGroupStore } from "../store/useGroupStore";
-import { MenuIcon, MessageSquare, Search as SearchIcon, Users,Plus } from "lucide-react";
+import { MenuIcon, MessageSquare, Search as SearchIcon,Plus } from "lucide-react";
 import { allGroups, getGroupsByName } from "../service/groupService";
 import { useNavigate } from "react-router-dom";
 
