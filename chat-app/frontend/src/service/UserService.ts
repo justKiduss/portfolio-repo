@@ -1,7 +1,7 @@
 import { AppError } from "../middleware/AppError";
-
-const API=`${import.meta.env.VITE_API_URL}/users`;
-
+const API=import.meta.env.DEV?
+    `${import.meta.env.VITE_API}/users`
+    :`${import.meta.env.VITE_API_URL}/users`
 export async function searchByName(username:string){
     const res=await fetch(`${API}/name?name=${encodeURIComponent(username)}`,{
         method: 'GET',

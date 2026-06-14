@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { MessageSquare, Settings, Users } from "lucide-react";
+import { CircleUser, MessageSquare, Settings, Users } from "lucide-react";
 
 export default function MainLayout() {
   const location = useLocation();
@@ -7,7 +7,8 @@ export default function MainLayout() {
 
   const sidebarLinks = [
     { name: "Messages", path: "/dashboard/chats", icon: MessageSquare },
-    { name: "GroupMessage", path: "/dashboard/group_chats", icon: Users }
+    { name: "GroupMessage", path: "/dashboard/group_chats", icon: Users },
+    { name:"profile", path:"/dashboard/profile",icon:CircleUser}
   ];
 
   return (

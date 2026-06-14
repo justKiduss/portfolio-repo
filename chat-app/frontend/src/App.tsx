@@ -13,6 +13,7 @@ import GroupTabsLayout from "./layout/groupTabsLayout";
 import GroupChat from "./component/groupChat";
 import CreateGroup from "./component/createGroup";
 import AddGroupMember from "./component/addGroupMembers";
+import { Profile } from "./component/profile";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
                 ]
               }
             ]
+          },
+          {
+            path:"profile",
+            element:<Profile/>
           }
         ],
       },

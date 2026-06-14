@@ -56,7 +56,9 @@ const Port=process.env.PORT;
 
 
 app.use(cors({
-    origin: "https://wavvy.kidus.codes",
+    origin: process.env.MODE==="PRODUCTION"?
+    "https://wavvy.kidus.codes"
+    : ["http://localhost:5173","http://localhost:8000"],
     credentials: true
 }));
 

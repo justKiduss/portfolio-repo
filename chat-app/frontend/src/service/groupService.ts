@@ -1,6 +1,8 @@
 import { AppError } from "../middleware/AppError";
 
-const API=`${import.meta.env.VITE_API_URL}/group`;
+const API=import.meta.env.DEV?
+    `${import.meta.env.VITE_API}/group`
+    :`${import.meta.env.VITE_API_URL}/group`
 
 export async function allGroups(){
     const res=await fetch(`${API}/`,{

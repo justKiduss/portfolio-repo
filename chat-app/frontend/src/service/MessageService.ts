@@ -1,7 +1,9 @@
 import { AppError } from "../middleware/AppError";
 
-const API=`${import.meta.env.VITE_API_URL}/messages`;
-
+const API=import.meta.env.DEV?
+    `${import.meta.env.VITE_API}/messages`
+    :`${import.meta.env.VITE_API_URL}/messages`
+    
 export async function GetConversation(id:number){
     const res=await fetch(`${API}/${id}`,{
         method:'GET',
