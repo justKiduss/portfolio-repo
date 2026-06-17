@@ -1,7 +1,9 @@
 import { AppError } from "../middleware/AppError";
+
 const API=import.meta.env.DEV?
     `${import.meta.env.VITE_API}/users`
     :`${import.meta.env.VITE_API_URL}/users`
+
 export async function searchByName(username:string){
     const res=await fetch(`${API}/name?name=${encodeURIComponent(username)}`,{
         method: 'GET',
@@ -56,4 +58,15 @@ export async function checkAuth(){
     if(!res.ok) throw new AppError("user not authenticated",401);
     console.log("data from checkauth",data)
     return data.data.user
+}
+
+export async function getById(id:number){
+
+    const res=await fetch(`${API}/${id}`,{
+        credentials:"include"
+    });
+
+    const data=await res.json();
+    if(!res.ok) throw new AppError("faild to get the user",401);
+    return data.data
 }

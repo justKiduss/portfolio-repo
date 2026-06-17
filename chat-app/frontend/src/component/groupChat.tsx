@@ -27,7 +27,6 @@ export default function GroupChat() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [More, setMore] = useState(false);
     const navigate = useNavigate();
-    console.log("groupMessages",groupMessages);
     useEffect(()=>{
         if(!id) return;
 
@@ -180,17 +179,15 @@ export default function GroupChat() {
                         const imageSource = buildSrc(msg.image ?? msg.image_url ?? msg.imageUrl);
                         const videoSource = buildSrc(msg.video ?? msg.video_url ?? msg.videoUrl);
                         const voiceSource = buildSrc(msg.voice ?? msg.voice_url ?? msg.voiceUrl ?? msg.audio ?? msg.audio_url);
-
+                        console.log("group message",groupMessages);
                         return (
                             <div 
                                 key={msg.id || Math.random()} 
-                                className={`flex flex-col ${isIncoming ? "items-start" : "items-end"}`}
+                                className={`flex items-end gap-2 ${isIncoming ? "flex-row" : "flex-row-reverse"}`}
                             >
                                 {/* Group Sender Name */}
                                 {isIncoming && msg.username && (
-                                    <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mb-1 px-1">
-                                        {msg.username}
-                                    </span>
+                                    <img src={msg.profile_pic} alt={msg.username} className="w-10 rounded-3xl"/>
                                 )}
 
                                 {/* Media & Text Flow Container */}
@@ -250,7 +247,7 @@ export default function GroupChat() {
                                                     ? "rounded-2xl rounded-tl-none bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700/50"
                                                     : "rounded-2xl rounded-tr-none bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
                                             }`}
-                                        >
+                                        >   
                                             <p className="whitespace-pre-wrap break-words">{msg.text}</p>
                                         </div>
                                     )}

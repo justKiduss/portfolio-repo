@@ -115,8 +115,8 @@ export const useGroupStore = create<GroupState>((set,get) => ({
         const socket = useChatStore.getState().socket;
         if (socket) {
             socket.off("newGroupMessage");
-            socket.off("updateGroupmessage");
-            socket.off("deleteGroupmessage");
+            socket.off("updateGroupMessage");
+            socket.off("deleteGroupMessage");
         }
     }
 }));

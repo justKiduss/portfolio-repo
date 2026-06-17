@@ -27,9 +27,11 @@ const groupMessageModel = () => {
         },
         getGroupMessages: async (group_id: number, user_id: number) => {
             const res = await pool.query(`
-                SELECT gm.id, gm.sender_id, gm.group_id, gm.text, gm.image, gm.video, gm.voice, gm.created_at
+                SELECT gm.id, gm.sender_id, gm.group_id, gm.text, gm.image, gm.video, gm.voice, gm.created_at,
+                u.username,u.profile_pic
                 FROM "groupMessage" gm
                 INNER JOIN group_members m ON gm.group_id = m.group_id
+                INNER JOIN users u ON gm.sender_id = u.id
                 WHERE gm.group_id = $1 AND m.user_id = $2
                 ORDER BY gm.created_at ASC
             `, [group_id, user_id]);
