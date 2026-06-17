@@ -17,8 +17,7 @@ export function Profile(){
         fetchProfile(Number(id));
 
     },[id])
-    if(!profile) return <div>Loading ...</div>
-    console.log(profile)
+    if(!profile) return <div className="h-auto flex items-center justify-center">Loading ...</div>
     return(
         <>
             <div className="min-h-screen flex items-center justify-center p-4 bg-zinc-950">
