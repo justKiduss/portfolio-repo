@@ -1,4 +1,14 @@
-export function ProjectCard({ title, desc, tags, img, demoLink, sourceLink, detailLink }) {
+interface ProjectCardProps {
+    title: string;
+    desc: string;
+    tags: string[];
+    img: string;
+    demoLink: string;
+    sourceLink: string;
+    detailLink: string;
+}
+
+export function ProjectCard({ title, desc, tags, img, demoLink, sourceLink, detailLink }: ProjectCardProps) {
     return (
         <div className="bg-[#111318] border border-zinc-800 rounded-2xl p-5 space-y-4 hover:border-zinc-700 transition">
             <img src={img} className="w-full h-48 object-cover rounded-xl" />
