@@ -40,9 +40,7 @@ export default function Hero(){
 
                 <li>
                 <a 
-                    href="mailto:kidusteshome036@gmail.com?subject=Portfolio%20Inquiry" 
-                    target="_blank" 
-                    rel="noreferrer"
+                    href="mailto:kidusteshome036@gmail.com?subject=Portfolio%20Inquiry"
                     className="flex items-center gap-2 bg-[#242933] hover:bg-[#2e3440] text-white px-4 py-2 rounded-lg text-sm font-medium border border-[#3b4252] transition-colors"
                 >
                     <Mail className='w-4 h-4'/>
