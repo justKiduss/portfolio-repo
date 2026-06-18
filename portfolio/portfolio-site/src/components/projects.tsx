@@ -1,5 +1,6 @@
 import strategy from "../assets/strategy.png";
 import movie from "../assets/movix.png";
+import wavvy from "../assets/wavvy.png";
 // import saas from "../assets/vite.svg";
 import { SiJavascript, SiTypescript, SiPostgresql, SiTailwindcss, SiReact, SiNodedotjs, SiMongodb } from "react-icons/si";
 import { ArrowRight } from "lucide-react";
@@ -10,8 +11,7 @@ export default function Projects(){
         <section className="pt-6">
             <h1 className="pb-4 text-left text-4xl">Selected Work</h1>
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {/* Strategy Game Card */}
+            <div className="grid gap-8 md:grid-cols-2">
                 <ProjectCard 
                     title="Strategy Game"
                     desc="Turn-based strategy game with AI opponent and fog of war."
@@ -20,6 +20,16 @@ export default function Projects(){
                     demoLink="https://portfolio-repo-one-sigma.vercel.app/"
                     sourceLink="https://github.com/justKiduss/portfolio-repo/tree/main/Games/Strategy_Game"
                     detailLink={`/projects/${ProjectDetail[0]?.id}`}
+                />
+
+                 <ProjectCard 
+                    title="Wavvy"
+                    desc="Real-time group chat platform with socket presence and live messaging."
+                    tags={["React", "Socket.io", "Node.js", "Postgres"]}
+                    img={wavvy} // Replace with your wavvy image import
+                    demoLink="https://wavvy.kidus.codes"
+                    sourceLink="#"
+                    detailLink={`/projects/wavvy`}
                 />
 
                 {/* Movix Card */}
@@ -31,17 +41,6 @@ export default function Projects(){
                     demoLink="https://movix-psi-seven.vercel.app/"
                     sourceLink="https://github.com/justKiduss/portfolio-repo/tree/main/chill-time"
                     detailLink={`/projects/${ProjectDetail[1]?.id}`}
-                />
-
-                {/* Wavvy Card (ADD THIS) */}
-                <ProjectCard 
-                    title="Wavvy"
-                    desc="Real-time group chat platform with socket presence and live messaging."
-                    tags={["React", "Socket.io", "Node.js", "Postgres"]}
-                    img={movie} // Replace with your wavvy image import
-                    demoLink="https://wavvy.kidus.codes"
-                    sourceLink="#"
-                    detailLink={`/projects/wavvy`}
                 />
             </div>
             <div className="mt-8 mb-3 space-y-5">
