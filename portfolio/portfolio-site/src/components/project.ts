@@ -21,24 +21,6 @@ export const ProjectDetail=[
             architectureImg: stra,
         },
         {
-            id:"movix",
-            title: "Movix",
-            subtitle: "Full-stack movie streaming platform with auth, reviews and watch history.",
-            systems: [
-                { title: "Review State Engine", detail: "Normalized useReducer with byIds/allIds structure — all CRUD operations flow through a custom useReview hook with useCallback and useMemo to prevent re-renders." },
-                { title: "Authentication", detail: "JWT auth with role-based authorization plus Google OAuth — tokens passed via URL params on OAuth callback, consumed and cleaned on mount." },
-                { title: "REST API Architecture", detail: "Layered Express backend — routes → controllers → services → models — with input validation middleware, rate limiting, and Winston structured logging." },
-                { title: "Watch History", detail: "localStorage persistence tracking continue-watching state per movie and series, including season and episode position with deduplication and 10-entry cap." },
-            ],
-            challenges: [
-                "Preventing stale state in search by using an ignore flag pattern inside useEffect to cancel outdated fetch responses.",
-                "Handling Google OAuth token handoff — backend redirects with token in URL params, frontend consumes and cleans the URL on mount.",
-                "Designing normalized review state to support fast lookups by ID without scanning arrays on every render.",
-            ],
-            stateStructure: `reviewState = { byIds: { [id]: { id, movie_id, rating, review } }, allIds: [...], loading, error }`,
-            architectureImg: movix,
-        },
-        {
             id: "wavvy",
             title: "Wavvy",
             subtitle: "Real-time group chat platform with end-to-end socket integration and presence tracking.",
@@ -65,6 +47,23 @@ export const ProjectDetail=[
             ],
             stateStructure: `chatState = { socket, onlineUsers: [{ userId, username }], messages: [Message], users: [User], isLoading }`,
             architectureImg: wavvy
+        },
+        {
+            id:"movix",
+            title: "Movix",
+            subtitle: "Full-stack movie streaming platform with auth, reviews and watch history.",
+            systems: [
+                { title: "Review State Engine", detail: "Normalized useReducer with byIds/allIds structure — all CRUD operations flow through a custom useReview hook with useCallback and useMemo to prevent re-renders." },
+                { title: "Authentication", detail: "JWT auth with role-based authorization plus Google OAuth — tokens passed via URL params on OAuth callback, consumed and cleaned on mount." },
+                { title: "REST API Architecture", detail: "Layered Express backend — routes → controllers → services → models — with input validation middleware, rate limiting, and Winston structured logging." },
+                { title: "Watch History", detail: "localStorage persistence tracking continue-watching state per movie and series, including season and episode position with deduplication and 10-entry cap." },
+            ],
+            challenges: [
+                "Preventing stale state in search by using an ignore flag pattern inside useEffect to cancel outdated fetch responses.",
+                "Handling Google OAuth token handoff — backend redirects with token in URL params, frontend consumes and cleans the URL on mount.",
+                "Designing normalized review state to support fast lookups by ID without scanning arrays on every render.",
+            ],
+            stateStructure: `reviewState = { byIds: { [id]: { id, movie_id, rating, review } }, allIds: [...], loading, error }`,
+            architectureImg: movix,
         }
-
     ]
