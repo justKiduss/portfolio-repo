@@ -12,7 +12,7 @@ export default function Hero(){
             <ul className="flex flex-wrap list-none gap-3">
                 <li>
                 <a 
-                    href="https://github.com" 
+                    href="https://github.com/justkiduss" 
                     target="_blank" 
                     rel="noreferrer"
                     className="flex items-center gap-2 bg-[#242933] hover:bg-[#2e3440] text-white px-4 py-2 rounded-lg text-sm font-medium border border-[#3b4252] transition-colors"
