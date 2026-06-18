@@ -1,5 +1,6 @@
 import stra from "../assets/excalidraw strategy.png";
 import movix from "../assets/excalidraw movix.png";
+import wavvy from "../assets/wavvy.png";
 export const ProjectDetail=[
         {
             id: "strategy-game",
@@ -36,5 +37,34 @@ export const ProjectDetail=[
             ],
             stateStructure: `reviewState = { byIds: { [id]: { id, movie_id, rating, review } }, allIds: [...], loading, error }`,
             architectureImg: movix,
+        },
+        {
+            id: "wavvy",
+            title: "Wavvy",
+            subtitle: "Real-time group chat platform with end-to-end socket integration and presence tracking.",
+            systems: [
+                { 
+                    title: "Socket Management", 
+                    detail: "Centralized socket lifecycle within a Zustand store — implementing a singleton connection pattern that prevents multiple socket instantiations via connection state tracking." 
+                },
+                { 
+                    title: "Presence Engine", 
+                    detail: "Real-time online status tracking using server-side maps keyed by userId, broadcasted via Socket.io to all clients on join/disconnect events." 
+                },
+                { 
+                    title: "Message Persistence", 
+                    detail: "Optimistic UI updates for instant messaging, synchronized with a PostgreSQL backend through a RESTful API and real-time socket events for multi-client state consistency." 
+                },
+                { 
+                    title: "Group Room Logic", 
+                    detail: "Dynamic room management using socket.join/leave rooms patterned by groupId, enabling targeted message broadcasting to active group participants only." 
+                },
+            ],
+            challenges: [
+                // You will fill these in yourself
+            ],
+            stateStructure: `chatState = { socket, onlineUsers: [{ userId, username }], messages: [Message], users: [User], isLoading }`,
+            architectureImg: wavvy
         }
+
     ]
