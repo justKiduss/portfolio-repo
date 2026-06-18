@@ -4,70 +4,45 @@ import movie from "../assets/movix.png";
 import { SiJavascript, SiTypescript, SiPostgresql, SiTailwindcss, SiReact, SiNodedotjs, SiMongodb } from "react-icons/si";
 import { ArrowRight } from "lucide-react";
 import { ProjectDetail } from "./project";
+import { ProjectCard } from "./projectCard";
 export default function Projects(){
     return(
         <section className="pt-6">
             <h1 className="pb-4 text-left text-4xl">Selected Work</h1>
-            <div className="grid gap-8 md:grid-cols-2">
-                <div className="bg-[#111318] border border-gray-800 rounded-xl p-4 space-y-4">
-                    <img src={strategy} alt="Stratgy game with turn based System" className="w-full h-80 object-cover rounded-md"/>
-                    <h2 className="text-bold text-left">Strategy Game</h2>
-                    <p className="text-sm text-gray-300 text-left">Turn-based strategy game with AI opponent and fog of war.</p>
-                    <div className="flex gap-2 flex-wrap text-xs text-gray-400 pt-3 pb-2">
-                        <code className="mr-2">Vanilla JS</code>
-                        <code className="mr-2">Canvas API</code>
-                    </div>  
-                    <div className="flex gap-5">
-                        <a href="https://portfolio-repo-one-sigma.vercel.app/" className="text-sm hover:text-purple-500">Live Demo</a>
-                        <a href="https://github.com/justKiduss/portfolio-repo/tree/main/Games/Strategy_Game" className="text-sm hover:text-purple-500">Source Code</a>
-                        <a href={`/projects/${ProjectDetail[0].id}`}>View More</a>
-                    </div>  
-                </div>
 
-                <div className="bg-[#111318] border border-zinc-800 rounded-2xl p-5 space-y-4 shadow-lg transition-transform hover:border-zinc-700">
-                    <img 
-                        src={strategy} 
-                        alt="Strategy game screenshot" 
-                        className="w-full h-48 object-cover rounded-xl"
-                    />
-                    
-                    <div>
-                        <h2 className="text-lg font-bold text-white mb-1">Strategy Game</h2>
-                        <p className="text-sm text-zinc-400">
-                            Turn-based strategy game with AI opponent and fog of war.
-                        </p>
-                    </div>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {/* Strategy Game Card */}
+                <ProjectCard 
+                    title="Strategy Game"
+                    desc="Turn-based strategy game with AI opponent and fog of war."
+                    tags={["Vanilla JS", "Canvas API"]}
+                    img={strategy}
+                    demoLink="https://portfolio-repo-one-sigma.vercel.app/"
+                    sourceLink="https://github.com/justKiduss/portfolio-repo/tree/main/Games/Strategy_Game"
+                    detailLink={`/projects/${ProjectDetail[0]?.id}`}
+                />
 
-                    {/* Professional Tag Badges */}
-                    <div className="flex gap-2 flex-wrap text-[10px] font-medium uppercase tracking-wider">
-                        <span className="px-2.5 py-1 bg-zinc-800 text-zinc-300 rounded-full">Vanilla JS</span>
-                        <span className="px-2.5 py-1 bg-zinc-800 text-zinc-300 rounded-full">Canvas API</span>
-                    </div>  
+                {/* Movix Card */}
+                <ProjectCard 
+                    title="Movix"
+                    desc="Full-stack movie streaming platform with TMDB integration, auth, and reviews."
+                    tags={["React", "Node.js", "Postgres", "Tailwind"]}
+                    img={movie}
+                    demoLink="https://movix-psi-seven.vercel.app/"
+                    sourceLink="https://github.com/justKiduss/portfolio-repo/tree/main/chill-time"
+                    detailLink={`/projects/${ProjectDetail[1]?.id}`}
+                />
 
-                    {/* Action Buttons */}
-                    <div className="flex items-center gap-4 pt-2 border-t border-zinc-800 pt-4">
-                        <a href="https://portfolio-repo-one-sigma.vercel.app/" className="text-xs text-white hover:text-purple-400 font-medium transition">Live Demo</a>
-                        <a href="https://github.com/justKiduss/portfolio-repo/tree/main/Games/Strategy_Game" className="text-xs text-white hover:text-purple-400 font-medium transition">Source Code</a>
-                        <a href={`/projects/${ProjectDetail[1].id}`} className="text-xs text-purple-400 hover:text-purple-300 font-bold ml-auto transition">View Details →</a>
-                    </div>   
-                </div>
-
-                <div className="bg-[#111318] border border-gray-800 rounded-xl p-4 space-y-4 h-auto">
-                    <img src={movie} alt="A Movie site users can stream their choosen movie for free and review for other" className="w-full h-80 object-cover rounded-md"/>
-                    <h2 className="text-bold text-left">Movix</h2>
-                    <p className="text-sm text-gray-300 text-left">A full-stack movie streaming platform with TMDB integration, user authentication, and a review and rating system. Built with React, Node.js, and PostgreSQL.</p>
-                    <div className="flex gap-2 flex-wrap text-xs text-gray-400 p-3">
-                        <code className="mr-2">React</code>
-                        <code className="mr-2">Node.js</code>
-                        <code className="mr-2">Postgres</code>
-                        <code className="mr-2">tailwind</code>
-                    </div>
-                      <div className="flex gap-5">
-                        <a href="https://movix-psi-seven.vercel.app/" className="text-sm hover:text-purple-500">Live Demo</a>
-                        <a href="https://github.com/justKiduss/portfolio-repo/tree/main/chill-time" className="text-sm hover:text-purple-500">Source Code</a>
-                        <a href={`/projects/${ProjectDetail[2].id}`}>View More</a>
-                    </div> 
-                </div>
+                {/* Wavvy Card (ADD THIS) */}
+                <ProjectCard 
+                    title="Wavvy"
+                    desc="Real-time group chat platform with socket presence and live messaging."
+                    tags={["React", "Socket.io", "Node.js", "Postgres"]}
+                    img={movie} // Replace with your wavvy image import
+                    demoLink="https://wavvy.kidus.codes"
+                    sourceLink="#"
+                    detailLink={`/projects/wavvy`}
+                />
             </div>
             <div className="mt-8 mb-3 space-y-5">
                 <a href="/projects" className="flex hover:text-purple-500">
