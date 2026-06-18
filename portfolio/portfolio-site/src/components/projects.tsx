@@ -23,6 +23,35 @@ export default function Projects(){
                         <a href={`/projects/${ProjectDetail[0].id}`}>View More</a>
                     </div>  
                 </div>
+
+                <div className="bg-[#111318] border border-zinc-800 rounded-2xl p-5 space-y-4 shadow-lg transition-transform hover:border-zinc-700">
+                    <img 
+                        src={strategy} 
+                        alt="Strategy game screenshot" 
+                        className="w-full h-48 object-cover rounded-xl"
+                    />
+                    
+                    <div>
+                        <h2 className="text-lg font-bold text-white mb-1">Strategy Game</h2>
+                        <p className="text-sm text-zinc-400">
+                            Turn-based strategy game with AI opponent and fog of war.
+                        </p>
+                    </div>
+
+                    {/* Professional Tag Badges */}
+                    <div className="flex gap-2 flex-wrap text-[10px] font-medium uppercase tracking-wider">
+                        <span className="px-2.5 py-1 bg-zinc-800 text-zinc-300 rounded-full">Vanilla JS</span>
+                        <span className="px-2.5 py-1 bg-zinc-800 text-zinc-300 rounded-full">Canvas API</span>
+                    </div>  
+
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-4 pt-2 border-t border-zinc-800 pt-4">
+                        <a href="https://portfolio-repo-one-sigma.vercel.app/" className="text-xs text-white hover:text-purple-400 font-medium transition">Live Demo</a>
+                        <a href="https://github.com/justKiduss/portfolio-repo/tree/main/Games/Strategy_Game" className="text-xs text-white hover:text-purple-400 font-medium transition">Source Code</a>
+                        <a href={`/projects/${ProjectDetail[1].id}`} className="text-xs text-purple-400 hover:text-purple-300 font-bold ml-auto transition">View Details →</a>
+                    </div>   
+                </div>
+
                 <div className="bg-[#111318] border border-gray-800 rounded-xl p-4 space-y-4 h-auto">
                     <img src={movie} alt="A Movie site users can stream their choosen movie for free and review for other" className="w-full h-80 object-cover rounded-md"/>
                     <h2 className="text-bold text-left">Movix</h2>
@@ -36,7 +65,7 @@ export default function Projects(){
                       <div className="flex gap-5">
                         <a href="https://movix-psi-seven.vercel.app/" className="text-sm hover:text-purple-500">Live Demo</a>
                         <a href="https://github.com/justKiduss/portfolio-repo/tree/main/chill-time" className="text-sm hover:text-purple-500">Source Code</a>
-                        <a href={`/projects/${ProjectDetail[1].id}`}>View More</a>
+                        <a href={`/projects/${ProjectDetail[2].id}`}>View More</a>
                     </div> 
                 </div>
             </div>
