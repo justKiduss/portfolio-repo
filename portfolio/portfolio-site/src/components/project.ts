@@ -43,7 +43,9 @@ export const ProjectDetail=[
                 },
             ],
             challenges: [
-                // You will fill these in yourself
+                "Architecting around serverless lifecycle limitations by implementing an automatic reconnection strategy and state re-hydration on socket re-establishment.",
+                "Ensuring UI consistency between the primary database (PostgreSQL) and temporary socket-based state using optimistic updates and rollback handling.",
+                "Managing socket connection overhead by implementing singleton patterns to prevent 'ghost' connections during React component re-renders.",
             ],
             stateStructure: `chatState = { socket, onlineUsers: [{ userId, username }], messages: [Message], users: [User], isLoading }`,
             architectureImg: wavvy
