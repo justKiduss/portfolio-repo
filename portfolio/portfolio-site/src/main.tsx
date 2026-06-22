@@ -6,6 +6,7 @@ import { BrowserRouter,Routes,Route } from "react-router-dom";
 import Detail from './components/detail';
 import { Header } from './components/header';
 import { AboutMe } from './components/aboutMe';
+import ProjectPage from './components/projectPage';
 
 
 function Layout(){
@@ -17,6 +18,7 @@ function Layout(){
           <Route path="/" element={<App/>}/>
           <Route path="/projects/:id" element={<Detail/>}/>
           <Route path="/about" element={<AboutMe/>}/>
+          <Route path="/projects" element={<ProjectPage/>}/>
         </Routes>
       </main>
     </div>
