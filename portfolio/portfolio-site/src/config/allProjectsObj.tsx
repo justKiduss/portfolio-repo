@@ -15,7 +15,7 @@ export const ProjectsInfo=[
     },
     {
         title:"Wavvy",
-        featured:false,
+        featured:true,
         desc:"Real-time group chat platform with socket presence and live messaging.",
         tags:["React", "Socket.io", "Node.js", "Postgres"],
         img:wavvy,
@@ -31,7 +31,7 @@ export const ProjectsInfo=[
         img:movie,
         demoLink:"https://movix-psi-seven.vercel.app/",
         sourceLink:"https://github.com/justKiduss/portfolio-repo/tree/main/chill-time",
-        detailLink:`/projects/${ProjectDetail[1]?.id}`
+        detailLink:`/projects/${ProjectDetail[2]?.id}`
     }
 
 ] 
