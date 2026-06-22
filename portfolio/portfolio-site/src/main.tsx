@@ -5,8 +5,8 @@ import { App } from './App'
 import { BrowserRouter,Routes,Route } from "react-router-dom";
 import Detail from './components/detail';
 import { Header } from './components/header';
-import { AboutMe } from './components/aboutMe';
-import ProjectPage from './components/projectPage';
+import { AboutMe } from './pages/aboutMe';
+import ProjectPage from './pages/projectPage';
 
 
 function Layout(){
