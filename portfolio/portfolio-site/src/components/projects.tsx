@@ -32,7 +32,6 @@ export default function Projects(){
                     detailLink={`/projects/wavvy`}
                 />
 
-                {/* Movix Card */}
                 <ProjectCard 
                     title="Movix"
                     desc="Full-stack movie streaming platform with TMDB integration, auth, and reviews."
@@ -42,7 +41,10 @@ export default function Projects(){
                     sourceLink="https://github.com/justKiduss/portfolio-repo/tree/main/chill-time"
                     detailLink={`/projects/${ProjectDetail[1]?.id}`}
                 />
-            </div>
+            </div> 
+
+
+
             <div className="mt-8 mb-3 space-y-5">
                 <a href="/projects" className="flex hover:text-purple-500">
                     More Projects

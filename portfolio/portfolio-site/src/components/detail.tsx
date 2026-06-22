@@ -14,7 +14,7 @@ export default function Detail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0c10] text-gray-200 px-6 py-16">
+    <div className="min-h-screen bg-[#0b0c10] text-gray-200 px-6">
       <div className="max-w-4xl mx-auto space-y-12">
 
         {/* HEADER */}

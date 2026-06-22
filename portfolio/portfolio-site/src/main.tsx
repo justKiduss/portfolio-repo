@@ -12,7 +12,7 @@ function Layout(){
   return (
     <div className="bg-[#0b0c10] text-white">
       <Header/>
-      <main className="min-h-screen bg-[#0b0c10] text-white">
+      <main className="min-h-screen bg-[#0b0c10] text-white max-w-3xl mx-auto px-6 py-16">
         <Routes>
           <Route path="/" element={<App/>}/>
           <Route path="/projects/:id" element={<Detail/>}/>
