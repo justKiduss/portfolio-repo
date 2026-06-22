@@ -5,7 +5,7 @@ import movie from "../assets/movix.png";
 export const ProjectsInfo=[
     {
         title:"Strategy Game",
-        featured:true,
+        featured:false,
         desc:"Turn-based strategy game with AI opponent and fog of war.",
         tags:["Vanilla JS", "Canvas API"],
         img:strategy,
