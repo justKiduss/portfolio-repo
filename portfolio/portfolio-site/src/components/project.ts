@@ -5,6 +5,7 @@ export const ProjectDetail=[
         {
             id: "strategy-game",
             title: "Strategy Game",
+            featured: true,
             subtitle: "Turn-based strategy game built with custom state management and AI systems.",
             systems: [
             { title: "State Engine", detail: "Custom Redux-like dispatcher with pure reducers handling movement, combat, and turns." },
@@ -23,6 +24,7 @@ export const ProjectDetail=[
         {
             id: "wavvy",
             title: "Wavvy",
+            featured: true,
             subtitle: "Real-time group chat platform with end-to-end socket integration and presence tracking.",
             systems: [
                 { 
@@ -53,6 +55,7 @@ export const ProjectDetail=[
         {
             id:"movix",
             title: "Movix",
+            featured: true,
             subtitle: "Full-stack movie streaming platform with auth, reviews and watch history.",
             systems: [
                 { title: "Review State Engine", detail: "Normalized useReducer with byIds/allIds structure — all CRUD operations flow through a custom useReview hook with useCallback and useMemo to prevent re-renders." },

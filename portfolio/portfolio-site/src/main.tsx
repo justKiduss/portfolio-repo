@@ -5,6 +5,7 @@ import { App } from './App'
 import { BrowserRouter,Routes,Route } from "react-router-dom";
 import Detail from './components/detail';
 import { Header } from './components/header';
+import { AboutMe } from './components/aboutMe';
 
 
 function Layout(){
@@ -15,6 +16,7 @@ function Layout(){
         <Routes>
           <Route path="/" element={<App/>}/>
           <Route path="/projects/:id" element={<Detail/>}/>
+          <Route path="/about" element={<AboutMe/>}/>
         </Routes>
       </main>
     </div>
