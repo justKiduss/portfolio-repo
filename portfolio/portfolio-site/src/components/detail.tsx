@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { ProjectDetail } from "./project";
+import { ProjectDetail } from "../config/allProjectDetaillObj";
 
 export default function Detail() {
   const { id } = useParams();

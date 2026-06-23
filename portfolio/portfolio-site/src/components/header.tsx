@@ -30,9 +30,9 @@ export function Header(){
                     })}
                     </div>
                 <ul className="flex list-none gap-4 md:gap-8 sm:gap-0.5 ">
-                    <li><a href="/about" className="hover:text-purple-500 text-sm md:text-base">About me</a></li>
-                    <li><a href='/resume' className="hover:text-purple-500 text-sm md:text-base">Resume</a></li>
-                    <li><a href='/projects' className="hover:text-purple-500 text-sm md:text-base">Projects</a></li>
+                    <li><Link to="/about" className="hover:text-purple-500 text-sm md:text-base">About me</Link></li>
+                    <li><Link to='/resume' className="hover:text-purple-500 text-sm md:text-base">Resume</Link></li>
+                    <li><Link to='/projects' className="hover:text-purple-500 text-sm md:text-base">Projects</Link></li>
                 </ul>
             </nav>
         </header>

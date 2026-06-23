@@ -1,49 +1,28 @@
-import strategy from "../assets/strategy.png";
-import movie from "../assets/movix.png";
-import wavvy from "../assets/wavvy.png";
 // import saas from "../assets/vite.svg";
 import { SiJavascript, SiTypescript, SiPostgresql, SiTailwindcss, SiReact, SiNodedotjs, SiMongodb } from "react-icons/si";
 import { ArrowRight } from "lucide-react";
-import { ProjectDetail } from "./project";
 import { ProjectCard } from "./projectCard";
+import { ProjectsInfo } from "../config/allProjectsObj";
 export default function Projects(){
+    const featuredProject=ProjectsInfo.filter((a)=>a.featured==true);
+
     return(
         <section className="pt-6">
             <h1 className="pb-4 text-left text-4xl">Selected Work</h1>
 
             <div className="grid gap-8 md:grid-cols-2">
-                <ProjectCard 
-                    title="Strategy Game"
-                    desc="Turn-based strategy game with AI opponent and fog of war."
-                    tags={["Vanilla JS", "Canvas API"]}
-                    img={strategy}
-                    demoLink="https://portfolio-repo-one-sigma.vercel.app/"
-                    sourceLink="https://github.com/justKiduss/portfolio-repo/tree/main/Games/Strategy_Game"
-                    detailLink={`/projects/${ProjectDetail[0]?.id}`}
-                />
-
-                 <ProjectCard 
-                    title="Wavvy"
-                    desc="Real-time group chat platform with socket presence and live messaging."
-                    tags={["React", "Socket.io", "Node.js", "Postgres"]}
-                    img={wavvy} // Replace with your wavvy image import
-                    demoLink="https://wavvy.kidus.codes"
-                    sourceLink="#"
-                    detailLink={`/projects/wavvy`}
-                />
-
-                <ProjectCard 
-                    title="Movix"
-                    desc="Full-stack movie streaming platform with TMDB integration, auth, and reviews."
-                    tags={["React", "Node.js", "Postgres", "Tailwind"]}
-                    img={movie}
-                    demoLink="https://movix-psi-seven.vercel.app/"
-                    sourceLink="https://github.com/justKiduss/portfolio-repo/tree/main/chill-time"
-                    detailLink={`/projects/${ProjectDetail[1]?.id}`}
-                />
+                {featuredProject.map((a)=>(
+                    <ProjectCard key={a.title}
+                        title={a.title}
+                        desc={a.desc}
+                        tags={a.tags}
+                        img={a.img}
+                        demoLink={a.demoLink}
+                        sourceLink={a.sourceLink}
+                        detailLink={a.detailLink}
+                    />
+                ))}
             </div> 
-
-
 
             <div className="mt-8 mb-3 space-y-5">
                 <a href="/projects" className="flex hover:text-purple-500">
