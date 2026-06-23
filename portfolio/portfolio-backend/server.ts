@@ -16,14 +16,18 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+// console.log("token",process.env.GITHUB_ACCESSTOKEN);
+// console.log("username",process.env.GIT_USERNAME);
+
 app.get("/api",(req:Request,res:Response)=>{
     res.send("Api is working");
 })
 app.use("/api",router);
 
-app.listen(port,()=>{
-    console.log(`Server running in the http://localhost:${port}`);
-})
-
+if(process.env.NODE_ENV==="development"){
+    app.listen(port,()=>{
+        console.log(`Server running in the http://localhost:${port}`);
+    })
+}
 // export default app;
 
