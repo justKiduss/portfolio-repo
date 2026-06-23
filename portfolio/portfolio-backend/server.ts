@@ -7,7 +7,7 @@ import cors from "cors";
 import router from "./routes/githubRoutes";
 
 const app =express();
-// const port=process.env.PORT || 8000;
+const port=process.env.PORT || 8000;
 
 app.use(express.json());
 app.use(cors({
@@ -20,9 +20,9 @@ app.get("/api",(req:Request,res:Response)=>{
     res.send("Api is working");
 })
 app.use("/api",router);
-// app.listen(port,()=>{
-//     console.log(`Server running in the http://localhost:${port}`);
-// })
+app.listen(port,()=>{
+    console.log(`Server running in the http://localhost:${port}`);
+})
 
-export default app;
+// export default app;
 

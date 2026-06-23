@@ -13,7 +13,7 @@ export async function githubActivity(req: Request,res: Response){
                     },
                 }
         );
-        // console.log("response",response);
+        console.log("response",response);
         if(!response.ok){
             return res.status(500).json({error:"Github fetch failed"});
         }
