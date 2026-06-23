@@ -1,6 +1,7 @@
 export default async function GitService(){
     try{
-        const response=await fetch('https://portfolio-repo-pi-wheat.vercel.app/api/github-activity');
+        // https://portfolio-repo-pi-wheat.vercel.app/api/github-activity
+        const response=await fetch('http://localhost:/api');
         if(!response.ok) throw new Error("Server not responding");
         return await response.json();
     }catch(error){

@@ -20,6 +20,7 @@ app.get("/api",(req:Request,res:Response)=>{
     res.send("Api is working");
 })
 app.use("/api",router);
+
 app.listen(port,()=>{
     console.log(`Server running in the http://localhost:${port}`);
 })
