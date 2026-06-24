@@ -4,7 +4,6 @@ dotenv.config();
 import express from "express";
 import type {Request,Response} from "express";
 import cors from "cors";
-import router from "./routes/githubRoutes";
 
 const app =express();
 const port=process.env.PORT || 8000;
@@ -22,12 +21,37 @@ app.use(cors({
 app.get("/api",(req:Request,res:Response)=>{
     res.send("Api is working");
 })
-app.use("/api",router);
 
-if(process.env.NODE_ENV==="development"){
-    app.listen(port,()=>{
-        console.log(`Server running in the http://localhost:${port}`);
-    })
-}
+app.get("/api/github-activity",async (req: Request,res: Response)=>{
+
+    try{
+        const response=await fetch(
+            `https://api.github.com/users/${process.env.GIT_USERNAME}/events`,{
+                headers:{
+                    Authorization:`Bearer ${process.env.GITHUB_ACCESSTOKEN}`,
+                    Accept:'application/vnd.github+json',
+                },
+                }
+            );
+            if(!response.ok){
+                return res.status(response.status).json({ error: "GitHub API request failed" });
+            }
+
+            const data=await response.json();
+            return res.status(200).json({
+                success:true,
+                data:data
+            })
+
+        }catch(error){
+            return error
+        }
+    }
+)
+
+app.listen(port,()=>{
+    console.log(`Server running in the http://localhost:${port}`);
+})
+
 // export default app;
 
