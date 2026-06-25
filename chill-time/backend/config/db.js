@@ -1,20 +1,14 @@
-import pg from "pg";
+import { Pool } from "pg";
 import dotenv from 'dotenv';
 
 // This line reads your .env file and attaches the variables to process.env
 dotenv.config();
 
-const {Pool} =pg;
-
 const pool=new Pool({
-    user:process.env.DB_USER,
-    host:process.env.DB_HOST,
-    database:process.env.DB_NAME,
-    password:process.env.DB_PASSWORD,
-    port:process.env.DB_PORT,
-    ssl: process.env.NODE_ENV === "production"
-        ? { rejectUnauthorized: false }
-        : false,
+    connectionString:process.env.DATABASE_URL,
+    ssl:process.env.NODE_ENV ==="production" ? {
+        rejectUnauthorized:false,
+    } : false
 });
 
 pool.on('connect',()=>{
@@ -39,6 +33,7 @@ const testConnection = async () => {
         console.error('Connection not successful', err.message);
     }
 };
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV?.toLowerCase() === "development") {
     testConnection()
 }
+
