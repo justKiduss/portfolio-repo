@@ -1,19 +1,20 @@
 import { Pool } from "pg";
 import dotenv from 'dotenv';
 
-// This line reads your .env file and attaches the variables to process.env
 dotenv.config();
 
-const pool=new Pool({
-    connectionString:process.env.DATABASE_URL,
-    ssl:process.env.NODE_ENV ==="production" ? {
-        rejectUnauthorized:false,
+const env = (process.env.NODE_ENV || 'development').toLowerCase();
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    // Checks correctly against normalized lowercase string
+    ssl: env === "production" ? {
+        rejectUnauthorized: false,
     } : false
 });
 
-pool.on('connect',()=>{
+pool.on('connect', () => {
     console.log('✅ PostgreSQL Connected Successfully to Movie-Site');
-})
+});
 
 pool.on('error', (err) => {
     console.error('❌ Unexpected error on idle client', err);
@@ -21,19 +22,3 @@ pool.on('error', (err) => {
 });
 
 export default pool;
-
-
-// Temporary Test Logic
-const testConnection = async () => {
-    try {
-        const res = await pool.query('SELECT NOW()');
-        console.log('Database Time:', res.rows[0].now);
-        console.log('connection is successful');
-    } catch (err) {
-        console.error('Connection not successful', err.message);
-    }
-};
-if (process.env.NODE_ENV?.toLowerCase() === "development") {
-    testConnection()
-}
-

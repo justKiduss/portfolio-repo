@@ -2,16 +2,16 @@ import pool from "../config/db.js";
 export function userModel(){
     return{
         getAll:async()=>{
-            const res=await pool.query('SELECT id,username,email,avatar,role FROM users');
+            const res=await pool.query('SELECT id,username,email,avatar,role,created_at FROM users');
             return res.rows;
         },
         getById:async(id)=>{
-            const res=await pool.query('SELECT * FROM users WHERE id= $1',[id]
+            const res=await pool.query('SELECT id,username,email,avatar,role,created_at FROM users WHERE id= $1',[id]
             );
             return res.rows[0];
         },
         getByUsername:async(username)=>{
-            const res=await pool.query(`SELECT * FROM users where username=$1`,[username]
+            const res=await pool.query(`SELECT id,username,email,avatar,role,created_at FROM users where username=$1`,[username]
             );
             return res.rows[0];
         },
@@ -23,7 +23,7 @@ export function userModel(){
             return res.rows[0];
         },
         getByEmail:async (email)=>{
-            const res=await pool.query('SELECT * FROM users WHERE email=$1',[email]                
+            const res=await pool.query('SELECT id,username,email,avatar,role,created_at FROM users WHERE email=$1',[email]                
             );
             return res.rows[0];
         },
@@ -40,7 +40,6 @@ export function userModel(){
             );
             return res.rows[0];
         }
-
     }
 }
 
