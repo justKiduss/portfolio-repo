@@ -31,7 +31,7 @@ export const createUserService=async (data)=>{
         error.status=409;
         throw error;  
     }
-    const hashedPassword=await bcrypt.hash(data.password.trim(),10);
+    const hashedPassword=await bcrypt.hash(data.password,10);
 
     const normalized={
         username:data.username.trim(),
@@ -39,16 +39,24 @@ export const createUserService=async (data)=>{
         password:hashedPassword,
         avatar:data.avatar?data.avatar.trim():null
     }
-    return await model.create(normalized);
+    await model.create(normalized);
+
+    const usersFound = await model.getByUsername(normalized.username);
+    const user = usersFound?.[0];
+    const token = generateToken(user);
+
+    return { user, token }
 }
 export const loginService=async (data)=>{
     if(!data) return null;
 
     const normalized={
-        email:data.email.trim(),
+        username:data.username.trim(),
         password:data.password.trim()
     }
-    const user=await model.getByEmail(normalized.email);
+    const userFound=await model.getByUsername(normalized.username);
+    const user=userFound?.find(u=>u.username.toLowerCase()===normalized.username.toLowerCase());
+
     if(!user){
         const error = new Error("Invalid credentials");
         error.status = 401;

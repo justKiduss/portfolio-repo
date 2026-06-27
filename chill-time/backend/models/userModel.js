@@ -23,7 +23,7 @@ export function userModel(){
             return res.rows[0];
         },
         getByEmail:async (email)=>{
-            const res=await pool.query('SELECT id,username,email,avatar,role,created_at FROM users WHERE email=$1',[email]                
+            const res=await pool.query('SELECT id,username,email,password,avatar,role,created_at FROM users WHERE email=$1',[email]                
             );
             return res.rows[0];
         },
