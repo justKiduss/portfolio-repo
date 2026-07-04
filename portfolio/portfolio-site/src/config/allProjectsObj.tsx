@@ -29,7 +29,7 @@ export const ProjectsInfo=[
         desc:"Full-stack movie streaming platform with TMDB integration, auth, and reviews.",
         tags:["React", "Node.js", "Postgres", "Tailwind"],
         img:movie,
-        demoLink:"https://movix-psi-seven.vercel.app/",
+        demoLink:"https://movix.kidus.codes",
         sourceLink:"https://github.com/justKiduss/portfolio-repo/tree/main/chill-time",
         detailLink:`/projects/${ProjectDetail[2]?.id}`
     }
