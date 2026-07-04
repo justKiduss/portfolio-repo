@@ -88,7 +88,7 @@
 // export default app;
 
 
-
+import cookieParser from "cookieparser";
 import express from "express";
 import cors from "cors";
 import reviewRoutes from "./routes/reviewRoutes.js";
@@ -116,11 +116,22 @@ app.set("trust proxy", 1);
 
 app.use(passport.initialize());
 app.use(helmet());
+app.use(cookieParser());
 app.use(cors({
   origin: "https://movix-psi-seven.vercel.app", 
   methods: ["GET", "POST","PUT","PATCH", "DELETE"],
   credentials: true
 }));
+
+app.use((err,req,res,next)=>{
+    const status=error.status || 500;
+    res.status(status).json({
+        success:false,
+        status:status,
+        msg:err.message || "something went wrong"
+    })
+})
+
 app.use(express.json());
 app.use(requestLogger);
 

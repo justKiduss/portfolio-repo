@@ -68,7 +68,7 @@ export const loginService=async (data)=>{
         error.status = 401;
         throw error;
     }
-    const token=generateToken(user)
+    const token=generateToken(user);
     return {user,token};
 }
 export const updateUserService=async (id,data)=>{
@@ -83,7 +83,7 @@ export const updateUserService=async (id,data)=>{
     }
     if(email){
         const existingEmail=await model.getByEmail(email.trim());
-        if(existingEmail && existingEmail.id !== user.id){
+        if(existingEmail && existingEmail?[0]?.id !== user.id){
             const error=new Error("email already exist");
             error.status=409;
             throw error; 
@@ -91,7 +91,7 @@ export const updateUserService=async (id,data)=>{
     }
     if(username){
         const existingusername=await model.getByUsername(username.trim());
-        if(existingusername && existingusername.id !== user.id){
+        if(existingusername && existingusername?[0]?.id !== user.id){
             const error=new Error("username already exist");
             error.status=409;
             throw error; 

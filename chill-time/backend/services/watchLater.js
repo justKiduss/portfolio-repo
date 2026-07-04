@@ -8,7 +8,7 @@ export const getAllWatchService=async(user_id)=>{
     return res.rows;
 }
 
-export const addContinueService=async(data)=>{
+export const addWatchLaterService=async(data)=>{
     const {user_id,movie_id,movie_title,poster_path}=data;
 
     if(!data.user_id || !data.movie_id || !data.movie_title || !data.poster_path){
