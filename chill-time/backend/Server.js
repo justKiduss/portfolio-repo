@@ -88,7 +88,6 @@
 // export default app;
 
 
-import cookieParser from "cookieparser";
 import express from "express";
 import cors from "cors";
 import reviewRoutes from "./routes/reviewRoutes.js";
@@ -102,6 +101,7 @@ import { requestLogger } from "./middleware/requestLogger.js";
 import passport from 'passport';
 // 1. ADD THIS IMPORT RIGHT HERE
 import pool from "./config/db.js"; 
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -124,7 +124,7 @@ app.use(cors({
 }));
 
 app.use((err,req,res,next)=>{
-    const status=error.status || 500;
+    const status=err.status || 500;
     res.status(status).json({
         success:false,
         status:status,

@@ -30,7 +30,9 @@ export const createUser=asyncHandler( async (req,res,next)=>{
         error.status=400;
         throw error;
     }
-    const {password,...safeUser}=newUser;
+
+    const {token}=newUser.token
+    const {password,...safeUser}=newUser.user;
     res.cookie("token",token, {
         httpOnly:true,
         secure:true,
@@ -51,8 +53,8 @@ export const loginUser=asyncHandler( async(req,res,next)=>{
     const {password,...safeUser}=user;
     res.cookie("token",token, {
         httpOnly:true,
-        secure:true,
-        samesite:"none",
+        secure:process.env.NODE_ENV==='production',
+        samesite:process.env.NODE_ENV==='production'?"none":"lax",
         maxAge:7*24*60*60*1000
     });
     res.status(200).json({success:true,data:{user:safeUser,token:token},msg:"user logging in"});

@@ -39,10 +39,8 @@ export const createUserService=async (data)=>{
         password:hashedPassword,
         avatar:data.avatar?data.avatar.trim():null
     }
-    await model.create(normalized);
-
-    const usersFound = await model.getByUsername(normalized.username);
-    const user = usersFound?.[0];
+    const user=await model.create(normalized);
+    console.log("user",user);
     const token = generateToken(user);
 
     return { user, token }
@@ -54,14 +52,13 @@ export const loginService=async (data)=>{
         username:data.username.trim(),
         password:data.password.trim()
     }
-    const userFound=await model.getByUsername(normalized.username);
-    const user=userFound?.find(u=>u.username.toLowerCase()===normalized.username.toLowerCase());
-
+    const user=await model.getByUsername(normalized.username);
     if(!user){
         const error = new Error("Invalid credentials");
         error.status = 401;
         throw error; 
     }
+    console.log("normalized",normalized,user);
     const isMatch=await bcrypt.compare(normalized.password,user.password);
     if(!isMatch){
         const error = new Error("Invalid credentials");
@@ -83,7 +80,7 @@ export const updateUserService=async (id,data)=>{
     }
     if(email){
         const existingEmail=await model.getByEmail(email.trim());
-        if(existingEmail && existingEmail?[0]?.id !== user.id){
+        if(existingEmail && existingEmail[0] && existingEmail[0].id !== user.id){
             const error=new Error("email already exist");
             error.status=409;
             throw error; 
@@ -91,7 +88,7 @@ export const updateUserService=async (id,data)=>{
     }
     if(username){
         const existingusername=await model.getByUsername(username.trim());
-        if(existingusername && existingusername?[0]?.id !== user.id){
+        if(existingusername && existingusername[0] && existingusername[0].id !== user.id){
             const error=new Error("username already exist");
             error.status=409;
             throw error; 

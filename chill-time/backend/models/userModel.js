@@ -11,7 +11,7 @@ export function userModel(){
             return res.rows[0];
         },
         getByUsername:async(username)=>{
-            const res=await pool.query(`SELECT id,username,email,avatar,role,created_at FROM users where username=$1`,[username]
+            const res=await pool.query(`SELECT id,username,password,email,avatar,role,created_at FROM users where username=$1`,[username]
             );
             return res.rows[0];
         },

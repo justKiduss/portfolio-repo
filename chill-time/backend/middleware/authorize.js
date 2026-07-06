@@ -1,5 +1,6 @@
 export const authorized=(...roles)=>{
     return(req,res,next)=>{
+        
         if(!req.user){
             const error=new Error("not authenticated");
             error.status=401;
