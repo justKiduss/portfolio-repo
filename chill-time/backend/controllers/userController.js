@@ -31,6 +31,12 @@ export const createUser=asyncHandler( async (req,res,next)=>{
         throw error;
     }
     const {password,...safeUser}=newUser;
+    res.cookie("token",token, {
+        httpOnly:true,
+        secure:true,
+        samesite:"none",
+        maxAge:7*24*60*60*1000
+    });
     res.status(201).json({success:true,data:safeUser,msg:"user created"});
 })
 
@@ -43,6 +49,12 @@ export const loginUser=asyncHandler( async(req,res,next)=>{
     }
     const {user,token}=result;
     const {password,...safeUser}=user;
+    res.cookie("token",token, {
+        httpOnly:true,
+        secure:true,
+        samesite:"none",
+        maxAge:7*24*60*60*1000
+    });
     res.status(200).json({success:true,data:{user:safeUser,token:token},msg:"user logging in"});
 })
 export const updateUser=asyncHandler( async(req,res,next)=>{

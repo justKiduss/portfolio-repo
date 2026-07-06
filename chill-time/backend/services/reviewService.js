@@ -12,6 +12,7 @@ export async function countReviewsByMovieIdService(movie_id){
     if(!movie_id) return 0;
     return await model.countReviewsByMovieId(movie_id);
 }
+
 export async function getReviewByMovieIdService(movie_id,page,limit){
     if(!movie_id) return null;
     //Page 1: $(1 - 1) *10 = {0}.The DB skips 0 rows and takes the first 10. (Rows 1–10).
@@ -19,7 +20,6 @@ export async function getReviewByMovieIdService(movie_id,page,limit){
     const offSet=(page-1)*limit;
     const reviews=await model.getReviewsByMovieId(movie_id,limit,offSet);
     const duration=Date.now() - start;
-
     logger.info({
         service:'getReviewByMovieIdService',
         movie_id,
@@ -29,6 +29,7 @@ export async function getReviewByMovieIdService(movie_id,page,limit){
     })
     return reviews;
 }
+
 export async function createService(data){
     if(!data) return null;
     // we use this write a script to import reviews from a CSV file example when their is data migration ? That script won't use your middleware.
@@ -39,21 +40,41 @@ export async function createService(data){
         review:data.review? data.review.trim() : null,
         user_id:data.user_id
     }
-    // const existing=await model.getReviewsByMovieId(normalized.movie_id);
-
-    // const duplicate=existing.find(r=>
-    //     r.review===normalized.review &&
-    //     r.movie_title
-    // )
     return await model.create(normalized);
 }
 
 export async function updateService(id,data){
-    if(!id || !data) return null;
-    return await model.update(id,data);
+
+    // data = {...req.body,user:req.user} 
+    if(!id || !data ||!data.user) return null;
+    const existingReview = await model.getById(data.id);
+    if (!existingReview) return null;
+    const isOwner = existingReview.user_id === data.user.id;
+    const isAdmin = data.user.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+        // Return a special flag or throw an error your asyncHandler can catch
+        const error = new Error("Not authorized");
+        error.status = 403;
+        throw error;
+    }
+    const { user, ...updatePayload } = data;
+    return await model.update(id,updatePayload);
 }
 
 export async function deleteService(id,user_id){
-    if(!id || !user_id) return null;
+       if(!id || !data ||!data.user) return null;
+    const existingReview = await model.getById(data.id);
+    if (!existingReview) return null;
+    const isOwner = existingReview.user_id === data.user.id;
+    const isAdmin = data.user.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+        // Return a special flag or throw an error your asyncHandler can catch
+        const error = new Error("Not authorized");
+        error.status = 403;
+        throw error;
+    }
+    const { user, ...updatePayload } = data;
     return  await model.delete(id,user_id);
 }

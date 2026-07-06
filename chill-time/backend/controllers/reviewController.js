@@ -43,13 +43,13 @@ export const createReviews=asyncHandler(async (req,res,next)=>{
                 error.status = 400;
                 throw error;
         }
-
+        
         res.status(201).json({success:true,data:newReview});   
 });
 
 export const updateReview=asyncHandler(async (req,res,next)=>{   
 
-        const updated=await updateService(req.params.id,{...req.body,user_id:req.user.id});
+        const updated=await updateService(req.params.id,{...req.body,user:req.user});
         if (!updated) {
                 const error = new Error("Review not found");
                 error.status = 404;
@@ -60,11 +60,13 @@ export const updateReview=asyncHandler(async (req,res,next)=>{
 
 export const deleteReview=asyncHandler(async (req,res)=>{
         const deleted=await deleteService(req.params.id,req.user.id);
+
         if (!deleted) {
                 const error = new Error("Review not found");
                 error.status = 404;
                 throw error;
         }
+
         res.status(200).json({
                 success:true,
                 data:deleted
