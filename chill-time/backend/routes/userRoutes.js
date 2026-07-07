@@ -67,7 +67,7 @@ const router=express.Router();
     router.post('/login',loginUser);
 
     router.get('/:id',protect,getUser);
-    router.put('/:id',protect,validateUserUpdate,updateUser);
+    router.patch('/:id',protect,validateUserUpdate,updateUser);
     router.delete('/me',protect,deleteOwnAccount);
     router.delete('/:id',protect,authorized('admin'),deleteUser);
 

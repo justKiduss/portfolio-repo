@@ -34,13 +34,22 @@ export function reviewModel(){
             return res.rows[0];
         },
         update:async(id,data)=>{
-            const {movie_id,movie_title,rating,review,user_id}=data;
-            const query=`UPDATE reviews SET movie_id=$1, movie_title=$2, rating=$3, review=$4,updated_at=NOW() WHERE id=$5 AND user_id=$6 RETURNING *`;
+            const user_id=data.user.id;
+            const {movie_id,movie_title,rating,review}=data;
+            const query=`UPDATE reviews SET 
+                        movie_id = COALESCE ($1, movie_id), 
+                        movie_title = COALESCE ($2,movie_title), 
+                        rating= COALESCE ($3,rating), 
+                        review= COALESCE ($4,review),
+                        updated_at=NOW()
+                        WHERE id=$5 AND user_id=$6 
+                        RETURNING *`;
             const values=[movie_id,movie_title,parseFloat(rating),review,id,user_id];
             const res=await pool.query(query,values);
             return res.rows[0];
         },
-        delete:async(id,user_id)=>{
+        delete:async(id,user)=>{
+            const user_id=user.id;
             const res=await pool.query(
                 `DELETE FROM reviews WHERE id=$1 AND user_id=$2 RETURNING *`,[id,user_id]
             );

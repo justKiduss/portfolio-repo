@@ -44,10 +44,10 @@ export async function createService(data){
 }
 
 export async function updateService(id,data){
-
+    // id is the review id
     // data = {...req.body,user:req.user} 
     if(!id || !data ||!data.user) return null;
-    const existingReview = await model.getById(data.id);
+    const existingReview = await model.getById(id);
     if (!existingReview) return null;
     const isOwner = existingReview.user_id === data.user.id;
     const isAdmin = data.user.role === 'admin';
@@ -58,16 +58,16 @@ export async function updateService(id,data){
         error.status = 403;
         throw error;
     }
-    const { user, ...updatePayload } = data;
-    return await model.update(id,updatePayload);
+    return await model.update(id,data)
 }
 
-export async function deleteService(id,user_id){
-       if(!id || !data ||!data.user) return null;
-    const existingReview = await model.getById(data.id);
+export async function deleteService(id,user){
+    if(!id || !user) return null;
+
+    const existingReview = await model.getById(id);
     if (!existingReview) return null;
-    const isOwner = existingReview.user_id === data.user.id;
-    const isAdmin = data.user.role === 'admin';
+    const isOwner = existingReview.user_id === user.id;
+    const isAdmin = user.role === 'admin';
 
     if (!isOwner && !isAdmin) {
         // Return a special flag or throw an error your asyncHandler can catch
@@ -75,6 +75,5 @@ export async function deleteService(id,user_id){
         error.status = 403;
         throw error;
     }
-    const { user, ...updatePayload } = data;
-    return  await model.delete(id,user_id);
+    return  await model.delete(id,user);
 }

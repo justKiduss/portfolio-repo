@@ -57,7 +57,7 @@ export const loginUser=asyncHandler( async(req,res,next)=>{
         samesite:process.env.NODE_ENV==='production'?"none":"lax",
         maxAge:7*24*60*60*1000
     });
-    res.status(200).json({success:true,data:{user:safeUser,token:token},msg:"user logging in"});
+    res.status(200).json({success:true,user:safeUser,msg:"user logging in"});
 })
 export const updateUser=asyncHandler( async(req,res,next)=>{
     const isOwner=Number(req.user.id) == Number(req.params.id);

@@ -59,7 +59,7 @@ export const updateReview=asyncHandler(async (req,res,next)=>{
 });
 
 export const deleteReview=asyncHandler(async (req,res)=>{
-        const deleted=await deleteService(req.params.id,req.user.id);
+        const deleted=await deleteService(req.params.id,req.user);
 
         if (!deleted) {
                 const error = new Error("Review not found");

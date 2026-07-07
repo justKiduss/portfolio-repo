@@ -11,10 +11,10 @@ import validateMovieId from "../middleware/validateMovieId.js";
 import { protect } from "../middleware/protect.js";
     const router=express.Router();
         router.get('/',getReviews);
+        router.get('/:id',validateId, getReview);
+
 
         router.get('/movie/:movie_id',validateMovieId,getReviewsByMovieId);
-
-        router.get('/:id',validateId, getReview);
 
         router.post('/',protect , validateReview ,createReviews);
 
