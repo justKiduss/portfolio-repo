@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function Movie(){
     const [page,setPage]=useState(1);
-    const {data,status}=useMovies(null,page);
-
+    const {movies,isLoading,error}=useMovies(null,page);
     const handlePageChange = (newPage) => {
         setPage(newPage);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -17,10 +16,10 @@ export default function Movie(){
 
             {/* Movie Grid - Replaces content every time page changes */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-6 min-h-[600px]">
-                {status === 'LOAING' ? (
+                {isLoading ? (
                     <div className="col-span-full text-center py-20 text-gray-400 dark:text-zinc-500 animate-pulse">Loading...</div>
                 ) : (
-                    data?.map((movie) => (
+                    movies?.map((movie) => (
                         <Link key={movie.id} to={`/movie/${movie.id}`} className="group">
                             <div className="overflow-hidden rounded-xl shadow-lg dark:shadow-none border border-transparent dark:border-zinc-800">
                             <img

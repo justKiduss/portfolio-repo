@@ -20,6 +20,55 @@ export async function getReviewByMovieIdService(movie_id,page,limit){
     const offSet=(page-1)*limit;
     const reviews=await model.getReviewsByMovieId(movie_id,limit,offSet);
     const duration=Date.now() - start;
+    // [
+    //     {
+    //         id: '4',
+    //         user_id: 1,
+    //         movie_id: '12',
+    //         movie_title: 'kingdom of heaven',
+    //         rating: 4.5,
+    //         review: 'this is an amazing movie',
+    //         created_at: 2026-07-08T22:59:27.622Z,
+    //         updated_at: 2026-07-08T22:59:27.622Z,
+    //         parent_id: null
+    //     }
+    // ]
+
+    const reviewMap={};
+    const tree=[];
+
+    for(const review of reviews){
+
+        reviewMap[review.id] = {
+            ...review,
+            replies:[]
+        };
+
+    }
+
+    for(const review of reviews){
+
+        if(review.parent_id){
+
+            const parent = reviewMap[review.parent_id];
+
+            if(parent){
+                parent.replies.push(
+                    reviewMap[review.id]
+                );
+            }
+
+        }else{
+
+            tree.push(
+                reviewMap[review.id]
+            );
+
+        }
+
+    }
+
+    console.log("revirews",reviews)
     logger.info({
         service:'getReviewByMovieIdService',
         movie_id,
@@ -27,7 +76,7 @@ export async function getReviewByMovieIdService(movie_id,page,limit){
         limit,
         duration:`${duration}ms`
     })
-    return reviews;
+    return tree;
 }
 
 export async function createService(data){

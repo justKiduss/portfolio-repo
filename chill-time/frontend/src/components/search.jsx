@@ -6,19 +6,20 @@ export default function Search(){
     const {query}=useOutletContext();
     const [pageNo,setPageNo]=useState(1);
     const [allMovies,setallMovies]=useState([]);
+    const {movies,isLoading,error}=useMovies(query,pageNo);
 
-    const {data,status}=useMovies(query,pageNo);
-
-    useEffect(()=>{
-        setallMovies([]);
-        setPageNo(1);
+    useEffect(()=>{setallMovies([]);setPageNo(1);
     },[query])
+            useEffect(()=>{
+            if(movies.length){
+                setallMovies(prev=>[
+                    ...prev,
+                    ...movies
+                ]);
+            }
 
-    useEffect(()=>{
-        if(data){
-            setallMovies((prev)=>[...prev,...data])
-        }
-    },[data]);
+        },[movies]);
+
         return(
             <>
             <div className="flex flex-col items-center">
@@ -43,9 +44,9 @@ export default function Search(){
                     <button 
                         onClick={() => setPageNo(prev => prev + 1)}
                         className="mt-8 px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
-                        disabled={status === 'loading'}
+                        disabled={isLoading}
                     >
-                        {status === 'loading' ? "Loading..." : "More Results"}
+                        {isLoading?"Loading...":"More Results"}
                     </button>
                 )}
             </div>

@@ -23,8 +23,11 @@ export default function Layout() {
   }
 
   const history = getHistory();
-  const debounceQuery=useDebounce(query,500);
-  const movies = useMovies(debounceQuery);
+  // const debounceQuery=useDebounce(query,500);
+  // const movies = useMovies(debounceQuery);
+  
+  const debounceQuery = useDebounce(query,500);
+  const { movies, isLoading } = useMovies(debounceQuery);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -94,11 +97,11 @@ export default function Layout() {
               <div className="absolute top-full left-0 w-full bg-white dark:bg-zinc-900 border dark:border-zinc-800 mt-1 rounded shadow-2xl z-50 max-h-96 overflow-y-auto">
                 {query.trim().length > 0 ? (
                   <>
-                    {movies.status === "loading" && (
+                    {isLoading && (
                       <div className="p-4 text-sm text-gray-500 text-center">Searching...</div>
                     )}
-                    {movies.data?.length > 0 ? (
-                      movies.data.slice(0, 5).map((movie) => (
+                    {movies.length > 0 ? (
+                      movies.slice(0, 5).map((movie) => (
                         <Link
                           key={movie.id}
                           to={`/${movie.media_type || "movie"}/${movie.id}`}
@@ -121,7 +124,7 @@ export default function Layout() {
                         </Link>
                       ))
                     ) : (
-                      movies.status !== "loading" && (
+                      !isLoading && (
                         <div className="p-4 text-sm text-gray-400 text-center">No results found</div>
                       )
                     )}

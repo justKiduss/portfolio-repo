@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllReviews, createReview, updateReviews, deleteReviews } from "../service/reviewService";
+import { getAllReviews, createReview, updateReviews, deleteReviews,createReply} from "../service/reviewService";
 
 export function useReviews(movie_id) {
   const queryClient = useQueryClient();
@@ -39,10 +39,21 @@ export function useReviews(movie_id) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reviews", movie_id] }),
   });
 
+  const replyMutation = useMutation({
+    mutationFn: ({ parentId, data }) =>
+        createReply(parentId, data),
+
+    onSuccess: () =>
+        queryClient.invalidateQueries({
+            queryKey: ["reviews", movie_id],
+        }),
+  });
+
   return {
     reviews: data,
     isLoading,
     error,
+    reply: createReply.mutate,
     create: createMutation.mutate,
     update: updateMutation.mutate,
     remove: deleteMutation.mutate,
