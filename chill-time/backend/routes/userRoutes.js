@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, deleteOwnAccount, deleteUser, getUser, getUsers, loginUser, updateUser } from "../controllers/userController.js";
+import { checkAuth, createUser, deleteOwnAccount, deleteUser, getUser, getUsers, loginUser, logout, updateUser } from "../controllers/userController.js";
 import { validateUser } from "../middleware/validateUser.js";
 import { protect } from "../middleware/protect.js";
 import { authorized } from "../middleware/authorize.js";
@@ -65,11 +65,12 @@ const router=express.Router();
 
     router.post('/',validateUser, createUser);
     router.post('/login',loginUser);
-
+    router.get('/checkAuth',protect,checkAuth);
+    
     router.get('/:id',protect,getUser);
     router.patch('/:id',protect,validateUserUpdate,updateUser);
     router.delete('/me',protect,deleteOwnAccount);
     router.delete('/:id',protect,authorized('admin'),deleteUser);
-
-
+    router.post('/logout',protect,logout);
+    
 export default router;

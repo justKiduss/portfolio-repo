@@ -118,7 +118,8 @@ app.use(passport.initialize());
 app.use(helmet());
 app.use(cookieParser());
 app.use(cors({
-  origin: "https://movix-psi-seven.vercel.app", 
+    origin:"http://localhost:3000",
+//   origin: "https://movix-psi-seven.vercel.app", 
   methods: ["GET", "POST","PUT","PATCH", "DELETE"],
   credentials: true
 }));

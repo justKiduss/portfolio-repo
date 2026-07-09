@@ -1,185 +1,50 @@
-// import { createReview, deleteReviews, getAllReviews, updateReviews } from "../service/reviewService"
-// import { useMemo } from "react";
-// export default function useReview(state,dispatch){
-    
-//     async function hydrate(movie_id) {
-//         dispatch({
-//             type:"HYDRATE_REVIEW_REQUEST"
-//         })
-//         try{
-//             const data=await getAllReviews(movie_id);
-//             const normalized={
-//                 byIds:{},
-//                 allIds:[]
-//             }
-//             data.forEach(r => {
-//                 normalized.byIds[r.id]=r;
-//                 normalized.allIds.push(r.id);
-//             });
-//             console.log("normalized",normalized);
-//             dispatch({
-//                 type:"HYDRATE_REVIEW_SUCCESS",
-//                 payload:normalized
-//             })
-//         }catch(err){
-//             dispatch({
-//                 type:"HYDRATE_REVIEW_FAILURE",
-//                 payload:err.message
-//             })
-//         }
-//     }
-//     async function create(movie_id,movie_title,rating,review){
-//         dispatch({
-//             type:"CREATE_REVIEW_REQUEST"
-//         })
-//         console.log("creating a review",movie_id,movie_title,rating,review);
-//         try{
-//             const payload=await createReview(movie_id,movie_title,rating,review);
-//             dispatch({
-//                 type:"CREATE_REVIEW_SUCCESS",
-//                 payload:payload
-//             })
-//         }catch(err){
-//             dispatch({
-//                 type:'CREATE_REVIEW_FAILURE',
-//                 payload:err.message
-//             })
-//         }
-//     }
-//     async function update(id,movie_id,movie_title,rating,review){
-//             dispatch({
-//                 type:"UPDATE_REVIEW_REQUEST"
-//             })
-//         try{
-//             const res=await updateReviews(id,movie_id,movie_title,rating,review);
-//             const payload=res.data ?? res;
-//             dispatch({
-//                 type:"UPDATE_REVIEW_SUCCESS",
-//                 payload
-//             })
-//         }catch(err){
-//             dispatch({
-//                 type:"UPDATE_REVIEW_FAILURE",
-//                 payload:err.message
-//             })
-//         }
-//     }
-//     async function remove(id){
-//         dispatch({
-//             type:"DELETE_REVIEW_REQUEST",
-//             payload:{id}
-//         })
-//         try{
-//             await deleteReviews(id);
-//                 dispatch({
-//                     type:"DELETE_REVIEW_SUCCESS",
-//                     payload:id
-//                 })
-//         }catch(err){
-//             dispatch({
-//                 type:"DELETE_REVIEW_FAILURE",
-//                 payload:err.message
-//             })
-//         }
-//     }
-//     return useMemo(() => ({
-//         create,
-//         update,
-//         remove,
-//         hydrate
-//     }), []);
-// }
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getAllReviews, createReview, updateReviews, deleteReviews } from "../service/reviewService";
 
-import { useCallback, useMemo } from "react";
-import { createReview, deleteReviews, getAllReviews, updateReviews } from "../service/reviewService";
+export function useReviews(movie_id) {
+  const queryClient = useQueryClient();
 
-export default function useReview(state, dispatch) {
+  // 1. Fetching (Replaces Hydrate)
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["reviews", movie_id],
+    queryFn: () => getAllReviews(movie_id),
+  });
 
-    const hydrate = useCallback(async (movie_id) => {
-        dispatch({ type: "HYDRATE_REVIEW_REQUEST" });
+  // 2. Mutation: Create
+    const createMutation = useMutation({
+        mutationFn: (newReview) => createReview(
+        newReview.movie_id,
+        newReview.movie_title,
+        newReview.rating,
+        newReview.review
+    ),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reviews", movie_id] }),
+  });
 
-        try {
-            const data = await getAllReviews(movie_id);
+  // 3. Mutation: Update
+    const updateMutation = useMutation({
+        mutationFn: (updatedData) => updateReviews(
+        updatedData.id,
+        updatedData.movie_id,
+        updatedData.movie_title,
+        updatedData.rating,
+        updatedData.review
+    ),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reviews", movie_id] }),
+  });
 
-            const normalized = { byIds: {}, allIds: [] };
+  // 4. Mutation: Delete
+  const deleteMutation = useMutation({
+    mutationFn: (id) => deleteReviews(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reviews", movie_id] }),
+  });
 
-            data.forEach(r => {
-                normalized.byIds[r.id] = r;
-                normalized.allIds.push(r.id);
-            });
-
-            dispatch({
-                type: "HYDRATE_REVIEW_SUCCESS",
-                payload: normalized
-            });
-
-        } catch (err) {
-            dispatch({
-                type: "HYDRATE_REVIEW_FAILURE",
-                payload: err.message
-            });
-        }
-    }, [dispatch]);
-
-    const create = useCallback(async (movie_id, movie_title, rating, review) => {
-        dispatch({ type: "CREATE_REVIEW_REQUEST" });
-
-        try {
-            const payload = await createReview(movie_id, movie_title, rating, review);
-
-            dispatch({
-                type: "CREATE_REVIEW_SUCCESS",
-                payload
-            });
-        } catch (err) {
-            dispatch({
-                type: "CREATE_REVIEW_FAILURE",
-                payload: err.message
-            });
-        }
-    }, [dispatch]);
-
-    const update = useCallback(async (id, movie_id, movie_title, rating, review) => {
-        dispatch({ type: "UPDATE_REVIEW_REQUEST" });
-
-        try {
-            const res = await updateReviews(id, movie_id, movie_title, rating, review);
-            const payload = res.data ?? res;
-
-            dispatch({
-                type: "UPDATE_REVIEW_SUCCESS",
-                payload
-            });
-        } catch (err) {
-            dispatch({
-                type: "UPDATE_REVIEW_FAILURE",
-                payload: err.message
-            });
-        }
-    }, [dispatch]);
-
-    const remove = useCallback(async (id) => {
-        dispatch({ type: "DELETE_REVIEW_REQUEST", payload: { id } });
-
-        try {
-            await deleteReviews(id);
-
-            dispatch({
-                type: "DELETE_REVIEW_SUCCESS",
-                payload: id
-            });
-        } catch (err) {
-            dispatch({
-                type: "DELETE_REVIEW_FAILURE",
-                payload: err.message
-            });
-        }
-    }, [dispatch]);
-
-    return useMemo(() => ({
-        create,
-        update,
-        remove,
-        hydrate
-    }), [create, update, remove, hydrate]);
+  return {
+    reviews: data,
+    isLoading,
+    error,
+    create: createMutation.mutate,
+    update: updateMutation.mutate,
+    remove: deleteMutation.mutate,
+  };
 }

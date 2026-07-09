@@ -3,15 +3,15 @@ import useAuth from "../hooks/useAuth";
 export function LoginForm() {
     const {login} =useAuth();
 
-    const [email,setEmail]=useState("");
+    const [username,setusername]=useState("");
     const [password,setPassword]=useState("");
 
     async function handleSubmit(e){
         e.preventDefault();
 
-        await login(email,password);  
+        await login(username,password);  
               
-        setEmail("");
+        setusername("");
         setPassword('');
     }
     
@@ -29,7 +29,7 @@ export function LoginForm() {
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-2 mb-4">
                         <label className="text-sm font-medium dark:text-zinc-300">Email</label>
-                        <input type="text" onChange={(e)=>setEmail(e.target.value)} value={email} className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                        <input type="text" onChange={(e)=>setusername(e.target.value)} value={username} className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                     </div>
                     <div className="flex flex-col gap-2 mb-2">
                         <label className="text-sm font-medium dark:text-zinc-300">Password</label>

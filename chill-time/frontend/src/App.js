@@ -12,6 +12,10 @@ import Series from "./page/series";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useEffect } from "react";
+import { checkAuth,isLoading } from "./hooks/useAuth";
+import useAuth from "./hooks/useAuth";
+import RedirectAuthenticatedUser from "./redirectAuthenticatetion";
+import {QueryClient,QueryClientProvider} from "@tanstack/react-query";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,11 +27,19 @@ const router = createBrowserRouter([
       },
       {
         path: "login",
-        element: <LoginPage/>,
+        element: ( 
+          <RedirectAuthenticatedUser>
+            <LoginPage/>
+          </RedirectAuthenticatedUser>
+        ),
       },
       {
         path:"signup",
-        element:<SignUpPage/> 
+        element:(
+          <RedirectAuthenticatedUser>
+            <SignUpPage/> 
+          </RedirectAuthenticatedUser>
+        ),
       },
       {
         path: "movie/:movieId",
@@ -51,29 +63,31 @@ const router = createBrowserRouter([
       }
     ],
   },
-]);
+]); 
+const queryClient = new QueryClient();
 
 function App() {
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
+  const {checkauth,isLoading}=useAuth();
 
-    if (token) {
-      // Save it exactly like your normal login does
-      localStorage.setItem("token", token);
-      
-      // Clean the URL so the token doesn't stay visible
-      window.history.replaceState({}, document.title, "/");
-      
-      // Optional: Refresh to ensure AuthContext picks up the new token
-      window.location.reload();
-    }
-  }, []);
+  useEffect(()=>{
+    checkauth();
+  },[])
+
+   if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-zinc-950 text-white font-mono">
+        Checking session...
+      </div>
+    );
+  }
+
   return (
         <div>
-          <RouterProvider router={router} />
-          <Analytics/>
-          <SpeedInsights/>
+            <QueryClientProvider client={queryClient}>
+              <RouterProvider router={router} />
+            </QueryClientProvider>
+            <Analytics/>
+            <SpeedInsights/>
         </div>
       );
 }

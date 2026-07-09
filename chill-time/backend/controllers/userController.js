@@ -1,6 +1,7 @@
 import { generateToken } from "../utilis/generate.js";
 import { createUserService, deleteUserService, getUserService, getUsersService, loginService, updateUserService } from "../services/userService.js"
 import { asyncHandler } from "../utilis/asyncHandler.js";
+import model from "../models/userModel.js";
 
 export const getUsers=asyncHandler( async (req,res,next)=>{
     const users=await getUsersService();
@@ -35,8 +36,8 @@ export const createUser=asyncHandler( async (req,res,next)=>{
     const {password,...safeUser}=newUser.user;
     res.cookie("token",token, {
         httpOnly:true,
-        secure:true,
-        samesite:"none",
+        secure:false,
+        sameSite:"lax",
         maxAge:7*24*60*60*1000
     });
     res.status(201).json({success:true,data:safeUser,msg:"user created"});
@@ -53,9 +54,11 @@ export const loginUser=asyncHandler( async(req,res,next)=>{
     const {password,...safeUser}=user;
     res.cookie("token",token, {
         httpOnly:true,
-        secure:process.env.NODE_ENV==='production',
-        samesite:process.env.NODE_ENV==='production'?"none":"lax",
-        maxAge:7*24*60*60*1000
+        // secure:process.env.NODE_ENV==='production',
+        secure:false,
+        // process.env.NODE_ENV==='production'?"none":
+        sameSite:"lax",
+        maxAge:7 * 24 * 60 * 60 * 1000
     });
     res.status(200).json({success:true,user:safeUser,msg:"user logging in"});
 })
@@ -110,3 +113,37 @@ export const deleteOwnAccount = asyncHandler(async (req, res) => {
         msg: "account deleted"
     });
 });
+
+export const logout=asyncHandler(async(req,res)=>{
+    res.clearCookie("token",{
+            httpOnly:true,
+            samesite:process.env.NODE_ENV==='production'?"none":"lax",
+            secure:process.env.NODE_ENV==="PRODUCTION"
+        }
+    )
+    res.status(200).json({
+            success:true,
+            msg:"logged out"
+        })
+})
+
+export const checkAuth=asyncHandler(async(req,res)=>{
+        const {id}=req.user;
+        const user=await model.getById(id);
+        if(!user){
+            const error = new Error("user not found");
+            error.status = 404;
+            throw error;
+        };
+        res.status(200).json({
+            msg:"user authenticated",
+            success:true,
+            data:{
+                user:{
+                    id:user.id,
+                    username:user.username,
+                    email:user.email
+                }
+            }
+        })
+})

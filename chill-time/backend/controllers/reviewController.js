@@ -1,5 +1,5 @@
 import { validateReview } from "../middleware/validateReview.js";
-import { getAllService, getReviewByIdService, createService, updateService, deleteService,getReviewByMovieIdService, countReviewsByMovieIdService } from "../services/reviewService.js";
+import { getAllService, getReviewByIdService, createService, updateService, deleteService,getReviewByMovieIdService, countReviewsByMovieIdService, createReplyService } from "../services/reviewService.js";
 import { asyncHandler } from "../utilis/asyncHandler.js";
 export const getReviews=asyncHandler(async(req,res,next)=>{
         const reviews=await getAllService();
@@ -45,6 +45,16 @@ export const createReviews=asyncHandler(async (req,res,next)=>{
         }
         
         res.status(201).json({success:true,data:newReview});   
+});
+// parentId,user,data
+export const createReplyController=asyncHandler(async (req,res,next)=>{
+        const reply=await createReplyService(req.params.parentId,req.user,req.body);
+        if(!reply){
+                const error = new Error("Review reply is not created");
+                error.status = 400;
+                throw error;    
+        }
+        res.status(201).json({success:true,data:reply});
 });
 
 export const updateReview=asyncHandler(async (req,res,next)=>{   

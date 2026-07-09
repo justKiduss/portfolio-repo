@@ -4,7 +4,7 @@
 // PATCH //update review/:id
 
 import express from "express";
-import { getReviews,createReviews, getReview, updateReview, deleteReview,getReviewsByMovieId} from "../controllers/reviewController.js";
+import { getReviews,createReviews, getReview, updateReview, deleteReview,getReviewsByMovieId, createReplyController} from "../controllers/reviewController.js";
 import { validateReview } from "../middleware/validateReview.js";
 import { validateId } from "../middleware/validateId.js"
 import validateMovieId from "../middleware/validateMovieId.js";
@@ -22,6 +22,7 @@ import { protect } from "../middleware/protect.js";
 
         router.delete("/:id",protect ,validateId ,deleteReview);
 
+        router.post("/:parentId",protect,createReplyController);
 
     export default router;
 

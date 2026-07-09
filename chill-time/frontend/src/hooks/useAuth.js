@@ -1,26 +1,38 @@
-import { useState } from "react";
-
-import { Login, Signup } from "../service/authService";
-
+import { Login, Signup, LogOut,checkAuth } from "../service/authService";
+import { useAuthStore } from "../store/useAuthStore";
 export default function useAuth(){
-    const [user,setUser]=useState(null);
-    const [token,setToken]=useState(localStorage.getItem("token") || null);
+    const user=useAuthStore((state)=>state.user);
+    const setUser=useAuthStore((state)=>state.setUser);
+    const isLoading=useAuthStore((state)=>state.isLoading);
+    const setIsLoading=useAuthStore((state)=>state.setIsLoading);
 
-    async function login(email,password){
-        const {user,token}=await Login(email,password);
-        setToken(token);
-        setUser(user);
-        localStorage.setItem('token',token);
+    async function login(username,password){
+        const userPayload=await Login(username,password);
+        setUser(userPayload);
+
     }
 
     async function signup(username,email,password){
-        await Signup(username,email,password);
+        const userPayload=await Signup(username,email,password);
+        setUser(userPayload);
     }
 
-    function logout(){
+    async function logout(){
+        await LogOut();
         setUser(null);
-        setToken(null);
-        localStorage.removeItem('token');
     }
-    return {user,token,login,logout,signup};
+
+    async function checkauth(){
+        try{
+            setIsLoading(true);
+            const userPayload=await checkAuth();
+            setUser(userPayload.data.user);
+        }catch(error){
+            console.error("Session verification failed:", error);
+            setUser(null);
+        }finally{
+            setIsLoading(false);
+        }
+    }
+    return {user,login,logout,signup,checkauth,isLoading};
 }

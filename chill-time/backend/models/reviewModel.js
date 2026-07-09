@@ -33,6 +33,19 @@ export function reviewModel(){
             const res=await pool.query(query,values);
             return res.rows[0];
         },
+        createReply:async(parentId,user,normalized)=>{
+            console.log("user.........",user);
+            const user_id=user.id;
+            console.log("user_if",user_id)
+            const {review,movie_id,movie_title,rating=null}=normalized;
+            const query=`INSERT INTO reviews (movie_id,movie_title,review,rating,user_id,parent_id) 
+            VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`;
+            
+            const values=[movie_id,movie_title,review,rating,user_id,parentId];
+            const res=await pool.query(query,values);
+            return res.rows[0];
+        },
+
         update:async(id,data)=>{
             const user_id=data.user.id;
             const {movie_id,movie_title,rating,review}=data;

@@ -42,6 +42,23 @@ export async function createService(data){
     }
     return await model.create(normalized);
 }
+// req.params.id,req.user,req.body
+export async function createReplyService(parentId,user,data){
+    if(!parentId || !user || !data){
+        return null;
+    }
+    const normalized={
+        movie_id:data.movie_id,
+        movie_title:data.movie_title ? data.movie_title.trim():null,
+        rating:data.rating?Number(data.rating):null,
+        review:data.review? data.review.trim() : null,
+        // user_id:data.user_id
+    }
+    console.log("normalize",normalized);
+    console.log("parent_id",parentId);
+    console.log("user",user)
+    return await model.createReply(parentId,user,normalized);
+}
 
 export async function updateService(id,data){
     // id is the review id
