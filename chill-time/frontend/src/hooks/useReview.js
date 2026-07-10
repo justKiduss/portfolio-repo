@@ -53,7 +53,7 @@ export function useReviews(movie_id) {
     reviews: data,
     isLoading,
     error,
-    reply: createReply.mutate,
+    reply: replyMutation.mutate,
     create: createMutation.mutate,
     update: updateMutation.mutate,
     remove: deleteMutation.mutate,

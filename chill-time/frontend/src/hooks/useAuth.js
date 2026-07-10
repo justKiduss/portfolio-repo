@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { Login, Signup, LogOut,checkAuth } from "../service/authService";
 import { useAuthStore } from "../store/useAuthStore";
 export default function useAuth(){
@@ -22,7 +23,7 @@ export default function useAuth(){
         setUser(null);
     }
 
-    async function checkauth(){
+    const checkauth=useCallback(async ()=>{
         try{
             setIsLoading(true);
             const userPayload=await checkAuth();
@@ -33,6 +34,6 @@ export default function useAuth(){
         }finally{
             setIsLoading(false);
         }
-    }
+    },[setUser,setIsLoading]);
     return {user,login,logout,signup,checkauth,isLoading};
 }
