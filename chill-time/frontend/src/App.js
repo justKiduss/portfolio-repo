@@ -150,7 +150,7 @@ function App() {
 
   useEffect(() => {
     checkauth();
-  }, []);
+  }, [checkauth]);
 
   if (isLoading) {
     return (
