@@ -118,20 +118,11 @@ app.use(passport.initialize());
 app.use(helmet());
 app.use(cookieParser());
 app.use(cors({
-    origin:"http://localhost:3000",
-//   origin: "https://movix-psi-seven.vercel.app", 
+    origin:env!=="development" ?
+    "https://movix.kidus.codes": "http://localhost:3000",
   methods: ["GET", "POST","PUT","PATCH", "DELETE"],
   credentials: true
 }));
-
-app.use((err,req,res,next)=>{
-    const status=err.status || 500;
-    res.status(status).json({
-        success:false,
-        status:status,
-        msg:err.message || "something went wrong"
-    })
-})
 
 app.use(express.json());
 app.use(requestLogger);
@@ -163,7 +154,16 @@ app.use("/api", limiter);
 app.use("/api/reviews", reviewRoutes);
 app.use('/api/user', router);
 
-app.use(notFound);
+// app.use(notFound);
+
+app.use((err,req,res,next)=>{
+    const status=err.status || 500;
+    res.status(status).json({
+        success:false,
+        status:status,
+        msg:err.message || "something went wrong"
+    })
+})
 app.use(errorHandler);
 
 // 2. FIXED: Uses the imported pool variable safely now
@@ -182,8 +182,8 @@ if (env === "development" || env === "test") {
     testConnection();
 }
 
-app.listen(port, () => {
-    console.log(`http://localhost:${port} connected successfully`);
-});
+// app.listen(port, () => {
+//     console.log(`http://localhost:${port} connected successfully`);
+// });
 
 export default app;

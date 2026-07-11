@@ -36,8 +36,8 @@ export const createUser=asyncHandler( async (req,res,next)=>{
     const {password,...safeUser}=newUser.user;
     res.cookie("token",token, {
         httpOnly:true,
-        secure:false,
-        sameSite:"lax",
+        secure:true,
+        sameSite:"none",
         maxAge:7*24*60*60*1000
     });
     res.status(201).json({success:true,data:safeUser,msg:"user created"});
@@ -55,9 +55,9 @@ export const loginUser=asyncHandler( async(req,res,next)=>{
     res.cookie("token",token, {
         httpOnly:true,
         // secure:process.env.NODE_ENV==='production',
-        secure:false,
+        secure:true,
         // process.env.NODE_ENV==='production'?"none":
-        sameSite:"lax",
+        sameSite:"none",
         maxAge:7 * 24 * 60 * 60 * 1000
     });
     res.status(200).json({success:true,user:safeUser,msg:"user logging in"});
@@ -117,8 +117,10 @@ export const deleteOwnAccount = asyncHandler(async (req, res) => {
 export const logout=asyncHandler(async(req,res)=>{
     res.clearCookie("token",{
             httpOnly:true,
-            samesite:process.env.NODE_ENV==='production'?"none":"lax",
-            secure:process.env.NODE_ENV==="PRODUCTION"
+            // samesite:process.env.NODE_ENV==='production'?"none":"lax",
+            // secure:process.env.NODE_ENV==="production"
+            sameSite:"none",
+            secure:true
         }
     )
     res.status(200).json({
