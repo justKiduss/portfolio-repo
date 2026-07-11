@@ -43,9 +43,12 @@ export default function PopularMovies() {
   if (!movies?.length) return null;
 
   return (
-    <div className="p-4 md:p-10 max-w-[1440px] mx-auto">
+    <div className="p-4 md:p-10 max-w-[1800px] mx-auto">
       <SectionHeader label="Most watched" title="Popular" />
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+      <div
+        className="grid gap-4"
+        style={{ gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))" }}
+      >
         {movies.map((movie) => (
           <Link
             key={movie.id}
@@ -56,7 +59,7 @@ export default function PopularMovies() {
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title || movie.name}
-                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
             <p className="mt-2 text-sm font-semibold truncate dark:text-zinc-200">
