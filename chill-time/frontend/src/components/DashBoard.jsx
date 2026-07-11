@@ -5,7 +5,7 @@ import Hero from "./Hero";
 
 export default function DashBoard() {
   return (
-    <div className="bg-gray-100 dark:bg-black min-h-screen transition-colors">
+    <div className="bg-black dark:bg-gray-100 min-h-screen transition-colors">
       <Hero />
       <ContinueWatching />
       <TrendingMovies />
