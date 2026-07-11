@@ -2,7 +2,7 @@ const isDev = (process.env.NODE_ENV || "").toLowerCase() === "development";
 
 const API=isDev ? 
         "http://localhost:5000/api/user":
-        `https://movix-twcp.onrender.com/api/user`;
+        `https://movix-backend-ashen.vercel.app/api/user`;
 
 export async function Login(username,password){
     const res=await fetch(`${API}/login`,{

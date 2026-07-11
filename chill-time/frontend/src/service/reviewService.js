@@ -2,7 +2,7 @@ const isDev = (process.env.NODE_ENV || "").toLowerCase() === "development";
 
 const API=isDev ? 
         "http://localhost:5000/api/reviews":
-        `https://movix-twcp.onrender.com/api/reviews`;
+        `https://movix-backend-ashen.vercel.app/api/reviews`;
 
 export async function createReview(movie_id,movie_title,rating,review){
     try{
