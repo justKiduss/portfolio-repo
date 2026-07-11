@@ -87,7 +87,7 @@ export default function ContinueWatching() {
   if (data.length === 0) return null;
 
   return (
-    <div className="relative group mx-10 mt-10">
+    <div className="relative group mt-10 p-4 md:p-10 max-w-[1440px] mx-auto">
       <SectionHeader label="Resume" title="Continue Watching" />
 
       <div className="overflow-hidden rounded-xl">

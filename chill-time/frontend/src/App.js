@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import useAuth from "./hooks/useAuth";
 import RedirectAuthenticatedUser from "./redirectAuthenticatetion";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import "./App.css";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -58,7 +58,7 @@ function App() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-[#0A0C10] text-[#2DE2C1] font-['JetBrains_Mono'] text-sm tracking-widest uppercase">
-        Checking session…
+        Welcome to Movix
       </div>
     );
   }

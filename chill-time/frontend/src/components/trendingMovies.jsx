@@ -115,9 +115,9 @@ export default function TrendingMovies() {
   if (!movies?.length) return null;
 
   return (
-    <div className="p-4 md:p-10">
+    <div className="p-4 md:p-10 max-w-[1440px] mx-auto">
       <SectionHeader label="Right now" title="Trending" />
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         {movies.map((movie) => (
           <Link key={movie.id} to={`/${movie.media_type || "movie"}/${movie.id}`} className="group flex flex-col">
             <div className="overflow-hidden rounded-lg shadow-md dark:shadow-none border border-transparent dark:border-zinc-800 group-hover:border-cyan-500/30 dark:group-hover:border-[#2DE2C1]/30 transition-colors">
