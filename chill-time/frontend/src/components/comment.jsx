@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useReviews } from "../hooks/useReview";
 import useAuth from "../hooks/useAuth";
 
-// Deterministic color per username so avatars aren't all the same flat blue
 const AVATAR_COLORS = [
     "bg-blue-600",
     "bg-purple-600",
@@ -153,11 +152,40 @@ function ReviewCard({ review, replyMutation, user, remove, setEdit, isEditing, c
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(review.likes || 0);
 
+    // FIX: this state + handler didn't exist before — there was no way to
+    // start the *first* reply on a top-level review, only on a reply that
+    // already existed (inside ReplyCard).
+    const [replyText, setReplyText] = useState("");
+    const [showReply, setShowReply] = useState(false);
+
     function toggleLike() {
         setLiked((prev) => {
             setLikeCount((c) => (prev ? c - 1 : c + 1));
             return !prev;
         });
+    }
+
+    function handleReply() {
+        if (!replyText.trim()) return;
+
+        replyMutation({
+            parentId: review.id,
+            data: {
+                movie_id: review.movie_id,
+                movie_title: review.movie_title,
+                review: replyText,
+            },
+        });
+
+        setReplyText("");
+        setShowReply(false);
+    }
+
+    function handleKeyDown(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleReply();
+        }
     }
 
     return (
@@ -204,6 +232,14 @@ function ReviewCard({ review, replyMutation, user, remove, setEdit, isEditing, c
                                     <span>Like</span>
                                 </button>
 
+                                {/* FIX: added — was missing entirely on ReviewCard */}
+                                <button
+                                    onClick={() => setShowReply((prev) => !prev)}
+                                    className="transition-colors hover:text-blue-600"
+                                >
+                                    Reply
+                                </button>
+
                                 {user && (
                                     <>
                                         <button
@@ -222,6 +258,27 @@ function ReviewCard({ review, replyMutation, user, remove, setEdit, isEditing, c
                                     </>
                                 )}
                             </div>
+
+                            {/* FIX: added — the actual reply input, same pattern as ReplyCard */}
+                            {showReply && (
+                                <div className="mt-3 flex gap-2">
+                                    <input
+                                        value={replyText}
+                                        onChange={(e) => setReplyText(e.target.value)}
+                                        onKeyDown={handleKeyDown}
+                                        autoFocus
+                                        className="flex-1 rounded-lg border border-zinc-300 p-2 text-sm outline-none transition-colors focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
+                                        placeholder="Write a reply..."
+                                    />
+                                    <button
+                                        onClick={handleReply}
+                                        disabled={!replyText.trim()}
+                                        className="rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+                                    >
+                                        Send
+                                    </button>
+                                </div>
+                            )}
                         </>
                     )}
 
@@ -334,7 +391,6 @@ export default function Comment({ movieId, moviename }) {
 
             <div className="space-y-5">
                 {isLoading ? (
-                    // simple skeleton instead of a bare "Loading..." string
                     [...Array(3)].map((_, i) => (
                         <div
                             key={i}
