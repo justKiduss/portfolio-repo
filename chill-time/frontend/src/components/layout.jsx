@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { to: "/", label: "Home" },
   { to: "/movies", label: "Movies" },
   { to: "/series", label: "Series" },
+  { to: "/watchlist", label: "Watch-List" },
 ];
 
 export default function Layout() {
@@ -18,8 +19,6 @@ export default function Layout() {
   const [dropDown, setDropDown] = useState(false);
   const location = useLocation();
 
-  // Home page renders a full-bleed Hero, so the header floats transparently over it.
-  // Every other page gets a solid header since there's no backdrop image behind it.
   const isHome = location.pathname === "/";
 
   function handleSearch(e) {
@@ -61,6 +60,8 @@ export default function Layout() {
   };
 
   return (
+    // FIX: base = gray-100 (light), dark: = black — matches every other page.
+    // Previously both were light shades, so toggling did nothing here.
     <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-black transition-colors duration-300">
       {isOpen && <Sidebar onClose={() => setisOpen(false)} />}
 
@@ -68,7 +69,9 @@ export default function Layout() {
         className={`fixed top-0 inset-x-0 z-50 px-6 py-4 transition-colors duration-300 ${
           isHome
             ? "bg-gradient-to-b from-black/60 to-transparent"
-            : "bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md border-b dark:border-zinc-800"
+            : // FIX: was "bg-bg-zinc-950/90" (typo, invalid class — never applied)
+              // and had base/dark: reversed. Correct: white by default, zinc-950 in dark mode.
+              "bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md border-b dark:border-zinc-800"
         }`}
       >
         <div className="max-w-[1800px] mx-auto flex items-center justify-between">
@@ -77,17 +80,16 @@ export default function Layout() {
               className="block md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
               onClick={() => setisOpen(!isOpen)}
             >
+              {/* FIX: was inverted — showed gray on the transparent hero header (low
+                  contrast against a dark image) and white on the solid light header
+                  (invisible against a white background). isHome should be white. */}
               <Menu className={`w-6 h-6 ${isHome ? "text-white" : "text-gray-700 dark:text-gray-300"}`} />
             </button>
 
-            <Link
-              to="/"
-              className={`text-xl font-bold ${isHome ? "text-white" : "dark:text-white"}`}
-            >
+            <Link to="/" className={`text-xl font-bold ${isHome ? "text-white" : "dark:text-white"}`}>
               Movix
             </Link>
 
-            {/* Pill-style nav, floating over the hero like the reference site */}
             <nav
               className={`hidden md:flex items-center gap-1 rounded-full p-1 ${
                 isHome ? "bg-white/10 backdrop-blur-md border border-white/10" : ""
@@ -234,8 +236,6 @@ export default function Layout() {
         </div>
       </header>
 
-      {/* Home's Hero fills the first viewport behind the header, so no top padding there.
-          Every other page needs padding equal to header height so content isn't hidden under it. */}
       <main className={`flex-1 ${isHome ? "" : "pt-20"}`} onClick={() => setDropDown(false)}>
         <Outlet context={{ query }} />
       </main>

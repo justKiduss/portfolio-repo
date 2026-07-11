@@ -6,7 +6,7 @@ export default function SectionHeader({ label, title }) {
           {label}
         </span>
       )}
-      <h1 className="font-['Barlow_Condensed'] font-bold text-2xl tracking-wide dark:text-white shrink-0">
+      <h1 className="font-['Barlow_Condensed'] font-bold text-2xl tracking-wide text-dark dark:text-white shrink-0">
         {title}
       </h1>
       <div className="h-px flex-1 bg-gray-200 dark:bg-zinc-800" />

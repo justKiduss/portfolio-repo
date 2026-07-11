@@ -2,7 +2,14 @@ import { Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const [isDark, setIsDark] = useState(() => {
+    const stored = localStorage.getItem("theme");
+    // If the person has already chosen a theme before, respect it.
+    // Otherwise default to dark — this is the app's real "designed" look;
+    // every component's cinematic styling lives behind the dark: prefix.
+    if (stored) return stored === "dark";
+    return true;
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;

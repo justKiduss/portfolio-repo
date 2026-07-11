@@ -2,11 +2,33 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { popularMovies } from "../service/movieService";
 import SectionHeader from "./sectionHeader";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 
 export default function PopularMovies() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [watchLaterList, setWatchLaterList] = useState(() => {
+    const saved = localStorage.getItem("watchLaterList");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("watchLaterList", JSON.stringify(watchLaterList));
+  }, [watchLaterList]);
+
+  const savingForWatchLater = (movie) => {
+    setWatchLaterList((prev) => {
+      const exists = prev.some((item) => item.id === movie.id);
+      if (exists) {
+        return prev.filter((item) => item.id !== movie.id);
+      }
+      return [...prev, movie];
+    });
+  };
+
+  const watchLaterIds = new Set(watchLaterList.map((item) => item.id));
 
   useEffect(() => {
     async function loadMovies() {
@@ -49,27 +71,50 @@ export default function PopularMovies() {
         className="grid gap-4"
         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))" }}
       >
-        {movies.map((movie) => (
-          <Link
-            key={movie.id}
-            to={`/${movie.media_type || "movie"}/${movie.id}`}
-            className="group flex flex-col"
-          >
-            <div className="overflow-hidden rounded-lg shadow-md dark:shadow-none border border-transparent dark:border-zinc-800 group-hover:border-cyan-500/30 dark:group-hover:border-[#2DE2C1]/30 transition-colors">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title || movie.name}
-                className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <p className="mt-2 text-sm font-semibold truncate dark:text-zinc-200">
-              {movie.title || movie.name}
-            </p>
-            <p className="text-xs font-['JetBrains_Mono'] text-gray-500 dark:text-zinc-500">
-              {(movie.release_date || movie.first_air_date)?.split("-")[0]}
-            </p>
-          </Link>
-        ))}
+        {movies.map((movie) => {
+          const isSaved = watchLaterIds.has(movie.id);
+
+          return (
+            <Link
+              key={movie.id}
+              to={`/${movie.media_type || "movie"}/${movie.id}`}
+              className="group flex flex-col"
+            >
+              <div className="relative overflow-hidden rounded-lg shadow-md dark:shadow-none border border-transparent dark:border-zinc-800 group-hover:border-cyan-500/30 dark:group-hover:border-[#2DE2C1]/30 transition-colors">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title || movie.name}
+                  className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    savingForWatchLater(movie);
+                  }}
+                  aria-label={isSaved ? "Remove from Watch Later" : "Add to Watch Later"}
+                  className={`absolute top-3 right-3 z-20
+                        p-2 rounded-full
+                        backdrop-blur-md
+                        transition-all duration-300
+                        ${
+                          isSaved
+                            ? "opacity-100 translate-y-0 bg-cyan-500 text-white"
+                            : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 bg-black/60 text-white hover:bg-cyan-500"
+                        }`}
+                >
+                  {isSaved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+                </button>
+              </div>
+              <p className="mt-2 text-sm font-semibold truncate dark:text-zinc-200">
+                {movie.title || movie.name}
+              </p>
+              <p className="text-xs font-['JetBrains_Mono'] text-gray-500 dark:text-zinc-500">
+                {(movie.release_date || movie.first_air_date)?.split("-")[0]}
+              </p>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
