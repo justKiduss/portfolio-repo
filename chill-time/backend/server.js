@@ -96,8 +96,8 @@ if (env === "development" || env === "test") {
     testConnection();
 }
 
-app.listen(port, () => {
-    console.log(`http://localhost:${port} connected successfully`);
-});
+// app.listen(port, () => {
+//     console.log(`http://localhost:${port} connected successfully`);
+// });
 
 export default app;
