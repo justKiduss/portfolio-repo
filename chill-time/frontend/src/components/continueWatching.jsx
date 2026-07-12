@@ -2,18 +2,44 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import SectionHeader from "./sectionHeader";
+import { getAllContinueWatchingService } from "../service/continueWatching";
 
 const CARD_WIDTH = 200;
 const GAP = 16;
 const STEP = CARD_WIDTH + GAP;
+
+// Merge backend + localStorage entries, deduping by movieId.
+// Backend entries win on conflict (assumed to be the more authoritative
+// source for a logged-in user); localStorage fills in anything backend
+// doesn't have (e.g. guest/offline history).
+function mergeContinueWatching(backendItems, localItems) {
+  const byId = new Map();
+  for (const item of localItems) byId.set(item.movieId, item);
+  for (const item of backendItems) byId.set(item.movieId, item);
+  return Array.from(byId.values());
+}
 
 export default function ContinueWatching() {
   const [data, setData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const watching = localStorage.getItem("continue_watching");
-    setData(JSON.parse(watching) || []);
+    async function load() {
+      // Read localStorage synchronously first, so guests / offline users
+      // still see something immediately even if the backend call fails.
+      const saved = localStorage.getItem("continue_watching");
+      const localItems = saved ? JSON.parse(saved) : [];
+      setData(localItems);
+
+      try {
+        const backendItems = await getAllContinueWatchingService();
+        setData(mergeContinueWatching(backendItems || [], localItems));
+      } catch (err) {
+        // Backend unreachable (e.g. logged out, network error) — just keep
+        // showing what we already loaded from localStorage.
+      }
+    }
+    load();
   }, []);
 
   const prevSlide = () => {
@@ -26,15 +52,9 @@ export default function ContinueWatching() {
   if (data.length === 0) return null;
 
   return (
-    // max-w matches TrendingMovies/PopularMovies so all three sections' edges align
     <div className="relative group mt-10 p-4 md:p-10 max-w-[1800px] mx-auto">
       <SectionHeader label="Resume" title="Continue Watching" />
 
-      {/*
-        Cards here are fixed-width flex items (w-[200px] flex-shrink-0), not a grid,
-        so they never stretch to fill the row — a short list correctly stays a short
-        row of 200px cards rather than distorting. Nothing to fix on that front.
-      */}
       <div className="overflow-hidden rounded-xl">
         <div
           className="flex transition-transform duration-500 ease-out gap-4"
