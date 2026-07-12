@@ -94,6 +94,16 @@ export default function TvDetail() {
     };
     const updated = [watchHistory, ...history.filter((item) => item.movieId !== movieId)].slice(0, 10);
     localStorage.setItem("continue_watching", JSON.stringify(updated));
+
+    async function syncToBackend() {
+          try {
+            await addContinueWatchingService(watchHistory);
+          } catch (err) {
+            // Backend unreachable (logged out, network error) — localStorage
+            // write above already succeeded, so this fails silently.
+          }
+    }
+    syncToBackend();
   }, [selectedSeason, selectedEpisode, tv, movieId]);
 
   if (pageLoading) {

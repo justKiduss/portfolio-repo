@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MovieDetailService from "../service/movieDetail";
 import Streaming from "../components/streaming";
+import { addContinueWatchingService } from "../service/continueWatching";
 
 export default function MovieDetail() {
   const { movieId } = useParams();
@@ -49,6 +50,16 @@ export default function MovieDetail() {
     };
     const updated = [watchHistory, ...history.filter((item) => item.movieId !== movieId)].slice(0, 10);
     localStorage.setItem("continue_watching", JSON.stringify(updated));
+
+    async function syncToBackend() {
+      try {
+        await addContinueWatchingService(watchHistory);
+      } catch (err) {
+        // Backend unreachable (logged out, network error) — localStorage
+        // write above already succeeded, so this fails silently.
+      }
+    }
+    syncToBackend();
   }, [movie, movieId]);
 
   if (loading) {

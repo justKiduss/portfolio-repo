@@ -23,12 +23,14 @@ export async function getAllContinueWatchingService(){
     }
 }
 
-export async function addContinueWatchingService(){
+export async function addContinueWatchingService(watchHistory){
     try{
         const response=await fetch(`${API}/addTOContinue`,{
             method:'POST',
             headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({movie_id,movie_title,posterPath}),
+            body:JSON.stringify({
+                movieId,title,poster,type,timestamp,season,episode
+            }),
             credentials:'include'
         })
         const data=await response.json();
