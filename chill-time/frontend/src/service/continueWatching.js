@@ -25,7 +25,9 @@ export async function getAllContinueWatchingService(){
         })
         const data=await response.json();
         if (!response.ok) throw new Error(data.error || "Request failed");
-        return transformMovieData(data.data);
+        return Array.isArray(data.data) 
+            ? data.data.map(transformMovieData) 
+            : [];
 
     }catch(error){
         throw new Error("couldn't reach backend");
