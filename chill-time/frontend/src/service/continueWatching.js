@@ -17,7 +17,10 @@ export async function getAllContinueWatchingService(){
     try{
         const response=await fetch(`${API}/getAll`,{
             method:'GET',
-            headers:{'Content-Type':'application/json'},
+            headers:{'Content-Type':'application/json',
+                'Cache-Control': 'no-cache', // Tells browser to fetch fresh data
+                'Pragma': 'no-cache'
+            },
             credentials:'include'
         })
         const data=await response.json();
