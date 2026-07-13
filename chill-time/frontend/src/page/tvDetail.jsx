@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { tvSeries, tvSeriesEpisodes } from "../service/movieService";
 import StreamingTv from "../components/streamingTv";
+import { addContinueWatchingService } from "../service/continueWatching";
 
 function getSavedProgress(movieId) {
   const history = JSON.parse(localStorage.getItem("continue_watching") || "[]");
