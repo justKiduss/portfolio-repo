@@ -54,6 +54,7 @@ export default function MovieDetail() {
     async function syncToBackend() {
       try {
         await addContinueWatchingService(watchHistory);
+        console.log("watch history",watchHistory);
       } catch (err) {
         // Backend unreachable (logged out, network error) — localStorage
         // write above already succeeded, so this fails silently.

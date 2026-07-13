@@ -53,7 +53,7 @@ export default function Movie() {
         ) : (
           movies?.map((movie) => {
             const isSaved = watchLaterIds.has(movie.id);
-
+            console.log(movie);
             return (
               <Link key={movie.id} to={`/movie/${movie.id}`} className="group">
                 <div className="relative overflow-hidden rounded-lg shadow-md dark:shadow-none border border-transparent dark:border-zinc-800 group-hover:border-cyan-500/30 dark:group-hover:border-[#2DE2C1]/30 transition-colors">
