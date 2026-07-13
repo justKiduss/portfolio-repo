@@ -34,7 +34,6 @@ export default function ContinueWatching() {
       try {
         const backendItems = await getAllContinueWatchingService();
         setData(mergeContinueWatching(backendItems || [], localItems));
-        console.log("data",data);
       } catch (err) {
         // Backend unreachable (e.g. logged out, network error) — just keep
         // showing what we already loaded from localStorage.
@@ -42,6 +41,7 @@ export default function ContinueWatching() {
     }
     load();
   }, []);
+  console.log("data",data);
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + data.length) % data.length);
