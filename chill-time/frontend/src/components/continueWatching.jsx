@@ -34,6 +34,7 @@ export default function ContinueWatching() {
       try {
         const backendItems = await getAllContinueWatchingService();
         setData(mergeContinueWatching(backendItems || [], localItems));
+        console.log("data",data);
       } catch (err) {
         // Backend unreachable (e.g. logged out, network error) — just keep
         // showing what we already loaded from localStorage.

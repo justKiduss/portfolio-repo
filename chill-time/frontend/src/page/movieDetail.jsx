@@ -57,6 +57,7 @@ export default function MovieDetail() {
       } catch (err) {
         // Backend unreachable (logged out, network error) — localStorage
         // write above already succeeded, so this fails silently.
+        return "Internal Server error";
       }
     }
     syncToBackend();
