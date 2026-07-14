@@ -15,7 +15,7 @@ import useAuth from "./hooks/useAuth";
 import RedirectAuthenticatedUser from "./redirectAuthenticatetion";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
-import WatchLaterPage from "./components/watchLater";
+import {WatchLaterPage} from "./components/watchLater";
 const router = createBrowserRouter([
   {
     path: "/",

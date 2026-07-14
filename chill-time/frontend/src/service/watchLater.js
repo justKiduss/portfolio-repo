@@ -1,11 +1,11 @@
 const isDev = (process.env.NODE_ENV || "").toLowerCase() === "development";
 
 const API=isDev ? 
-        "http://localhost:5000/api/reviews":
+        "http://localhost:5000/api/watchLater":
         `https://movix-backend-ashen.vercel.app/api/watchLater`;
 
 
-export async function getAllContinueWatchingService(){
+export async function getAllWatchLaterService(){
     try{
         const response=await fetch(`${API}/getAll`,{
             method:'GET',
@@ -23,12 +23,13 @@ export async function getAllContinueWatchingService(){
     }
 }
 
-export async function addContinueWatchingService(){
+export async function addWatchLaterService(watchLater){
+    const {movieId,title,poster,type,timestamp}=watchLater;
     try{
         const response=await fetch(`${API}/addToWatchLater`,{
             method:'POST',
             headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({movie_id,movie_title,posterPath}),
+            body:JSON.stringify({movieId,title,poster,type,timestamp}),
             credentials:'include'
         })
         const data=await response.json();
