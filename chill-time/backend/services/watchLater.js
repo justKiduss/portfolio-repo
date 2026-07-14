@@ -10,9 +10,9 @@ export const getAllWatchService=async(user_id)=>{
 }
 
 export const addWatchLaterService=async(data,user_id)=>{
-    const {movie_id,movie_title,poster_path}=data;
+    const {movieId,title,poster,type,timestamp}=data;
 
-    if(!data.movie_id || !data.movie_title || !data.poster_path ||!user_id){
+    if(!movieId || !title || !poster ||!user_id){
         return null;
     }
 
