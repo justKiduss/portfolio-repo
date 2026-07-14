@@ -7,10 +7,10 @@ export function watch_later(){
             return res.rows;
         },
         addMovie:async(data,user_id)=>{
-            const {movieId,title,poster,type,timestamp}=data;
-            const query=`INSERT INTO watch_later (user_id,movie_id,title,poster,type,timestamp) 
+            const {movieId,title,poster}=data;
+            const query=`INSERT INTO watch_later (user_id,movie_id,movie_title,poster_path) 
                     values ($1,$2,$3,$4,$5,$6) RETURNING *`;
-            const values=[user_id,movieId,title,poster,type,timestamp];
+            const values=[user_id,movieId,title,poster];
             const res=await pool.query(query,values);
             return res.rows[0];
         }
