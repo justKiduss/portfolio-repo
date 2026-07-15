@@ -47,7 +47,7 @@ export default function Series() {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    toggle(movie);
+                    toggle(show);
                   }}
                   aria-label={saved ? "Remove from Watch Later" : "Add to Watch Later"}
                   className={`absolute top-3 right-3 z-20
