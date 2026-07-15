@@ -2,9 +2,9 @@ import { useSearchParams, Link } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
 import Pagination from "../components/pagination";
 import SectionHeader from "../components/sectionHeader";
-import FilterBar from "../components/filterBar";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import useWatchLater from "../hooks/useWatchLater";
+import FilterBar from "../components/FilerBar";
 
 export default function Movie() {
   const [searchParams, setSearchParams] = useSearchParams();
