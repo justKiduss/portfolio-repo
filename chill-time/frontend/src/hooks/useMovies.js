@@ -1,36 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { Movie, SearchMovie } from "../service/movieService";
 
+export default function useMovies({ query, page = 1, genre, year, country, language } = {}) {
+  const filters = { query, page, genre, year, country, language };
 
-export default function useMovies(query, page = 1) {
+  const { data, isLoading, error, isFetching } = useQuery({
+    queryKey: ["movies", filters],
 
-    const {
-        data,
-        isLoading,
-        error,
-        isFetching
-    } = useQuery({
+    queryFn: async () => {
+      const response = query
+        ? await SearchMovie(query, page)
+        : await Movie({ page, genre, year, country, language });
 
-        queryKey: ["movies", { query, page }],
+      return response.results;
+    },
 
-        queryFn: async () => {
+    placeholderData: (previous) => previous,
+  });
 
-            const response = query
-                ? await SearchMovie(query)
-                : await Movie(page);
-
-            return response.results;
-
-        },
-
-        // staleTime: 1000 * 60 * 5, // cache for 5 minutes
-        placeholderData:(previous)=>previous,
-    });
-
-    return {
-        movies: data ?? [],
-        isLoading,
-        isFetching,
-        error
-    };
+  return {
+    movies: data ?? [],
+    isLoading,
+    isFetching,
+    error,
+  };
 }
