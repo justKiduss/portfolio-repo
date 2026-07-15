@@ -237,8 +237,7 @@ export default function StreamingTv({ movie, movieId, selectedEpisode, selectedN
           </div>
         </div>
       </div>
-      <Cast movieId={movieId} type="movie" />
-      <Recommendations movieId={movieId} type="movie" />
+      <Cast movieId={movieId} type="tv" />
     </div>
   );
 }

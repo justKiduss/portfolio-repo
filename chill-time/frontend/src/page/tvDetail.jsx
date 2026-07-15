@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { tvSeries, tvSeriesEpisodes } from "../service/movieService";
 import StreamingTv from "../components/streamingTv";
 import { addContinueWatchingService } from "../service/continueWatching";
-
+import Recommendations from "../components/Recommendations";
 function getSavedProgress(movieId) {
   const history = JSON.parse(localStorage.getItem("continue_watching") || "[]");
   const saved = history.find((item) => item.movieId === movieId);
@@ -242,7 +242,7 @@ export default function TvDetail() {
           )}
         </div>
       </div>
-      <Recommendations movieId={movieId} type="movie"/>
+      <Recommendations movieId={movieId} type="tv"/>
     </div>
   );
 }
