@@ -99,7 +99,6 @@ export default function Streaming({movie,movieId}) {
   };
 
 
-  console.log("movie from streaming ",movie)
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6 bg-[#0A0C10] text-[#E8E6E1]">
       <style>{`
@@ -220,7 +219,7 @@ export default function Streaming({movie,movieId}) {
           </h1>
           <p className="text-[#9CA3AF] leading-relaxed text-sm">{movie.overview}</p>
           <div className="font-['JetBrains_Mono'] text-xs text-[#2DE2C1] tracking-wide">
-                RATING {movie.vote_average?.toFixed(1) ?? "N/A"}
+                RATING {movie.rating?? "N/A"}
           </div>
         </div>
       </div>

@@ -34,7 +34,7 @@ export default function Series() {
           </div>
         ) : (
           data?.map((show) => {
-            
+            const saved = isSaved(show.id);
             return (
               <Link key={show.id} to={`/tv/${show.id}`} className="group">
                 <div className="relative overflow-hidden rounded-lg shadow-md dark:shadow-none border border-transparent dark:border-zinc-800 group-hover:border-cyan-500/30 dark:group-hover:border-[#2DE2C1]/30 transition-colors">
@@ -44,23 +44,11 @@ export default function Series() {
                     className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggle(show);
-                    }}
-                    aria-label={isSaved ? "Remove from Watch Later" : "Add to Watch Later"}
-                    className={`absolute top-3 right-3 z-20
-                          p-2 rounded-full
-                          backdrop-blur-md
-                          transition-all duration-300
-                          ${
-                            isSaved
-                              ? "opacity-100 translate-y-0 bg-cyan-500 text-white"
-                              : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 bg-black/60 text-white hover:bg-cyan-500"
-                          }`}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(show); }}
+                    aria-label={saved ? "Remove from Watch Later" : "Add to Watch Later"}
+                    className={`... ${saved ? "opacity-100 ... bg-cyan-500 ..." : "opacity-0 ... bg-black/60 ..."}`}
                   >
-                    {isSaved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+                    {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
                   </button>
                 </div>
                 <h2 className="mt-2 text-sm font-bold truncate dark:text-zinc-200 group-hover:text-cyan-600 dark:group-hover:text-[#2DE2C1] transition-colors">

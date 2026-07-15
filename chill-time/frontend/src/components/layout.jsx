@@ -5,7 +5,7 @@ import Sidebar from "./sidebarMenu";
 import { CircleUser, Menu, Search } from "lucide-react";
 import ThemeToggle from "./themeToggle";
 import useDebounce from "../hooks/useDebounce";
-
+import Footer from "./Footer"
 const NAV_LINKS = [
   { to: "/", label: "Home" },
   { to: "/movies", label: "Movies" },
@@ -239,6 +239,7 @@ export default function Layout() {
       <main className={`flex-1 ${isHome ? "" : "pt-20"}`} onClick={() => setDropDown(false)}>
         <Outlet context={{ query }} />
       </main>
+      <Footer/>
     </div>
   );
 }
