@@ -98,6 +98,8 @@ export default function Streaming({movie,movieId}) {
     setTimeout(() => setSwitching(false), 500);
   };
 
+
+  console.log("movie from streaming ",movie)
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6 bg-[#0A0C10] text-[#E8E6E1]">
       <style>{`

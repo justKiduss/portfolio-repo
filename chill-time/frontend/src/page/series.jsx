@@ -4,31 +4,13 @@ import useSeries from "../hooks/useSeries";
 import Pagination from "../components/pagination";
 import SectionHeader from "../components/sectionHeader";
 import { Bookmark, BookmarkCheck } from "lucide-react";
+import useWatchLater from "../hooks/useWatchLater";
 
 export default function Series() {
   const [page, setPage] = useState(1);
   const { data, status } = useSeries(page);
 
-  const [watchLaterList, setWatchLaterList] = useState(() => {
-    const saved = localStorage.getItem("watchLaterList");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("watchLaterList", JSON.stringify(watchLaterList));
-  }, [watchLaterList]);
-
-  const savingForWatchLater = (show) => {
-    setWatchLaterList((prev) => {
-      const exists = prev.some((item) => item.id === show.id);
-      if (exists) {
-        return prev.filter((item) => item.id !== show.id);
-      }
-      return [...prev, show];
-    });
-  };
-
-  const watchLaterIds = new Set(watchLaterList.map((item) => item.id));
+  const { isSaved, toggle } = useWatchLater();
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -52,8 +34,8 @@ export default function Series() {
           </div>
         ) : (
           data?.map((show) => {
-            const isSaved = watchLaterIds.has(show.id);
-
+            const saved = isSaved(movie.id);
+            
             return (
               <Link key={show.id} to={`/tv/${show.id}`} className="group">
                 <div className="relative overflow-hidden rounded-lg shadow-md dark:shadow-none border border-transparent dark:border-zinc-800 group-hover:border-cyan-500/30 dark:group-hover:border-[#2DE2C1]/30 transition-colors">
@@ -66,7 +48,7 @@ export default function Series() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      savingForWatchLater(show);
+                      toggle(movie);
                     }}
                     aria-label={isSaved ? "Remove from Watch Later" : "Add to Watch Later"}
                     className={`absolute top-3 right-3 z-20

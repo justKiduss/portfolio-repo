@@ -3,35 +3,16 @@ import { trendingMovies } from "../service/movieService";
 import { Link } from "react-router-dom";
 import SectionHeader from "./sectionHeader";
 import { Bookmark, BookmarkCheck } from "lucide-react";
+import useWatchLater from "../hooks/useWatchLater";
 
 export default function TrendingMovies() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [watchLaterList, setWatchLaterList] = useState(() => {
-    const saved = localStorage.getItem("watchLaterList");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("watchLaterList", JSON.stringify(watchLaterList));
-  }, [watchLaterList]);
-
-  const savingForWatchLater = (movie) => {
-    setWatchLaterList((prev) => {
-      const exists = prev.some((item) => item.id === movie.id);
-
-      if (exists) {
-        return prev.filter((item) => item.id !== movie.id);
-      }
-
-      return [...prev, movie];
-    });
-  };
-
-  // O(1) lookup instead of calling .some() on every render for every card
-  const watchLaterIds = new Set(watchLaterList.map((item) => item.id));
+  // Replaces the local watchLaterList state, its persistence effect, and the
+  // savingForWatchLater toggle — all of that now lives in one shared hook.
+  const { isSaved, toggle } = useWatchLater();
 
   useEffect(() => {
     async function loadMovies() {
@@ -75,7 +56,7 @@ export default function TrendingMovies() {
         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))" }}
       >
         {movies.map((movie) => {
-          const isSaved = watchLaterIds.has(movie.id);
+          const saved = isSaved(movie.id);
 
           return (
             <Link
@@ -93,23 +74,20 @@ export default function TrendingMovies() {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    savingForWatchLater(movie);
+                    toggle(movie);
                   }}
-                  aria-label={isSaved ? "Remove from Watch Later" : "Add to Watch Later"}
+                  aria-label={saved ? "Remove from Watch Later" : "Add to Watch Later"}
                   className={`absolute top-3 right-3 z-20
                         p-2 rounded-full
                         backdrop-blur-md
                         transition-all duration-300
                         ${
-                          isSaved
-                            ? // Saved: always visible, cyan tint, filled icon —
-                              // no need to hover just to confirm something's saved
-                              "opacity-100 translate-y-0 bg-cyan-500 text-white"
-                            : // Not saved: same hover-reveal behavior as before
-                              "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 bg-black/60 text-white hover:bg-cyan-500"
+                          saved
+                            ? "opacity-100 translate-y-0 bg-cyan-500 text-white"
+                            : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 bg-black/60 text-white hover:bg-cyan-500"
                         }`}
                 >
-                  {isSaved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+                  {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
                 </button>
               </div>
               <p className="mt-2 text-sm font-semibold truncate dark:text-zinc-200">

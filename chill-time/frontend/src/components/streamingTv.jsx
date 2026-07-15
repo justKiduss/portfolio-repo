@@ -107,6 +107,7 @@ export default function StreamingTv({ movie, movieId, selectedEpisode, selectedN
     setActiveServer(server);
     setTimeout(() => setSwitching(false), 500);
   };
+  console.log("tv series from streaming tv",movie)
 
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6 bg-[#0A0C10] text-[#E8E6E1]">
@@ -231,7 +232,7 @@ export default function StreamingTv({ movie, movieId, selectedEpisode, selectedN
           </h1>
           <p className="text-[#9CA3AF] leading-relaxed text-sm">{movie.overview}</p>
           <div className="font-['JetBrains_Mono'] text-xs text-[#2DE2C1] tracking-wide">
-            RATING {String(movie.rating).padStart(4, "0")}
+            RATING {movie.vote_average?.toFixed(1)}
           </div>
         </div>
       </div>
