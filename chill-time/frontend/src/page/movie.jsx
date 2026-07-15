@@ -1,25 +1,49 @@
-import { useState } from "react";
+import { useSearchParams, Link } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
-import { Link } from "react-router-dom";
 import Pagination from "../components/pagination";
 import SectionHeader from "../components/sectionHeader";
+import FilterBar from "../components/filterBar";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import useWatchLater from "../hooks/useWatchLater";
 
 export default function Movie() {
-  const [page, setPage] = useState(1);
-  const { movies, isLoading, error } = useMovies(null, page);
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const page = Number(searchParams.get("page")) || 1;
+  const filters = {
+    genre: searchParams.get("genre") || "",
+    year: searchParams.get("year") || "",
+    country: searchParams.get("country") || "",
+    language: searchParams.get("language") || "",
+  };
+
+  const { movies, isLoading, error } = useMovies({ page, ...filters });
   const { isSaved, toggle } = useWatchLater();
 
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
+  function updateFilter(key, value) {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set(key, value);
+    else next.delete(key);
+    next.set("page", "1");
+    setSearchParams(next);
+  }
+
+  function resetFilters() {
+    setSearchParams({ page: "1" });
+  }
+
+  function handlePageChange(newPage) {
+    const next = new URLSearchParams(searchParams);
+    next.set("page", String(newPage));
+    setSearchParams(next);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <SectionHeader label="Browse" title="All Movies" />
+
+      <FilterBar mediaType="movie" values={filters} onChange={updateFilter} onReset={resetFilters} />
 
       {error && (
         <p className="font-['JetBrains_Mono'] text-sm text-rose-500 dark:text-[#FF3E7F] mb-6">
@@ -32,10 +56,13 @@ export default function Movie() {
           <div className="col-span-full text-center py-20 font-['JetBrains_Mono'] text-gray-400 dark:text-zinc-500 animate-pulse">
             Loading…
           </div>
+        ) : movies?.length === 0 ? (
+          <div className="col-span-full text-center py-20 font-['JetBrains_Mono'] text-sm text-gray-400 dark:text-zinc-500">
+            No movies match these filters.
+          </div>
         ) : (
           movies?.map((movie) => {
             const saved = isSaved(movie.id);
-            
             return (
               <Link key={movie.id} to={`/movie/${movie.id}`} className="group">
                 <div className="relative overflow-hidden rounded-lg shadow-md dark:shadow-none border border-transparent dark:border-zinc-800 group-hover:border-cyan-500/30 dark:group-hover:border-[#2DE2C1]/30 transition-colors">
@@ -51,18 +78,14 @@ export default function Movie() {
                       toggle(movie);
                     }}
                     aria-label={saved ? "Remove from Watch Later" : "Add to Watch Later"}
-                    className={`absolute top-3 right-3 z-20
-                          p-2 rounded-full
-                          backdrop-blur-md
-                          transition-all duration-300
-                          ${
-                            saved
-                              ? "opacity-100 translate-y-0 bg-cyan-500 text-white"
-                              : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 bg-black/60 text-white hover:bg-cyan-500"
-                          }`}
-                >
-                  {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
-                </button>
+                    className={`absolute top-3 right-3 z-20 p-2 rounded-full backdrop-blur-md transition-all duration-300 ${
+                      saved
+                        ? "opacity-100 translate-y-0 bg-cyan-500 text-white"
+                        : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 bg-black/60 text-white hover:bg-cyan-500"
+                    }`}
+                  >
+                    {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+                  </button>
                 </div>
                 <h2 className="mt-2 text-sm font-bold truncate dark:text-zinc-200 group-hover:text-cyan-600 dark:group-hover:text-[#2DE2C1] transition-colors">
                   {movie.title}

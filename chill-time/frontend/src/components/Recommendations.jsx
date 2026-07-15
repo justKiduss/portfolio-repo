@@ -33,38 +33,44 @@ export default function Recommendations({ movieId, type = "movie" }) {
   }
   if (error || items.length === 0) return null;
 
-  return (
-    <div>
-      <div className="flex items-center gap-2 mb-4">
-        <span className="font-['Barlow_Condensed'] font-semibold tracking-[0.2em] uppercase text-xs text-[#6B7280]">
-          You may also like
-        </span>
-        <div className="h-px flex-1 bg-[#1E222A]" />
-      </div>
+    return (
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="font-['Barlow_Condensed'] font-semibold tracking-[0.2em] uppercase text-xs text-[#6B7280]">
+              You may also like
+            </span>
+            <div className="h-px flex-1 bg-[#1E222A]" />
+          </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-thin">
-        {items.map((item) => (
-          <Link
-            key={item.id}
-            to={`/${item.media_type || type}/${item.id}`}
-            className="group w-[140px] shrink-0 flex flex-col"
-          >
-            <div className="overflow-hidden rounded-lg border border-[#1E222A] group-hover:border-[#2DE2C1]/40 transition-colors">
-              <img
-                src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
-                alt={item.title || item.name}
-                className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <p className="mt-2 text-xs font-['Inter'] font-medium text-[#E8E6E1] truncate">
-              {item.title || item.name}
-            </p>
-            <p className="text-[10px] font-['JetBrains_Mono'] text-[#6B7280]">
-              {(item.release_date || item.first_air_date)?.split("-")[0]}
-            </p>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
+          {/* CHANGED: Removed horizontal scrolling classes */}
+          <div className="flex flex-col gap-3">
+            {items.map((item) => (
+              <Link
+                key={item.id}
+                to={`/${item.media_type || type}/${item.id}`}
+                className="group flex items-center gap-4 p-2 rounded-lg hover:bg-[#12151B] transition-colors border border-transparent hover:border-[#1E222A]"
+              >
+                {/* Thumbnails are smaller in a vertical list */}
+                <div className="w-16 h-24 overflow-hidden rounded shadow shrink-0">
+                  <img
+                    src={`https://image.tmdb.org/t/p/w92${item.poster_path}`}
+                    alt={item.title || item.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                
+                {/* Text Info */}
+                <div className="flex flex-col justify-center">
+                  <p className="text-sm font-['Inter'] font-medium text-[#E8E6E1]">
+                    {item.title || item.name}
+                  </p>
+                  <p className="text-[10px] font-['JetBrains_Mono'] text-[#6B7280]">
+                    {(item.release_date || item.first_air_date)?.split("-")[0]}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      );
 }
