@@ -226,7 +226,6 @@ export default function Streaming({movie,movieId}) {
         </div>
       </div>
       <Cast movieId={movieId} type="movie"/>
-      <Recommendations movieId={movieId} type="movie"/>
     </div>
   );
 }
