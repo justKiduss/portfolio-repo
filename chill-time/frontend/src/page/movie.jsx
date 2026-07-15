@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useMovies from "../hooks/useMovies";
 import { Link } from "react-router-dom";
 import Pagination from "../components/pagination";
@@ -34,7 +34,6 @@ export default function Movie() {
           </div>
         ) : (
           movies?.map((movie) => {
-            const saved = isSaved(movie.id);
 
             return (
               <Link key={movie.id} to={`/movie/${movie.id}`} className="group">

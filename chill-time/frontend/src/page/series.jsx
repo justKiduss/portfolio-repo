@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import useSeries from "../hooks/useSeries";
 import Pagination from "../components/pagination";
@@ -34,7 +34,6 @@ export default function Series() {
           </div>
         ) : (
           data?.map((show) => {
-            const saved = isSaved(show.id);
             
             return (
               <Link key={show.id} to={`/tv/${show.id}`} className="group">
