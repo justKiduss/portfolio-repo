@@ -34,7 +34,7 @@ export default function Series() {
           </div>
         ) : (
           data?.map((show) => {
-            const saved = isSaved(movie.id);
+            const saved = isSaved(show.id);
             
             return (
               <Link key={show.id} to={`/tv/${show.id}`} className="group">
@@ -48,7 +48,7 @@ export default function Series() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      toggle(movie);
+                      toggle(show);
                     }}
                     aria-label={isSaved ? "Remove from Watch Later" : "Add to Watch Later"}
                     className={`absolute top-3 right-3 z-20
