@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import MovieDetailService from "../service/movieDetail";
 import Streaming from "../components/streaming";
 import { addContinueWatchingService } from "../service/continueWatching";
+import Recommendations from "../components/Recommendations";
 
 export default function MovieDetail() {
   const { movieId } = useParams();
@@ -80,5 +81,10 @@ export default function MovieDetail() {
   }
   if (!movie) return null;
 
-  return <Streaming movie={movie} movieId={movieId} />;
+  return 
+    <>
+      <Streaming movie={movie} movieId={movieId} />
+      <Recommendations movieId={movieId} type="movie"/>
+    </>
+  ;
 }

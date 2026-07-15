@@ -242,6 +242,7 @@ export default function TvDetail() {
           )}
         </div>
       </div>
+      <Recommendations movieId={movieId} type="movie"/>
     </div>
   );
 }
