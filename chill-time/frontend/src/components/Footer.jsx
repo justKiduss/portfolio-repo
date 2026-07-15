@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Github, Twitter } from "lucide-react";
 
 const LINK_GROUPS = [
   {
@@ -31,7 +30,7 @@ export default function Footer() {
             <p className="mt-3 text-sm text-gray-500 dark:text-zinc-500 leading-relaxed">
               Track what you're watching, discover what's trending, and save what's next.
             </p>
-            <div className="flex items-center gap-3 mt-4">
+            {/* <div className="flex items-center gap-3 mt-4">
               <a
                 href="https://github.com"
                 target="_blank"
@@ -50,7 +49,7 @@ export default function Footer() {
               >
                 <Twitter size={16} />
               </a>
-            </div>
+            </div> */}
           </div>
 
           {/* Link groups */}

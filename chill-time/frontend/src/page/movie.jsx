@@ -34,7 +34,7 @@ export default function Movie() {
           </div>
         ) : (
           movies?.map((movie) => {
-            const saved = isSaved(show.id);
+            const saved = isSaved(movie.id);
             
             return (
               <Link key={movie.id} to={`/movie/${movie.id}`} className="group">
@@ -45,7 +45,7 @@ export default function Movie() {
                     className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <button
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(show); }}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(movie); }}
                     aria-label={saved ? "Remove from Watch Later" : "Add to Watch Later"}
                     className={`... ${saved ? "opacity-100 ... bg-cyan-500 ..." : "opacity-0 ... bg-black/60 ..."}`}
                   >
