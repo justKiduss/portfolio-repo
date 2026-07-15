@@ -41,7 +41,7 @@ export default function Movie() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <SectionHeader label="Browse" title="All Movies" />
+      <SectionHeader label="Browse" title="All Tv Shows" />
 
       <FilterBar mediaType="movie" values={filters} onChange={updateFilter} onReset={resetFilters}/>
 
