@@ -81,10 +81,10 @@ export default function MovieDetail() {
   }
   if (!movie) return null;
 
-  return 
+  return (
     <>
       <Streaming movie={movie} movieId={movieId} />
       <Recommendations movieId={movieId} type="movie"/>
     </>
-  ;
+  );
 }
