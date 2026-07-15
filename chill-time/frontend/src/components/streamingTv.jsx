@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Comment from "./comment";
 import Cast from "./Cast";
-import Recommendations from "./Recommendations";
 
 const SERVERS = [
   {
