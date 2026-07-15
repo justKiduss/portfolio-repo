@@ -1,12 +1,12 @@
 import { useSearchParams, Link } from "react-router-dom";
-import useMovies from "../hooks/useMovies";
+import useSeries from "../hooks/useSeries";
 import Pagination from "../components/pagination";
 import SectionHeader from "../components/sectionHeader";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import useWatchLater from "../hooks/useWatchLater";
 import FilterBar from "../components/FilerBar";
 
-export default function Movie() {
+export default function Series() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const page = Number(searchParams.get("page")) || 1;
@@ -17,7 +17,7 @@ export default function Movie() {
     language: searchParams.get("language") || "",
   };
 
-  const { movies, isLoading, error } = useMovies({ page, ...filters });
+  const { status, data: series, error } = useSeries({ page, ...filters });
   const { isSaved, toggle } = useWatchLater();
 
   function updateFilter(key, value) {
@@ -41,41 +41,41 @@ export default function Movie() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <SectionHeader label="Browse" title="All Tv Shows" />
+      <SectionHeader label="Browse" title="All Series" />
 
-      <FilterBar mediaType="movie" values={filters} onChange={updateFilter} onReset={resetFilters}/>
+      <FilterBar mediaType="tv" values={filters} onChange={updateFilter} onReset={resetFilters} />
 
-      {error && (
+      {status === "error" && (
         <p className="font-['JetBrains_Mono'] text-sm text-rose-500 dark:text-[#FF3E7F] mb-6">
-          Failed to load movies.
+          {error || "Failed to load series."}
         </p>
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-6 min-h-[600px]">
-        {isLoading ? (
+        {status === "loading" ? (
           <div className="col-span-full text-center py-20 font-['JetBrains_Mono'] text-gray-400 dark:text-zinc-500 animate-pulse">
             Loading…
           </div>
-        ) : movies?.length === 0 ? (
+        ) : series?.length === 0 ? (
           <div className="col-span-full text-center py-20 font-['JetBrains_Mono'] text-sm text-gray-400 dark:text-zinc-500">
-            No movies match these filters.
+            No series match these filters.
           </div>
         ) : (
-          movies?.map((movie) => {
-            const saved = isSaved(movie.id);
+          series?.map((show) => {
+            const saved = isSaved(show.id);
             return (
-              <Link key={movie.id} to={`/movie/${movie.id}`} className="group">
+              <Link key={show.id} to={`/tv/${show.id}`} className="group">
                 <div className="relative overflow-hidden rounded-lg shadow-md dark:shadow-none border border-transparent dark:border-zinc-800 group-hover:border-cyan-500/30 dark:group-hover:border-[#2DE2C1]/30 transition-colors">
                   <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    alt={movie.title || movie.name}
+                    src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
+                    alt={show.title || show.name}
                     className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      toggle(movie);
+                      toggle(show);
                     }}
                     aria-label={saved ? "Remove from Watch Later" : "Add to Watch Later"}
                     className={`absolute top-3 right-3 z-20 p-2 rounded-full backdrop-blur-md transition-all duration-300 ${
@@ -88,10 +88,10 @@ export default function Movie() {
                   </button>
                 </div>
                 <h2 className="mt-2 text-sm font-bold truncate dark:text-zinc-200 group-hover:text-cyan-600 dark:group-hover:text-[#2DE2C1] transition-colors">
-                  {movie.title}
+                  {show.name}
                 </h2>
                 <p className="text-xs font-['JetBrains_Mono'] text-gray-500 dark:text-zinc-500">
-                  {(movie.release_date || movie.first_air_date)?.split("-")[0]}
+                  {(show.release_date || show.first_air_date)?.split("-")[0]}
                 </p>
               </Link>
             );
