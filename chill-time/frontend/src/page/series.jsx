@@ -43,7 +43,7 @@ export default function Movie() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <SectionHeader label="Browse" title="All Movies" />
 
-      <FilterBar mediaType="movie" values={filters} onChange={updateFilter} onReset={resetFilters} />
+      <FilterBar mediaType="movie" values={filters} onChange={updateFilter} onReset={resetFilters}/>
 
       {error && (
         <p className="font-['JetBrains_Mono'] text-sm text-rose-500 dark:text-[#FF3E7F] mb-6">

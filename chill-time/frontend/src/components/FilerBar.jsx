@@ -67,7 +67,7 @@ export default function FilterBar({ mediaType = "movie", values, onChange, onRes
   return (
     <div className="mb-8 space-y-4">
       {/* Genre pills */}
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+      <div className="flex gap-2 pb-1 -mx-1 px-1">
         {genres.map((genre) => {
           const isActive = String(values.genre) === String(genre.id);
           return (
