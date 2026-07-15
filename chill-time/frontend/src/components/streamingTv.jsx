@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Comment from "./comment";
+import Cast from "./Cast";
+import Recommendations from "./Recommendations";
 
 const SERVERS = [
   {
@@ -235,6 +237,8 @@ export default function StreamingTv({ movie, movieId, selectedEpisode, selectedN
           </div>
         </div>
       </div>
+      <Cast movieId={movieId} type="movie" />
+      <Recommendations movieId={movieId} type="movie" />
     </div>
   );
 }

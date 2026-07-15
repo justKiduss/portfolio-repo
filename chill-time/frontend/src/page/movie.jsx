@@ -45,12 +45,24 @@ export default function Movie() {
                     className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <button
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(movie); }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggle(movie);
+                    }}
                     aria-label={saved ? "Remove from Watch Later" : "Add to Watch Later"}
-                    className={`... ${saved ? "opacity-100 ... bg-cyan-500 ..." : "opacity-0 ... bg-black/60 ..."}`}
-                  >
-                    {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
-                  </button>
+                    className={`absolute top-3 right-3 z-20
+                          p-2 rounded-full
+                          backdrop-blur-md
+                          transition-all duration-300
+                          ${
+                            saved
+                              ? "opacity-100 translate-y-0 bg-cyan-500 text-white"
+                              : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 bg-black/60 text-white hover:bg-cyan-500"
+                          }`}
+                >
+                  {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+                </button>
                 </div>
                 <h2 className="mt-2 text-sm font-bold truncate dark:text-zinc-200 group-hover:text-cyan-600 dark:group-hover:text-[#2DE2C1] transition-colors">
                   {movie.title}
