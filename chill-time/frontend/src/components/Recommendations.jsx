@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 import { getRecommendations } from "../service/creditsService";
+import useWatchLater from "../hooks/useWatchLater";
 
 export default function Recommendations({ movieId, type = "movie" }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const { isSaved, toggle } = useWatchLater();
+
   useEffect(() => {
     if (!movieId) return;
+
     async function load() {
       try {
         setLoading(true);
         setError(false);
+
         const data = await getRecommendations(movieId, type);
         setItems(data.slice(0, 12));
       } catch (err) {
@@ -21,6 +27,7 @@ export default function Recommendations({ movieId, type = "movie" }) {
         setLoading(false);
       }
     }
+
     load();
   }, [movieId, type]);
 
@@ -31,45 +38,84 @@ export default function Recommendations({ movieId, type = "movie" }) {
       </p>
     );
   }
+
   if (error || items.length === 0) return null;
 
-    return (
-        <div className="mt-8">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="font-['Barlow_Condensed'] font-semibold tracking-[0.2em] uppercase text-xs text-[#6B7280]">
-              You may also like
-            </span>
-            <div className="h-px flex-1 bg-[#1E222A]" />
-          </div>
+  return (
+    <section className="mt-10">
+      <div className="flex items-center gap-3 mb-6">
+        <span className="font-['Barlow_Condensed'] font-semibold tracking-[0.2em] uppercase text-xs text-[#6B7280] whitespace-nowrap">
+          You may also like
+        </span>
+        <div className="h-px flex-1 bg-zinc-800" />
+      </div>
 
-          <div className="flex flex-col gap-3">
-            {items.map((item) => (
-              <Link
-                key={item.id}
-                to={`/${item.media_type || type}/${item.id}`}
-                className="group flex items-center gap-4 p-2 rounded-lg hover:bg-[#12151B] transition-colors border border-transparent hover:border-[#1E222A]"
-              >
-                {/* Thumbnails are smaller in a vertical list */}
-                <div className="w-16 h-24 overflow-hidden rounded shadow shrink-0">
-                  <img
-                    src={`https://image.tmdb.org/t/p/w92${item.poster_path}`}
-                    alt={item.title || item.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                
-                {/* Text Info */}
-                <div className="flex flex-col justify-center">
-                  <p className="text-sm font-['Inter'] font-medium text-[#E8E6E1]">
-                    {item.title || item.name}
-                  </p>
-                  <p className="text-[10px] font-['JetBrains_Mono'] text-[#6B7280]">
-                    {(item.release_date || item.first_air_date)?.split("-")[0]}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      );
+      <div
+        className="grid gap-4"
+        style={{
+          gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+        }}
+      >
+        {items.map((item) => {
+          const saved = isSaved(item.id);
+
+          return (
+            <Link
+              key={item.id}
+              to={`/${item.media_type || type}/${item.id}`}
+              className="group flex flex-col"
+            >
+              <div className="relative overflow-hidden rounded-lg border border-transparent dark:border-zinc-800 shadow-md dark:shadow-none transition-colors group-hover:border-cyan-500/30">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                  alt={item.title || item.name}
+                  className="w-full aspect-[2/3] object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    toggle({
+                      movieId: item.id,
+                      title: item.title || item.name,
+                      poster: item.poster_path,
+                      type: item.media_type || type,
+                      timestamp: Date.now(),
+                    });
+                  }}
+                  aria-label={
+                    saved
+                      ? "Remove from Watch Later"
+                      : "Add to Watch Later"
+                  }
+                  className={`absolute top-3 right-3 z-20 rounded-full p-2 backdrop-blur-md transition-all duration-300 ${
+                    saved
+                      ? "bg-cyan-500 text-white opacity-100"
+                      : "bg-black/60 text-white opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-cyan-500"
+                  }`}
+                >
+                  {saved ? (
+                    <BookmarkCheck size={18} />
+                  ) : (
+                    <Bookmark size={18} />
+                  )}
+                </button>
+              </div>
+
+              <p className="mt-2 line-clamp-2 text-sm font-semibold dark:text-zinc-200">
+                {item.title || item.name}
+              </p>
+
+              <p className="mt-1 text-xs font-['JetBrains_Mono'] text-gray-500 dark:text-zinc-500">
+                {(item.release_date || item.first_air_date)?.split("-")[0] ||
+                  "—"}
+              </p>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
 }
