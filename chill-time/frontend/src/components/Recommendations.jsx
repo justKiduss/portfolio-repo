@@ -42,7 +42,6 @@ export default function Recommendations({ movieId, type = "movie" }) {
             <div className="h-px flex-1 bg-[#1E222A]" />
           </div>
 
-          {/* CHANGED: Removed horizontal scrolling classes */}
           <div className="flex flex-col gap-3">
             {items.map((item) => (
               <Link
