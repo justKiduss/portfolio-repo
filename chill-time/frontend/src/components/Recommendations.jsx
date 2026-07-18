@@ -76,14 +76,7 @@ export default function Recommendations({ movieId, type = "movie" }) {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-
-                    toggle({
-                      movieId: item.id,
-                      title: item.title || item.name,
-                      poster: item.poster_path,
-                      type: item.media_type || type,
-                      timestamp: Date.now(),
-                    });
+                    toggle(item);
                   }}
                   aria-label={
                     saved
