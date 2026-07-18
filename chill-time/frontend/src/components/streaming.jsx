@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Comment from "./comment";
 import Cast from "./Cast";
+import ReportBrokenLink from "./ReportBrokenLink.jsx";
 
 const SERVERS = [
   {
@@ -80,14 +81,12 @@ const SERVERS = [
   },
 ];
 
-export default function Streaming({movie,movieId}) {
+export default function Streaming({ movie, movieId }) {
   const [comment, setComment] = useState(false);
   const [activeServer, setActiveServer] = useState(SERVERS[4]);
   const [switching, setSwitching] = useState(false);
 
-  const src = activeServer.getMovieUrl(
-    movieId,
-  );
+  const src = activeServer.getMovieUrl(movieId);
 
   if (!movie || !movieId) return null;
   const title = movie.title || movie.name;
@@ -98,7 +97,6 @@ export default function Streaming({movie,movieId}) {
     setActiveServer(server);
     setTimeout(() => setSwitching(false), 500);
   };
-
 
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6 bg-[#0A0C10] text-[#E8E6E1]">
@@ -139,11 +137,21 @@ export default function Streaming({movie,movieId}) {
 
       {/* Frequency Strip — server selector */}
       <div>
-        <div className="flex items-center gap-2 mb-2.5">
-          <span className="font-['Barlow_Condensed'] font-semibold tracking-[0.2em] uppercase text-xs text-[#6B7280]">
-            Frequency
-          </span>
-          <div className="h-px flex-1 bg-[#1E222A]" />
+        <div className="flex items-center justify-between gap-2 mb-2.5">
+          <div className="flex items-center gap-2 flex-1">
+            <span className="font-['Barlow_Condensed'] font-semibold tracking-[0.2em] uppercase text-xs text-[#6B7280]">
+              Frequency
+            </span>
+            <div className="h-px flex-1 bg-[#1E222A]" />
+          </div>
+          {/* NEW: report broken link, right next to the server strip so it
+              has access to which title/server the user was actually on */}
+          <ReportBrokenLink
+            title={title}
+            movieId={movieId}
+            mediaType="movie"
+            serverName={activeServer.name}
+          />
         </div>
 
         <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
@@ -197,7 +205,7 @@ export default function Streaming({movie,movieId}) {
         </button>
         {comment && (
           <div className="mt-3 animate-[fadeIn_0.2s_ease]">
-            <Comment movieId={movieId} moviename={title}/>
+            <Comment movieId={movieId} moviename={title} />
           </div>
         )}
       </div>
@@ -220,11 +228,11 @@ export default function Streaming({movie,movieId}) {
           </h1>
           <p className="text-[#9CA3AF] leading-relaxed text-sm">{movie.overview}</p>
           <div className="font-['JetBrains_Mono'] text-xs text-[#2DE2C1] tracking-wide">
-                RATING {movie.rating?? "N/A"}
+            RATING {movie.rating ?? "N/A"}
           </div>
         </div>
       </div>
-      <Cast movieId={movieId} type="movie"/>
+      <Cast movieId={movieId} type="movie" />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { usePostHog } from "posthog-js/react";
 const MOVIE_GENRES = [
   { id: "", name: "All" },
   { id: 28, name: "Action" },
@@ -63,18 +64,22 @@ const selectClass =
 export default function FilterBar({ mediaType = "movie", values, onChange, onReset }) {
   const genres = mediaType === "tv" ? TV_GENRES : MOVIE_GENRES;
   const hasActiveFilters = values.genre || values.year || values.country || values.language;
+  const posthog = usePostHog();
 
   return (
     <div className="mb-8 space-y-4">
       {/* Genre pills */}
-      <div className="flex gap-2 pb-1 -mx-1 px-1">
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
         {genres.map((genre) => {
           const isActive = String(values.genre) === String(genre.id);
           return (
             <button
               key={genre.id || "all"}
               type="button"
-              onClick={() => onChange("genre", genre.id)}
+              onClick={() => {
+                onChange("genre", genre.id);
+                posthog?.capture("filter_applied", { filter_type: "genre", value: genre.name });
+              }}
               className={`shrink-0 px-3.5 py-1.5 rounded-full text-sm font-['Inter'] border whitespace-nowrap transition-colors ${
                 isActive
                   ? "bg-cyan-600 dark:bg-[#2DE2C1] border-cyan-600 dark:border-[#2DE2C1] text-white dark:text-black font-medium"
@@ -91,7 +96,10 @@ export default function FilterBar({ mediaType = "movie", values, onChange, onRes
       <div className="flex flex-wrap items-center gap-3">
         <select
           value={values.year}
-          onChange={(e) => onChange("year", e.target.value)}
+          onChange={(e) => {
+            onChange("year", e.target.value);
+            posthog?.capture("filter_applied", { filter_type: "year", value: e.target.value });
+          }}
           className={selectClass}
         >
           <option value="">All Years</option>

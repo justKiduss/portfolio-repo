@@ -267,7 +267,7 @@ function ReviewCard({ review, replyMutation, user, remove, setEdit, isEditing, c
                                         onChange={(e) => setReplyText(e.target.value)}
                                         onKeyDown={handleKeyDown}
                                         autoFocus
-                                        className="flex-1 rounded-lg border border-zinc-300 p-2 text-sm outline-none transition-colors focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
+                                        className="ph-no-capture flex-1 rounded-lg border border-zinc-300 p-2 text-sm outline-none transition-colors focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
                                         placeholder="Write a reply..."
                                     />
                                     <button
@@ -372,7 +372,7 @@ export default function Comment({ movieId, moviename }) {
                             value={reviewText}
                             onChange={(e) => setReviewText(e.target.value)}
                             rows={3}
-                            className="w-full resize-none rounded-xl border border-zinc-300 p-4 outline-none transition-colors focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
+                            className="ph-no-capture w-full resize-none rounded-xl border border-zinc-300 p-4 outline-none transition-colors focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
                             placeholder="What did you think?"
                         />
 
@@ -424,7 +424,7 @@ export default function Comment({ movieId, moviename }) {
                                     onChange={(e) => setEditText(e.target.value)}
                                     rows={3}
                                     autoFocus
-                                    className="w-full resize-none rounded-xl border border-zinc-300 p-3 outline-none transition-colors focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
+                                    className="ph-no-capture w-full resize-none rounded-xl border border-zinc-300 p-3 outline-none transition-colors focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
                                 />
 
                                 <div className="flex gap-2">

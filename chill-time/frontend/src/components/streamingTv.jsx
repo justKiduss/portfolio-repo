@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Comment from "./comment";
 import Cast from "./Cast";
+import ReportBrokenLink from "./ReportBrokenLink";
 
 const SERVERS = [
   {
@@ -85,11 +86,7 @@ export default function StreamingTv({ movie, movieId, selectedEpisode, selectedN
   const [activeServer, setActiveServer] = useState(SERVERS[4]);
   const [switching, setSwitching] = useState(false);
 
-  const src = activeServer.getTvUrl(
-    movieId,
-    selectedNum,
-    selectedEpisode
-  );
+  const src = activeServer.getTvUrl(movieId, selectedNum, selectedEpisode);
 
   if (!movie || !movieId) return null;
 
@@ -151,11 +148,21 @@ export default function StreamingTv({ movie, movieId, selectedEpisode, selectedN
 
       {/* Frequency Strip — server selector */}
       <div>
-        <div className="flex items-center gap-2 mb-2.5">
-          <span className="font-['Barlow_Condensed'] font-semibold tracking-[0.2em] uppercase text-xs text-[#6B7280]">
-            Frequency
-          </span>
-          <div className="h-px flex-1 bg-[#1E222A]" />
+        <div className="flex items-center justify-between gap-2 mb-2.5">
+          <div className="flex items-center gap-2 flex-1">
+            <span className="font-['Barlow_Condensed'] font-semibold tracking-[0.2em] uppercase text-xs text-[#6B7280]">
+              Frequency
+            </span>
+            <div className="h-px flex-1 bg-[#1E222A]" />
+          </div>
+          {/* NEW: report broken link, with season/episode context folded
+              into the title so a report identifies exactly what was playing */}
+          <ReportBrokenLink
+            title={`${title} — S${selectedNum}E${selectedEpisode}`}
+            movieId={movieId}
+            mediaType="tv"
+            serverName={activeServer.name}
+          />
         </div>
 
         <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
@@ -232,7 +239,7 @@ export default function StreamingTv({ movie, movieId, selectedEpisode, selectedN
           </h1>
           <p className="text-[#9CA3AF] leading-relaxed text-sm">{movie.overview}</p>
           <div className="font-['JetBrains_Mono'] text-xs text-[#2DE2C1] tracking-wide">
-            RATING {movie.rating??"N/A"}
+            RATING {movie.rating ?? "N/A"}
           </div>
         </div>
       </div>

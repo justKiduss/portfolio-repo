@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import FeedbackWidget from "./Feedbackwidget";
 
 const LINK_GROUPS = [
   {
@@ -30,26 +31,12 @@ export default function Footer() {
             <p className="mt-3 text-sm text-gray-500 dark:text-zinc-500 leading-relaxed">
               Track what you're watching, discover what's trending, and save what's next.
             </p>
-            {/* <div className="flex items-center gap-3 mt-4">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="p-2 rounded-full bg-gray-100 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400 hover:text-cyan-600 dark:hover:text-[#2DE2C1] hover:bg-gray-200 dark:hover:bg-zinc-800 transition-colors"
-              >
-                <Github size={16} />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Twitter"
-                className="p-2 rounded-full bg-gray-100 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400 hover:text-cyan-600 dark:hover:text-[#2DE2C1] hover:bg-gray-200 dark:hover:bg-zinc-800 transition-colors"
-              >
-                <Twitter size={16} />
-              </a>
-            </div> */}
+
+            {/* FIX: was raw pasted source code sitting inside JSX (invalid
+                syntax) — now properly imported and rendered as a component. */}
+            <div className="mt-4">
+              <FeedbackWidget />
+            </div>
           </div>
 
           {/* Link groups */}

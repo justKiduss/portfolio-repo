@@ -16,6 +16,8 @@ import RedirectAuthenticatedUser from "./redirectAuthenticatetion";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
 import WatchLaterPage from "./components/watchLater";
+import { PostHogProvider } from "posthog-js/react";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -50,6 +52,12 @@ const router = createBrowserRouter([
 
 const queryClient = new QueryClient();
 
+
+const posthogOptions = {
+  api_host: process.env.REACT_APP_POSTHOG_HOST,
+  defaults: "2025-05-24",
+};
+
 function App() {
   const { checkauth, isLoading } = useAuth();
 
@@ -66,13 +74,15 @@ function App() {
   }
 
   return (
-    <div>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-      <Analytics />
-      <SpeedInsights />
-    </div>
+    <PostHogProvider apiKey={process.env.REACT_APP_POSTHOG_KEY} options={posthogOptions}>
+      <div>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+        <Analytics />
+        <SpeedInsights />
+      </div>
+    </PostHogProvider>
   );
 }
 

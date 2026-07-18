@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
+import { usePostHog } from "posthog-js/react";
 import useMovies from "../hooks/useMovies";
 import Sidebar from "./sidebarMenu";
 import { CircleUser, Menu, Search } from "lucide-react";
 import ThemeToggle from "./themeToggle";
 import useDebounce from "../hooks/useDebounce";
-import Footer from "./Footer"
+import Footer from "./Footer";
+
 const NAV_LINKS = [
   { to: "/", label: "Home" },
   { to: "/movies", label: "Movies" },
@@ -18,8 +20,15 @@ export default function Layout() {
   const [isOpen, setisOpen] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const location = useLocation();
+  const posthog = usePostHog();
 
   const isHome = location.pathname === "/";
+
+  // Client-side route changes don't trigger a real page load, so PostHog's
+  // default pageview capture never fires on in-app navigation without this.
+  useEffect(() => {
+    posthog?.capture("$pageview");
+  }, [location.pathname, location.search, posthog]);
 
   function handleSearch(e) {
     setQuery(e.target.value);

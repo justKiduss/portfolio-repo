@@ -59,12 +59,14 @@ import { useOutletContext } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { usePostHog } from "posthog-js/react";
 
 export default function Search() {
   const { query } = useOutletContext();
   const [pageNo, setPageNo] = useState(1);
   const [allMovies, setAllMovies] = useState([]);
   const { movies, isLoading, error } = useMovies(query, pageNo);
+  const posthog = usePostHog();
 
   useEffect(() => {
     setAllMovies([]);
@@ -98,6 +100,7 @@ export default function Search() {
           <Link
             key={`${movie.id}-${i}`}
             to={`/${movie.media_type || "movie"}/${movie.id}`}
+            onClick={() => posthog?.capture("search_result_selected", { media_id: movie.id, query })}
             className="group flex flex-col"
           >
             <div className="overflow-hidden rounded-lg shadow-md dark:shadow-none border border-transparent dark:border-zinc-800 group-hover:border-cyan-500/30 dark:group-hover:border-[#2DE2C1]/30 transition-colors">
