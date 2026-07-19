@@ -154,7 +154,7 @@ export default function Streaming({ movie, movieId }) {
           />
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
+        <div className="flex gap-2 bg-[#12151B] overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
           {SERVERS.map((server) => {
             const isActive = server.id === activeServer.id;
             return (
