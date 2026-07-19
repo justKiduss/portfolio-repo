@@ -165,7 +165,7 @@ export default function StreamingTv({ movie, movieId, selectedEpisode, selectedN
           />
         </div>
 
-        <div className="flex gap-2 bg-[#12151B] overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin scrollbar-thumb-[#2DE2C1] scrollbar-track-[#1E222A]">
+        <div className="flex gap-2 bg-[#12151B] overflow-x-hidden pb-1 -mx-1 px-1 scrollbar-thin scrollbar-thumb-[#2DE2C1] scrollbar-track-[#1E222A]">
           {SERVERS.map((server) => {
             const isActive = server.id === activeServer.id;
             return (
