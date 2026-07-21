@@ -18,10 +18,14 @@ unitOne.src="./asset/unit.png";
 const unitTwo=new Image();
 unitTwo.src="./asset/aiUnit.png";
 
+const TOTAL_IMAGES = 6;
+let started=false;
 let loaded=0;
+
 export function startGame(){
     loaded++;
-    if(loaded>=2 ){
+    if(loaded>=TOTAL_IMAGES && !started ){
+        started=true;
         inputs(canvas,x,y,boardWidth,boardHeight,tileHeight,tileWidth,render);
         render();
     }
