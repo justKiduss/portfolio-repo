@@ -42,7 +42,7 @@ export default function Layout() {
 
   const history = getHistory();
   const debounceQuery = useDebounce(query, 500);
-  const { movies, isLoading } = useMovies(debounceQuery);
+  const { movies, isLoading } = useMovies({ query: debounceQuery});
 
   function handleSubmit(e) {
     e.preventDefault();
